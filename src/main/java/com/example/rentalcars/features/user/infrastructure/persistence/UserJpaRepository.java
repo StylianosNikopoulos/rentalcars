@@ -1,4 +1,4 @@
 package com.example.rentalcars.features.user.infrastructure.persistence;
 
-public class SpringUserJpaRepository {
+public class UserJpaRepository {
 }
