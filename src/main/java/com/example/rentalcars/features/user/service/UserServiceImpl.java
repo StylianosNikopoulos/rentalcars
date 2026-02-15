@@ -1,6 +1,7 @@
 package com.example.rentalcars.features.user.service;
 
 import com.example.rentalcars.core.exception.BusinessException;
+import com.example.rentalcars.features.user.controller.dto.LoginRequest;
 import com.example.rentalcars.features.user.controller.dto.UserRequest;
 import com.example.rentalcars.features.user.domain.Role;
 import com.example.rentalcars.features.user.domain.User;
@@ -46,5 +47,17 @@ public class UserServiceImpl implements UserService{
                 .build();
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public User login(LoginRequest request) {
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new BusinessException("Invalid credentials", "BAD_CREDENTIALS"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+            throw new BusinessException("Invalid credentials", "BAD_CREDENTIALS");
+        }
+
+        return user;
     }
 }

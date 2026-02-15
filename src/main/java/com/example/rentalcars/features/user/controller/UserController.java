@@ -1,5 +1,6 @@
 package com.example.rentalcars.features.user.controller;
 
+import com.example.rentalcars.features.user.controller.dto.LoginRequest;
 import com.example.rentalcars.features.user.controller.dto.UserRequest;
 import com.example.rentalcars.features.user.controller.dto.UserResponse;
 import com.example.rentalcars.features.user.infrastructure.mapper.UserMapper;
@@ -35,5 +36,11 @@ public class UserController {
     public ResponseEntity<UserResponse> register(@Valid @RequestBody UserRequest request){
         var savedUser = userService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(userMapper.toResponse(savedUser));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest request) {
+        var user = userService.login(request);
+        return ResponseEntity.ok(userMapper.toResponse(user));
     }
 }
