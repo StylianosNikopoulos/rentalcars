@@ -1,4 +1,6 @@
 package com.example.rentalcars.features.user.domain;
 
-public class Role {
+public enum Role {
+    CUSTOMER,
+    ADMIN
 }
