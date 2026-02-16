@@ -13,4 +13,5 @@ public class User {
     private final Role role;
     private final String firstName;
     private final String lastName;
+    private final CustomerProfile profile;
 }

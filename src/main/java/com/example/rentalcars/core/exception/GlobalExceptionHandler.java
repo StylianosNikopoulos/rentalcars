@@ -1,8 +1,6 @@
-package com.example.rentalcars.features.user.domain.exception;
+package com.example.rentalcars.core.exception;
 
-import com.example.rentalcars.core.exception.BusinessException;
-import com.example.rentalcars.core.exception.NotFoundException;
-import com.example.rentalcars.features.user.controller.dto.ApiError;
+import com.example.rentalcars.core.dto.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

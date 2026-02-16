@@ -1,4 +1,4 @@
-package com.carrental.core.domain;
+package com.example.rentalcars.core.domain;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -7,7 +7,7 @@ import java.util.Objects;
 public abstract class BaseEntity {
     private final UUID id;
     private final LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private final LocalDateTime updatedAt;
 
     protected BaseEntity() {
         this.id = UUID.randomUUID();

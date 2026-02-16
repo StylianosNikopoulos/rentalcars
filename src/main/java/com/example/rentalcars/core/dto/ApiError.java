@@ -1,4 +1,4 @@
-package com.example.rentalcars.features.user.controller.dto;
+package com.example.rentalcars.core.dto;
 
 import lombok.Builder;
 import lombok.Data;
