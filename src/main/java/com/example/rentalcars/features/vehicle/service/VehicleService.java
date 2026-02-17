@@ -9,5 +9,6 @@ public interface VehicleService {
     Vehicle createVehicle(VehicleRequest request);
     List<Vehicle> getAllVehicles();
     Vehicle getVehicleById(UUID id);
+    Vehicle updateVehicle(UUID id, VehicleRequest request);
     void deleteVehicle(UUID id);
 }

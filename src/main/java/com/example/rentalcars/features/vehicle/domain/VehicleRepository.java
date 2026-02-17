@@ -8,4 +8,6 @@ public interface VehicleRepository {
     Vehicle save(Vehicle vehicle);
     Optional<Vehicle> findById(UUID id);
     List<Vehicle> findAllVehicles();
+    boolean existsByLicensePlate(String licensePlate);
+    void deleteById(UUID id);
 }

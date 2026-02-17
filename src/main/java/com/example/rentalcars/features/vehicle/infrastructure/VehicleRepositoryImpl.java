@@ -35,4 +35,14 @@ public class VehicleRepositoryImpl implements VehicleRepository {
                 .map(vehicleMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public boolean existsByLicensePlate(String licensePlate) {
+        return jpaRepository.findByLicensePlate(licensePlate).isPresent();
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        jpaRepository.deleteById(id);
+    }
 }

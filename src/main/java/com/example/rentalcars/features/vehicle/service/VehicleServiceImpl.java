@@ -1,9 +1,12 @@
 package com.example.rentalcars.features.vehicle.service;
 
+import com.example.rentalcars.core.exception.BusinessException;
 import com.example.rentalcars.features.vehicle.controller.dto.VehicleRequest;
+import com.example.rentalcars.features.vehicle.domain.LicensePlate;
 import com.example.rentalcars.features.vehicle.domain.Vehicle;
 import com.example.rentalcars.features.vehicle.domain.VehicleRepository;
-import com.example.rentalcars.features.vehicle.infrastructure.persistence.VehicleJpaRepository;
+import com.example.rentalcars.features.vehicle.domain.VehicleStatus;
+import com.example.rentalcars.features.vehicle.domain.exception.VehicleNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,27 +18,66 @@ import java.util.UUID;
 public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
-    private final VehicleJpaRepository jpaRepository;
 
     @Override
     @Transactional
     public Vehicle createVehicle(VehicleRequest request) {
-        return null;
+
+        if (vehicleRepository.existsByLicensePlate(request.getLicensePlate())){
+            throw new BusinessException("Vehicle already exists", "DUPLICATE_LICENSE_PLATE");
+        }
+
+        var vehicle = Vehicle.builder()
+                .id(UUID.randomUUID())
+                .brand(request.getBrand())
+                .model(request.getModel())
+                .year(request.getYear())
+                .fuelType(request.getFuelType())
+                .licensePlate(new LicensePlate(request.getLicensePlate()))
+                .status(VehicleStatus.AVAILABLE)
+                .dailyPrice(request.getDailyPrice())
+                .build();
+
+        return vehicleRepository.save(vehicle);
     }
 
     @Override
     public List<Vehicle> getAllVehicles() {
-        return List.of();
+        return vehicleRepository.findAllVehicles();
     }
 
     @Override
     public Vehicle getVehicleById(UUID id) {
-        return null;
+        return vehicleRepository.findById(id)
+                .orElseThrow(()-> new VehicleNotFoundException(id));
+    }
+
+    @Override
+    @Transactional
+    public Vehicle updateVehicle(UUID id, VehicleRequest request) {
+        Vehicle existingVehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new VehicleNotFoundException(id));
+
+        Vehicle updatedVehicle = Vehicle.builder()
+                .id(existingVehicle.getId())
+                .brand(request.getBrand())
+                .model(request.getModel())
+                .year(request.getYear())
+                .fuelType(request.getFuelType())
+                .licensePlate(new LicensePlate(request.getLicensePlate()))
+                .status(existingVehicle.getStatus())
+                .dailyPrice(request.getDailyPrice())
+                .build();
+
+        return vehicleRepository.save(updatedVehicle);
     }
 
     @Override
     @Transactional
     public void deleteVehicle(UUID id) {
-
+        if (!vehicleRepository.findById(id).isPresent()) {
+            throw new VehicleNotFoundException(id);
+        }
+        vehicleRepository.deleteById(id);
     }
 }
