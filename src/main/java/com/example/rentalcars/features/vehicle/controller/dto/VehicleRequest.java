@@ -1,0 +1,28 @@
+package com.example.rentalcars.features.vehicle.controller.dto;
+
+import com.example.rentalcars.features.vehicle.domain.FuelType;
+import jakarta.validation.constraints.*;
+import lombok.Data;
+import java.math.BigDecimal;
+
+@Data
+public class VehicleRequest {
+    @NotBlank(message = "Brand is required")
+    private String brand;
+
+    @NotBlank(message = "Model is required")
+    private String model;
+
+    @Min(value = 1900, message = "Year must be valid")
+    private int year;
+
+    @NotNull(message = "Fuel type is required")
+    private FuelType fuelType;
+
+    @NotBlank(message = "License plate is required")
+    private String licensePlate;
+
+    @NotNull(message = "Daily price is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
+    private BigDecimal dailyPrice;
+}

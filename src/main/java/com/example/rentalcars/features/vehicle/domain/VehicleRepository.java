@@ -1,0 +1,11 @@
+package com.example.rentalcars.features.vehicle.domain;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+public interface VehicleRepository {
+    Vehicle save(Vehicle vehicle);
+    Optional<Vehicle> findById(UUID id);
+    List<Vehicle> findAllVehicles();
+}

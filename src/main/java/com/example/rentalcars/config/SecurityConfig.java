@@ -23,6 +23,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/vehicles/**").permitAll()
+                        .requestMatchers("/api/v1/vehicles/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/users/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

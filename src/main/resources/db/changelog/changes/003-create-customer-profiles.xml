@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="20260215-003" author="drive-node">
+    <changeSet author="db" id="003-create-customer-profiles">
         <createTable tableName="customer_profiles">
             <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
