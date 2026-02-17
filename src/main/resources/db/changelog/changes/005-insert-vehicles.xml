@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="admin" id="005-insert-vehicles">
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440001"/>
+            <column name="brand" value="Toyota"/>
+            <column name="model" value="Yaris"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="ZXY-1001"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="45.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T10:00:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440002"/>
+            <column name="brand" value="Tesla"/>
+            <column name="model" value="Model 3"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="ZXY-1002"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="85.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T10:05:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440003"/>
+            <column name="brand" value="Volkswagen"/>
+            <column name="model" value="Golf"/>
+            <column name="year" valueNumeric="2021"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="ZXY-1003"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="55.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T10:10:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440004"/>
+            <column name="brand" value="BMW"/>
+            <column name="model" value="320i"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="ZXY-1004"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="95.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T10:15:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440005"/>
+            <column name="brand" value="Audi"/>
+            <column name="model" value="A3 Sportback"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="ZXY-1005"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="70.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T10:20:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440006"/>
+            <column name="brand" value="Fiat"/>
+            <column name="model" value="500e"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="ZXY-1006"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="50.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T10:25:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440007"/>
+            <column name="brand" value="Ford"/>
+            <column name="model" value="Focus"/>
+            <column name="year" valueNumeric="2021"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="ZXY-1007"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="52.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T10:30:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440008"/>
+            <column name="brand" value="Peugeot"/>
+            <column name="model" value="2008"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="ZXY-1008"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="65.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T10:35:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440009"/>
+            <column name="brand" value="Mercedes"/>
+            <column name="model" value="A180"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="ZXY-1009"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="88.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T10:40:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440010"/>
+            <column name="brand" value="Hyundai"/>
+            <column name="model" value="Ioniq 5"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="ZXY-1010"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="90.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T10:45:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440011"/>
+            <column name="brand" value="Kia"/>
+            <column name="model" value="Sportage"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="ZXY-1011"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="75.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:00:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440012"/>
+            <column name="brand" value="Nissan"/>
+            <column name="model" value="Qashqai"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="ZXY-1012"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="68.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:05:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440013"/>
+            <column name="brand" value="Volvo"/>
+            <column name="model" value="XC40 Recharge"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="ZXY-1013"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="95.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:10:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440014"/>
+            <column name="brand" value="Renault"/>
+            <column name="model" value="Clio"/>
+            <column name="year" valueNumeric="2021"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="ZXY-1014"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="42.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:15:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440015"/>
+            <column name="brand" value="Dacia"/>
+            <column name="model" value="Duster"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="ZXY-1015"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="50.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:20:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440016"/>
+            <column name="brand" value="Opel"/>
+            <column name="model" value="Corsa-e"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="ZXY-1016"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="55.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:25:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440017"/>
+            <column name="brand" value="Seat"/>
+            <column name="model" value="Leon"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="ZXY-1017"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="62.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:30:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440018"/>
+            <column name="brand" value="Skoda"/>
+            <column name="model" value="Octavia"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="ZXY-1018"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="72.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:35:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440019"/>
+            <column name="brand" value="Mazda"/>
+            <column name="model" value="CX-5"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="ZXY-1019"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="82.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:40:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440020"/>
+            <column name="brand" value="Mini"/>
+            <column name="model" value="Cooper S"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="ZXY-1020"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="78.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:45:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440021"/>
+            <column name="brand" value="Suzuki"/>
+            <column name="model" value="Swift"/>
+            <column name="year" valueNumeric="2021"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="ZXY-1021"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="38.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:50:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440022"/>
+            <column name="brand" value="Porsche"/>
+            <column name="model" value="Taycan"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="ZXY-1022"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="180.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:55:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440023"/>
+            <column name="brand" value="Land Rover"/>
+            <column name="model" value="Defender"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="ZXY-1023"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="140.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:00:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440024"/>
+            <column name="brand" value="Jeep"/>
+            <column name="model" value="Renegade"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="ZXY-1024"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="65.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:05:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440025"/>
+            <column name="brand" value="Lexus"/>
+            <column name="model" value="NX 350h"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="ZXY-1025"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="105.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:10:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440026"/>
+            <column name="brand" value="Mitsubishi"/>
+            <column name="model" value="ASX"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="ZXY-1026"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="55.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:15:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440027"/>
+            <column name="brand" value="Subaru"/>
+            <column name="model" value="Forester"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="ZXY-1027"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="75.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:20:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440028"/>
+            <column name="brand" value="Honda"/>
+            <column name="model" value="Civic e:HEV"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="ZXY-1028"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="70.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:25:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440029"/>
+            <column name="brand" value="Alfa Romeo"/>
+            <column name="model" value="Giulia"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="ZXY-1029"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="110.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:30:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440030"/>
+            <column name="brand" value="Citroen"/>
+            <column name="model" value="C3"/>
+            <column name="year" valueNumeric="2021"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="ZXY-1030"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="35.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:35:00"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
