@@ -1,9 +1,7 @@
-package com.example.rentalcars.features.vehicle.infrastructure;
+package com.example.rentalcars.features.vehicle.infrastructure.adapter.outbound.persistence;
 
-import com.example.rentalcars.features.vehicle.domain.Vehicle;
-import com.example.rentalcars.features.vehicle.domain.VehicleRepository;
-import com.example.rentalcars.features.vehicle.infrastructure.mapper.VehicleMapper;
-import com.example.rentalcars.features.vehicle.infrastructure.persistence.VehicleJpaRepository;
+import com.example.rentalcars.features.vehicle.domain.model.Vehicle;
+import com.example.rentalcars.features.vehicle.domain.port.outbound.VehicleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -15,24 +13,24 @@ import java.util.UUID;
 public class VehicleRepositoryImpl implements VehicleRepository {
 
     private final VehicleJpaRepository jpaRepository;
-    private final VehicleMapper vehicleMapper;
+    private final VehiclePersistenceMapper vehiclePersistenceMapper;
 
     @Override
     public Vehicle save(Vehicle vehicle) {
-        var entity = vehicleMapper.toEntity(vehicle);
+        var entity = vehiclePersistenceMapper.toEntity(vehicle);
         var saved = jpaRepository.save(entity);
-        return vehicleMapper.toDomain(saved);
+        return vehiclePersistenceMapper.toDomain(saved);
     }
 
     @Override
     public Optional<Vehicle> findById(UUID id) {
-        return jpaRepository.findById(id).map(vehicleMapper::toDomain);
+        return jpaRepository.findById(id).map(vehiclePersistenceMapper::toDomain);
     }
 
     @Override
     public List<Vehicle> findAllVehicles() {
         return jpaRepository.findAll().stream()
-                .map(vehicleMapper::toDomain)
+                .map(vehiclePersistenceMapper::toDomain)
                 .toList();
     }
 

@@ -1,7 +1,7 @@
-package com.example.rentalcars.features.vehicle.service;
+package com.example.rentalcars.features.vehicle.domain.port.inbound;
 
-import com.example.rentalcars.features.vehicle.controller.dto.VehicleRequest;
-import com.example.rentalcars.features.vehicle.domain.Vehicle;
+import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.dto.VehicleRequest;
+import com.example.rentalcars.features.vehicle.domain.model.Vehicle;
 import java.util.List;
 import java.util.UUID;
 

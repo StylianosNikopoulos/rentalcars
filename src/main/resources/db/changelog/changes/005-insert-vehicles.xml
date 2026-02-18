@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet author="admin" id="005-insert-vehicles">
+    <changeSet author="db" id="005-insert-vehicles">
         <insert tableName="vehicles">
             <column name="id" value="550e8400-e29b-41d4-a716-446655440001"/>
             <column name="brand" value="Toyota"/>

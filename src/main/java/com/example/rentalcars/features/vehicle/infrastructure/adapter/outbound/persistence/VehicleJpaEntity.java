@@ -1,7 +1,7 @@
-package com.example.rentalcars.features.vehicle.infrastructure.persistence;
+package com.example.rentalcars.features.vehicle.infrastructure.adapter.outbound.persistence;
 
-import com.example.rentalcars.features.vehicle.domain.FuelType;
-import com.example.rentalcars.features.vehicle.domain.VehicleStatus;
+import com.example.rentalcars.features.vehicle.domain.model.FuelType;
+import com.example.rentalcars.features.vehicle.domain.model.VehicleStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

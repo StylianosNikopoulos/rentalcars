@@ -1,6 +1,6 @@
-package com.example.rentalcars.features.vehicle.controller.dto;
+package com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.dto;
 
-import com.example.rentalcars.features.vehicle.domain.FuelType;
+import com.example.rentalcars.features.vehicle.domain.model.FuelType;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.math.BigDecimal;

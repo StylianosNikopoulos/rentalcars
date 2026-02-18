@@ -1,9 +1,9 @@
-package com.example.rentalcars.features.vehicle.controller;
+package com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest;
 
-import com.example.rentalcars.features.vehicle.controller.dto.VehicleRequest;
-import com.example.rentalcars.features.vehicle.controller.dto.VehicleResponse;
-import com.example.rentalcars.features.vehicle.infrastructure.mapper.VehicleMapper;
-import com.example.rentalcars.features.vehicle.service.VehicleService;
+import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.dto.VehicleRequest;
+import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.dto.VehicleResponse;
+import com.example.rentalcars.features.vehicle.domain.port.inbound.VehicleService;
+import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.mapper.VehicleRestMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,31 +19,31 @@ import java.util.UUID;
 public class VehicleController {
 
     private final VehicleService vehicleService;
-    private final VehicleMapper vehicleMapper;
+    private final VehicleRestMapper vehicleRestMapper;
 
     @GetMapping
     public ResponseEntity<List<VehicleResponse>> getAllVehicles(){
-        var vehicles = vehicleService.getAllVehicles().stream().map(vehicleMapper::toResponse).toList();
+        var vehicles = vehicleService.getAllVehicles().stream().map(vehicleRestMapper::toResponse).toList();
         return ResponseEntity.ok(vehicles);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<VehicleResponse> getVehicleById(@PathVariable UUID id){
-        return ResponseEntity.ok(vehicleMapper.toResponse(vehicleService.getVehicleById(id)));
+        return ResponseEntity.ok(vehicleRestMapper.toResponse(vehicleService.getVehicleById(id)));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<VehicleResponse> createVehicle(@Valid @RequestBody VehicleRequest request){
         var vehicle = vehicleService.createVehicle(request);
-        return new ResponseEntity<>(vehicleMapper.toResponse(vehicle), HttpStatus.CREATED);
+        return new ResponseEntity<>(vehicleRestMapper.toResponse(vehicle), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<VehicleResponse> updateVehicle(@PathVariable UUID id, @Valid @RequestBody VehicleRequest request) {
         var updatedVehicle = vehicleService.updateVehicle(id,request);
-        return ResponseEntity.ok(vehicleMapper.toResponse(updatedVehicle));
+        return ResponseEntity.ok(vehicleRestMapper.toResponse(updatedVehicle));
     }
 
     @DeleteMapping("/{id}")

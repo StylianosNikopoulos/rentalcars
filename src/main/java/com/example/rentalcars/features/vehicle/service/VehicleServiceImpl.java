@@ -1,11 +1,12 @@
 package com.example.rentalcars.features.vehicle.service;
 
 import com.example.rentalcars.core.exception.BusinessException;
-import com.example.rentalcars.features.vehicle.controller.dto.VehicleRequest;
-import com.example.rentalcars.features.vehicle.domain.LicensePlate;
-import com.example.rentalcars.features.vehicle.domain.Vehicle;
-import com.example.rentalcars.features.vehicle.domain.VehicleRepository;
-import com.example.rentalcars.features.vehicle.domain.VehicleStatus;
+import com.example.rentalcars.features.vehicle.domain.port.inbound.VehicleService;
+import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.dto.VehicleRequest;
+import com.example.rentalcars.features.vehicle.domain.model.LicensePlate;
+import com.example.rentalcars.features.vehicle.domain.model.Vehicle;
+import com.example.rentalcars.features.vehicle.domain.port.outbound.VehicleRepository;
+import com.example.rentalcars.features.vehicle.domain.model.VehicleStatus;
 import com.example.rentalcars.features.vehicle.domain.exception.VehicleNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
