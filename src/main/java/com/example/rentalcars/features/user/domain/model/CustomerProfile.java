@@ -1,4 +1,4 @@
-package com.example.rentalcars.features.user.domain;
+package com.example.rentalcars.features.user.domain.model;
 
 import lombok.Builder;
 import lombok.Getter;

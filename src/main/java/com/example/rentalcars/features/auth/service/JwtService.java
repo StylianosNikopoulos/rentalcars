@@ -1,6 +1,6 @@
 package com.example.rentalcars.features.auth.service;
 
-import com.example.rentalcars.features.user.domain.User;
+import com.example.rentalcars.features.user.domain.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;

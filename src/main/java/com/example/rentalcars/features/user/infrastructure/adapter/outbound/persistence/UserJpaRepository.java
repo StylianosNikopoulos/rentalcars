@@ -1,4 +1,4 @@
-package com.example.rentalcars.features.user.infrastructure.persistence;
+package com.example.rentalcars.features.user.infrastructure.adapter.outbound.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;

@@ -1,5 +1,6 @@
-package com.example.rentalcars.features.user.domain;
+package com.example.rentalcars.features.user.domain.port.outbound;
 
+import com.example.rentalcars.features.user.domain.model.User;
 import java.util.Optional;
 import java.util.UUID;
 

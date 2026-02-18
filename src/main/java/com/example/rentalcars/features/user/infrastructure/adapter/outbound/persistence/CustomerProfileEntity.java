@@ -1,4 +1,4 @@
-package com.example.rentalcars.features.user.infrastructure.persistence;
+package com.example.rentalcars.features.user.infrastructure.adapter.outbound.persistence;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +14,7 @@ public class CustomerProfileEntity {
     private UUID id;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", unique = true)
     private UserJpaEntity user;
 
     private String phoneNumber;

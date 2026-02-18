@@ -1,11 +1,13 @@
 package com.example.rentalcars.features.user.service;
 
 import com.example.rentalcars.core.exception.BusinessException;
-import com.example.rentalcars.features.user.controller.dto.UserRequest;
-import com.example.rentalcars.features.user.domain.Role;
-import com.example.rentalcars.features.user.domain.User;
-import com.example.rentalcars.features.user.domain.UserRepository;
+import com.example.rentalcars.features.user.domain.model.CustomerProfile;
+import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UserRequest;
+import com.example.rentalcars.features.user.domain.model.Role;
+import com.example.rentalcars.features.user.domain.model.User;
+import com.example.rentalcars.features.user.domain.port.outbound.UserRepository;
 import com.example.rentalcars.features.user.domain.exception.UserNotFoundException;
+import com.example.rentalcars.features.user.domain.port.inbound.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,7 +16,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -36,6 +38,13 @@ public class UserServiceImpl implements UserService{
             throw new BusinessException("Email already exists", "EMAIL_TAKEN");
         }
 
+        var profile = CustomerProfile.builder()
+                .id(UUID.randomUUID())
+                .phoneNumber(null)
+                .address(null)
+                .driverLicenseNumber(null)
+                .build();
+
         var user = User.builder()
                 .id(UUID.randomUUID())
                 .email(request.getEmail())
@@ -43,6 +52,7 @@ public class UserServiceImpl implements UserService{
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .role(Role.CUSTOMER)
+                .profile(profile)
                 .build();
 
         return userRepository.save(user);

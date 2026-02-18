@@ -1,8 +1,8 @@
-package com.example.rentalcars.features.user.controller;
+package com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest;
 
-import com.example.rentalcars.features.user.controller.dto.UserResponse;
-import com.example.rentalcars.features.user.infrastructure.mapper.UserMapper;
-import com.example.rentalcars.features.user.service.UserService;
+import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UserResponse;
+import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.mapper.UserMapper;
+import com.example.rentalcars.features.user.domain.port.inbound.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,6 @@
 package com.example.rentalcars.features.auth.infrastructure.security;
 
-import com.example.rentalcars.features.user.domain.User;
+import com.example.rentalcars.features.user.domain.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

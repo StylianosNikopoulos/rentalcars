@@ -1,6 +1,6 @@
 package com.example.rentalcars.features.auth.infrastructure.security;
 
-import com.example.rentalcars.features.user.domain.UserRepository;
+import com.example.rentalcars.features.user.domain.port.outbound.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
