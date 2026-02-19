@@ -1,9 +1,9 @@
-package com.example.rentalcars.features.auth.controller;
+package com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest;
 
-import com.example.rentalcars.features.auth.controller.dto.AuthResponse;
-import com.example.rentalcars.features.auth.controller.dto.LoginRequest;
-import com.example.rentalcars.features.auth.controller.dto.RegisterRequest;
-import com.example.rentalcars.features.auth.service.AuthService;
+import com.example.rentalcars.features.auth.domain.port.inbound.AuthUseCase;
+import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.AuthResponse;
+import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.LoginRequest;
+import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.RegisterRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthUseCase authService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {

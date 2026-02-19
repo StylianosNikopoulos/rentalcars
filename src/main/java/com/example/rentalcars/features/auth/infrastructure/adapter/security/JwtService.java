@@ -1,4 +1,4 @@
-package com.example.rentalcars.features.auth.service;
+package com.example.rentalcars.features.auth.infrastructure.adapter.security;
 
 import com.example.rentalcars.features.user.domain.model.User;
 import io.jsonwebtoken.Jwts;

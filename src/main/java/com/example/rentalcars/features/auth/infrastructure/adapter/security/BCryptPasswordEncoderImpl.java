@@ -1,4 +1,4 @@
-package com.example.rentalcars.features.auth.infrastructure.password;
+package com.example.rentalcars.features.auth.infrastructure.adapter.security;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

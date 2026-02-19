@@ -1,4 +1,4 @@
-package com.example.rentalcars.features.auth.controller.dto;
+package com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto;
 
 import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UserResponse;
 import lombok.Builder;

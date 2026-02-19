@@ -1,4 +1,4 @@
-package com.example.rentalcars.features.auth.controller.dto;
+package com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

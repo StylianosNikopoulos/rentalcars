@@ -1,4 +1,4 @@
-package com.example.rentalcars.features.auth.infrastructure.security;
+package com.example.rentalcars.features.auth.infrastructure.adapter.security;
 
 import com.example.rentalcars.features.user.domain.port.outbound.UserRepository;
 import lombok.RequiredArgsConstructor;

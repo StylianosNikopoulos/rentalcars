@@ -1,55 +1,53 @@
 package com.example.rentalcars.features.auth.service;
 
-import com.example.rentalcars.core.exception.BusinessException;
-import com.example.rentalcars.features.auth.controller.dto.AuthResponse;
-import com.example.rentalcars.features.auth.controller.dto.LoginRequest;
-import com.example.rentalcars.features.auth.controller.dto.RegisterRequest;
-import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UserRequest;
-import com.example.rentalcars.features.user.domain.port.outbound.UserRepository;
-import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.mapper.UserMapper;
+import com.example.rentalcars.features.auth.domain.port.inbound.AuthUseCase;
+import com.example.rentalcars.features.auth.domain.port.outbound.IdentityPort;
+import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.AuthResponse;
+import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.LoginRequest;
+import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.RegisterRequest;
+import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.mapper.UserRestMapper;
 import com.example.rentalcars.features.user.domain.port.inbound.UserService;
+import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthService implements AuthUseCase {
 
+    private final IdentityPort identityPort;
     private final UserService userService;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final UserMapper userMapper;
+    private final UserRestMapper userRestMapper;
 
-    public AuthResponse register(RegisterRequest request) {
-        var userRequest = new UserRequest();
-        userRequest.setEmail(request.getEmail());
-        userRequest.setPassword(request.getPassword());
-        userRequest.setFirstName(request.getFirstName());
-        userRequest.setLastName(request.getLastName());
-
-        var user = userService.register(userRequest);
-        var token = jwtService.generateToken(user);
+    @Override
+    public AuthResponse login(LoginRequest request) {
+        identityPort.authenticate(request.getEmail(), request.getPassword());
+        var user = userService.getUserByEmail(request.getEmail());
+        var token = identityPort.generateToken(request.getEmail());
 
         return AuthResponse.builder()
-                .token(token)
-                .user(userMapper.toResponse(user))
+                .token(token.getAccessToken())
+                .user(userRestMapper.toResponse(user))
                 .build();
     }
 
-    public AuthResponse login(LoginRequest request) {
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new BusinessException("Invalid credentials", "BAD_CREDENTIALS"));
+    @Override
+    @Transactional
+    public AuthResponse register(RegisterRequest request) {
+        var userRequest = UserRequest.builder()
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .build();
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-            throw new BusinessException("Invalid credentials", "BAD_CREDENTIALS");
-        }
+        var user = userService.register(userRequest);
+        var token = identityPort.generateToken(user.getEmail());
 
-        var token = jwtService.generateToken(user);
         return AuthResponse.builder()
-                .token(token)
-                .user(userMapper.toResponse(user))
+                .token(token.getAccessToken())
+                .user(userRestMapper.toResponse(user))
                 .build();
     }
 }
