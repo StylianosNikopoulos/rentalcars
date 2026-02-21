@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="db" id="007-insert-basic-users">
+        <insert tableName="users">
+            <column name="id" value="b67f8a07-a579-40d6-ab8e-e3301b815afd"/>
+            <column name="email" value="admin@example.com"/>
+            <column name="password_hash" value="$2a$10$jJKZm4O6lL6iuo3tQImbye6z826WVRVcxfZoBCkk3lawQ1Xzm1laS"/>
+            <column name="first_name" value="Admin"/>
+            <column name="last_name" value="Admin"/>
+            <column name="role" value="ADMIN"/>
+            <column name="created_at" valueDate="now()"/>
+        </insert>
+        <insert tableName="customer_profiles">
+            <column name="id" value="2e2d832d-2f01-4c12-9c31-15764d977457"/>
+            <column name="user_id" value="b67f8a07-a579-40d6-ab8e-e3301b815afd"/>
+            <column name="phone_number" value="6900000000"/>
+            <column name="address" value="Admin address"/>
+            <column name="driver_license_number" value="ADMIN-001"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="1dafccfc-aaac-4553-8302-ff54c645b186"/>
+            <column name="email" value="customer@example.com"/>
+            <column name="password_hash" value="$2a$10$jJKZm4O6lL6iuo3tQImbye6z826WVRVcxfZoBCkk3lawQ1Xzm1laS"/>
+            <column name="first_name" value="John"/>
+            <column name="last_name" value="Joe"/>
+            <column name="role" value="CUSTOMER"/>
+            <column name="created_at" valueDate="now()"/>
+        </insert>
+        <insert tableName="customer_profiles">
+            <column name="id" value="7f198c6b-28f0-4592-938b-d72938475612"/>
+            <column name="user_id" value="1dafccfc-aaac-4553-8302-ff54c645b186"/>
+            <column name="phone_number" value="6900000000"/>
+            <column name="address" value="Customer address"/>
+            <column name="driver_license_number" value="CUSTOMER-001"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

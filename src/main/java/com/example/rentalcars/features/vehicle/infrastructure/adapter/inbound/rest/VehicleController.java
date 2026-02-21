@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
@@ -33,21 +32,18 @@ public class VehicleController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<VehicleResponse> createVehicle(@Valid @RequestBody VehicleRequest request){
         var vehicle = vehicleService.createVehicle(request);
         return new ResponseEntity<>(vehicleRestMapper.toResponse(vehicle), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<VehicleResponse> updateVehicle(@PathVariable UUID id, @Valid @RequestBody VehicleRequest request) {
         var updatedVehicle = vehicleService.updateVehicle(id,request);
         return ResponseEntity.ok(vehicleRestMapper.toResponse(updatedVehicle));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteVehicle(@PathVariable UUID id) {
         vehicleService.deleteVehicle(id);
         return ResponseEntity.noContent().build();

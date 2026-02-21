@@ -8,7 +8,6 @@ import com.example.rentalcars.features.reservation.infrastructure.adapter.inboun
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
@@ -28,13 +27,12 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReservationResponse> getMyReservation(@PathVariable UUID id){
+    public ResponseEntity<ReservationResponse> getReservation(@PathVariable UUID id){
         Reservation reservation = reservationService.getReservationById(id);
         return ResponseEntity.ok(restMapper.toResponse(reservation));
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN','CUSTOMER')")
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest request){
         Reservation reservation = restMapper.toDomain(request);
         Reservation created = reservationService.createReservation(reservation);
@@ -43,7 +41,6 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ADMIN')")
     public void cancel(@PathVariable UUID id) {
         reservationService.cancelReservation(id);
     }

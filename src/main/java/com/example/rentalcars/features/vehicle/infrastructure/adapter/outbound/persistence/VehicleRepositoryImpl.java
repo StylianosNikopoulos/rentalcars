@@ -28,6 +28,11 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     }
 
     @Override
+    public Optional<Vehicle> findByIdWithLock(UUID id) {
+        return jpaRepository.findByIdWithLock(id).map(vehiclePersistenceMapper::toDomain);
+    }
+
+    @Override
     public List<Vehicle> findAllVehicles() {
         return jpaRepository.findAll().stream()
                 .map(vehiclePersistenceMapper::toDomain)
