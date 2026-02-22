@@ -62,7 +62,7 @@ public class ReservationServiceImpl implements ReservationService {
         var auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (!isAdmin(auth) && !userId.toString().equals(auth.getName())) {
-            throw new AccessDeniedException("Cannot view reservations of another user");
+            throw new AccessDeniedException("You don't have permission");
         }
 
         return reservationRepository.findByUserId(userId);
@@ -93,7 +93,7 @@ public class ReservationServiceImpl implements ReservationService {
     private void validateOwnership(Reservation reservation) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         if (!isAdmin(auth) && !reservation.getUserId().toString().equals(auth.getName())) {
-            throw new AccessDeniedException("You don't have permission to access this reservation");
+            throw new AccessDeniedException("You don't have permission");
         }
     }
 

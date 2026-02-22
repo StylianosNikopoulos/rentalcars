@@ -10,6 +10,9 @@ import com.example.rentalcars.features.user.domain.exception.UserNotFoundExcepti
 import com.example.rentalcars.features.user.domain.port.inbound.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
@@ -23,12 +26,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(UUID id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        validateOwnership(user);
+        return user;
     }
 
     @Override
     public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+        validateOwnership(user);
+        return user;
+    }
+
+    @Override
+    public User getInternalUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
     }
 
     @Override
@@ -56,5 +69,23 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         return userRepository.save(user);
+    }
+
+    // Helper method for security
+    private void validateOwnership(User user) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (isAdmin(auth)) {
+            return;
+        }
+
+        if (!user.getEmail().equals(auth.getName())) {
+            throw new AccessDeniedException("You do not have permission to access this user's data");
+        }
+    }
+
+    // Helper method for admin check
+    private boolean isAdmin(Authentication auth) {
+        return auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 }

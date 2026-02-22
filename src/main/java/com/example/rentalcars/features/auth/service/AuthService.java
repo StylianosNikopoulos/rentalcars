@@ -23,7 +23,7 @@ public class AuthService implements AuthUseCase {
     @Override
     public AuthResponse login(LoginRequest request) {
         identityPort.authenticate(request.getEmail(), request.getPassword());
-        var user = userService.getUserByEmail(request.getEmail());
+        var user = userService.getInternalUserByEmail(request.getEmail());
         var token = identityPort.generateToken(request.getEmail());
 
         return AuthResponse.builder()

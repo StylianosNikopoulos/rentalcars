@@ -29,7 +29,6 @@ public class VehicleServiceImpl implements VehicleService {
         }
 
         var vehicle = Vehicle.builder()
-                .id(UUID.randomUUID())
                 .brand(request.getBrand())
                 .model(request.getModel())
                 .year(request.getYear())

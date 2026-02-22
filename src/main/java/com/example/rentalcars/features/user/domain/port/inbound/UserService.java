@@ -7,5 +7,6 @@ import java.util.UUID;
 public interface UserService {
     User getUserById(UUID id);
     User getUserByEmail(String email);
+    User getInternalUserByEmail(String email);
     User register(UserRequest request);
 }

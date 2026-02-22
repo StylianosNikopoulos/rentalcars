@@ -22,7 +22,7 @@ public class IdentityAdapter implements IdentityPort {
 
     @Override
     public AuthenticationToken generateToken(String email) {
-        var user = userService.getUserByEmail(email);
+        var user = userService.getInternalUserByEmail(email);
         String token = jwtService.generateToken(user);
         return new AuthenticationToken(token, user.getEmail(), user.getRole().name());
     }
