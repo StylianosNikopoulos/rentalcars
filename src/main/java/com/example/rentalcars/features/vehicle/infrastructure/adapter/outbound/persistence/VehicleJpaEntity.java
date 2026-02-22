@@ -15,6 +15,7 @@ import java.util.UUID;
 @Setter
 public class VehicleJpaEntity {
     @Id
+    @GeneratedValue(strategy =  GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)
@@ -35,6 +36,7 @@ public class VehicleJpaEntity {
     @Enumerated(EnumType.STRING)
     private VehicleStatus status;
 
+    @Column(nullable = false)
     private BigDecimal dailyPrice;
 
     @Version

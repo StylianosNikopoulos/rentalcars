@@ -6,6 +6,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel =  "spring")
 public interface ReservationPersistenceMapper {
+    @Mapping(target = "userId", source = "user.id")
     Reservation toDomain(ReservationJpaEntity entity);
 
     @Mapping(target = "user", ignore = true)

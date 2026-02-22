@@ -1,5 +1,6 @@
 package com.example.rentalcars.features.reservation.domain.model;
 
+import com.example.rentalcars.features.reservation.domain.exception.InvalidReservationDatesException;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,5 +32,15 @@ public class Reservation {
 
     public void cancel() {
         this.status = ReservationStatus.CANCELLED;
+    }
+
+    public void calculateTotal(BigDecimal dailyPrice) {
+        if (!isValid()) {
+            throw new InvalidReservationDatesException();
+        }
+
+        long days = ChronoUnit.DAYS.between(startDate, endDate);
+        if (days <= 0) days = 1;  // At least 1 day
+        this.totalAmount = dailyPrice.multiply(BigDecimal.valueOf(days));
     }
 }

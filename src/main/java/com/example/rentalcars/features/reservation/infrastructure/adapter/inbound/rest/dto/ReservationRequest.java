@@ -1,10 +1,27 @@
 package com.example.rentalcars.features.reservation.infrastructure.adapter.inbound.rest.dto;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record ReservationRequest(
-        UUID vehicleId,
-        LocalDateTime startDate,
-        LocalDateTime endDate
-) {}
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ReservationRequest {
+    @NotNull
+    private UUID vehicleId;
+
+    @NotNull
+    @Future(message = "Start date must be in the future")
+    private LocalDateTime startDate;
+
+    @NotNull
+    @Future(message = "End date must be in the future")
+    private LocalDateTime endDate;
+}

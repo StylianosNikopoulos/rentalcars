@@ -5,6 +5,7 @@ import com.example.rentalcars.features.reservation.domain.port.inbound.Reservati
 import com.example.rentalcars.features.reservation.infrastructure.adapter.inbound.rest.dto.ReservationRequest;
 import com.example.rentalcars.features.reservation.infrastructure.adapter.inbound.rest.dto.ReservationResponse;
 import com.example.rentalcars.features.reservation.infrastructure.adapter.inbound.rest.mapper.ReservationRestMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest request){
+    public ResponseEntity<ReservationResponse> create(@Valid @RequestBody ReservationRequest request){
         Reservation reservation = restMapper.toDomain(request);
         Reservation created = reservationService.createReservation(reservation);
         return new ResponseEntity<>(restMapper.toResponse(created), HttpStatus.CREATED);

@@ -2,6 +2,7 @@ package com.example.rentalcars.features.reservation.infrastructure.adapter.outbo
 
 import com.example.rentalcars.features.reservation.domain.model.Reservation;
 import com.example.rentalcars.features.reservation.domain.port.outbound.ReservationRepository;
+import com.example.rentalcars.features.user.infrastructure.adapter.outbound.persistence.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
@@ -16,10 +17,14 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final ReservationJpaRepository jpaRepository;
     private final ReservationPersistenceMapper mapper;
+    private final UserJpaRepository userJpaRepository;
 
     @Override
     public Reservation save(Reservation reservation) {
         var entity = mapper.toEntity(reservation);
+        if (reservation.getUserId() != null) {
+            entity.setUser(userJpaRepository.getReferenceById(reservation.getUserId()));
+        }
         var saved = jpaRepository.save(entity);
         return mapper.toDomain(saved);
     }

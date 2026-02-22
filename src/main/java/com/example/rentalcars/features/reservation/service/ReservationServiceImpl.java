@@ -7,8 +7,10 @@ import com.example.rentalcars.features.reservation.domain.model.Reservation;
 import com.example.rentalcars.features.reservation.domain.model.ReservationStatus;
 import com.example.rentalcars.features.reservation.domain.port.inbound.ReservationService;
 import com.example.rentalcars.features.reservation.domain.port.outbound.ReservationRepository;
+import com.example.rentalcars.features.user.domain.exception.UserNotFoundException;
+import com.example.rentalcars.features.user.domain.port.outbound.UserRepository;
 import com.example.rentalcars.features.vehicle.domain.exception.VehicleNotFoundException;
-import com.example.rentalcars.features.vehicle.infrastructure.adapter.outbound.persistence.VehicleJpaRepository;
+import com.example.rentalcars.features.vehicle.domain.port.outbound.VehicleRepository;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +25,8 @@ import java.util.UUID;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final VehicleJpaRepository vehicleRepository;
+    private final VehicleRepository vehicleRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -31,26 +34,24 @@ public class ReservationServiceImpl implements ReservationService {
         var auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (!isAdmin(auth)) {
-            reservation.setUserId(UUID.fromString(auth.getName()));
+            String email = auth.getName();
+            var user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UserNotFoundException(email));
+            reservation.setUserId(user.getId());
         }
 
         if (!reservation.isValid()) {
             throw new InvalidReservationDatesException();
         }
 
-        vehicleRepository.findByIdWithLock(reservation.getVehicleId())
+        var vehicle = vehicleRepository.findByIdWithLock(reservation.getVehicleId())
                 .orElseThrow(() -> new VehicleNotFoundException(reservation.getVehicleId()));
 
-        boolean isOccupied = reservationRepository.existsOverlap(
-                reservation.getVehicleId(),
-                reservation.getStartDate(),
-                reservation.getEndDate()
-        );
-
-        if (isOccupied) {
+        if (reservationRepository.existsOverlap(reservation.getVehicleId(), reservation.getStartDate(), reservation.getEndDate())) {
             throw new CarNotAvailableException();
         }
 
+        reservation.calculateTotal(vehicle.getDailyPrice());
         reservation.setStatus(ReservationStatus.PENDING);
         return reservationRepository.save(reservation);
     }
