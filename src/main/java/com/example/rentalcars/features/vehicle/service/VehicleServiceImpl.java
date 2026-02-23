@@ -60,6 +60,7 @@ public class VehicleServiceImpl implements VehicleService {
 
         Vehicle updatedVehicle = Vehicle.builder()
                 .id(existingVehicle.getId())
+                .version(existingVehicle.getVersion())
                 .brand(request.getBrand())
                 .model(request.getModel())
                 .year(request.getYear())

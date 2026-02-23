@@ -20,4 +20,5 @@ public class Vehicle {
     private LicensePlate licensePlate;
     private VehicleStatus status;
     private BigDecimal dailyPrice;
+    private Long version;
 }

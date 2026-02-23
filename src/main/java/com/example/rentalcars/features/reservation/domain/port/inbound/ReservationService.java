@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ReservationService {
-    List<Reservation> getMyReservations(UUID userId);
+    List<Reservation> getMyReservations();
     Reservation getReservationById(UUID id);
     Reservation createReservation(Reservation reservation);
     void cancelReservation(UUID reservationId);

@@ -8,7 +8,6 @@ import org.mapstruct.Mapping;
 public interface VehiclePersistenceMapper {
 
     @Mapping(target = "licensePlate", source = "licensePlate.value")
-    @Mapping(target = "version", ignore = true)
     VehicleJpaEntity toEntity(Vehicle domain);
 
     @Mapping(target = "licensePlate", expression = "java(new com.example.rentalcars.features.vehicle.domain.model.LicensePlate(entity.getLicensePlate()))")

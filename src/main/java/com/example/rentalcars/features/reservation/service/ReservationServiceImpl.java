@@ -58,14 +58,14 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Reservation> getMyReservations(UUID userId) {
+    public List<Reservation> getMyReservations() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
 
-        if (!isAdmin(auth) && !userId.toString().equals(auth.getName())) {
-            throw new AccessDeniedException("You don't have permission");
-        }
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
 
-        return reservationRepository.findByUserId(userId);
+        return reservationRepository.findByUserId(user.getId());
     }
 
     @Override
@@ -92,8 +92,17 @@ public class ReservationServiceImpl implements ReservationService {
     // Helper method for security
     private void validateOwnership(Reservation reservation) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!isAdmin(auth) && !reservation.getUserId().toString().equals(auth.getName())) {
-            throw new AccessDeniedException("You don't have permission");
+
+        if (isAdmin(auth)) {
+            return;
+        }
+
+        String email = auth.getName();
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+
+        if (!reservation.getUserId().equals(user.getId())) {
+            throw new AccessDeniedException("You don't have permission to do this action");
         }
     }
 

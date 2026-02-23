@@ -21,9 +21,9 @@ public class ReservationController {
     private final ReservationRestMapper restMapper;
     private final ReservationService reservationService;
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ReservationResponse>> getMyReservations(@PathVariable UUID userId){
-        List<Reservation> reservations = reservationService.getMyReservations(userId);
+    @GetMapping("/me")
+    public ResponseEntity<List<ReservationResponse>> getMyReservations(){
+        List<Reservation> reservations = reservationService.getMyReservations();
         return ResponseEntity.ok(restMapper.toResponseList(reservations));
     }
 
