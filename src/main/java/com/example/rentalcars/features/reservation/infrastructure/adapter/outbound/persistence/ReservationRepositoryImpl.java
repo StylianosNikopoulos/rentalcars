@@ -1,11 +1,11 @@
 package com.example.rentalcars.features.reservation.infrastructure.adapter.outbound.persistence;
 
+import com.example.rentalcars.core.valueobject.DateRange;
 import com.example.rentalcars.features.reservation.domain.model.Reservation;
 import com.example.rentalcars.features.reservation.domain.port.outbound.ReservationRepository;
 import com.example.rentalcars.features.user.infrastructure.adapter.outbound.persistence.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,7 +42,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public boolean existsOverlap(UUID vehicleId, LocalDateTime start, LocalDateTime end) {
-        return jpaRepository.existsOverlappingReservations(vehicleId, start, end);
+    public boolean existsOverlap(UUID vehicleId, DateRange period) {
+        return jpaRepository.existsOverlappingReservations(vehicleId, period.start(), period.end());
     }
 }

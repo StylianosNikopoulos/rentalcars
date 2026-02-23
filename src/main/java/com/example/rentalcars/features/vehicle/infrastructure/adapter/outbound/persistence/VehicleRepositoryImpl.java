@@ -4,6 +4,7 @@ import com.example.rentalcars.features.vehicle.domain.model.Vehicle;
 import com.example.rentalcars.features.vehicle.domain.port.outbound.VehicleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,5 +48,14 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     @Override
     public void deleteById(UUID id) {
         jpaRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Vehicle> findAvailableVehicles(LocalDateTime start, LocalDateTime end) {
+        List<VehicleJpaEntity> entities = jpaRepository.findAvailableVehicles(start, end);
+
+        return entities.stream()
+                .map(vehiclePersistenceMapper::toDomain)
+                .toList();
     }
 }

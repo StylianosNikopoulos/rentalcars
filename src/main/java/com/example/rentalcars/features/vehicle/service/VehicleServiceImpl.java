@@ -1,6 +1,7 @@
 package com.example.rentalcars.features.vehicle.service;
 
 import com.example.rentalcars.core.exception.BusinessException;
+import com.example.rentalcars.core.valueobject.DateRange;
 import com.example.rentalcars.features.vehicle.domain.port.inbound.VehicleService;
 import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.dto.VehicleRequest;
 import com.example.rentalcars.features.vehicle.domain.model.LicensePlate;
@@ -11,6 +12,7 @@ import com.example.rentalcars.features.vehicle.domain.exception.VehicleNotFoundE
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -76,9 +78,15 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     @Transactional
     public void deleteVehicle(UUID id) {
-        if (!vehicleRepository.findById(id).isPresent()) {
+        if (vehicleRepository.findById(id).isEmpty()) {
             throw new VehicleNotFoundException(id);
         }
         vehicleRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Vehicle> getAvailableVehicles(LocalDateTime start, LocalDateTime end) {
+        new DateRange(start, end);
+        return vehicleRepository.findAvailableVehicles(start, end);
     }
 }

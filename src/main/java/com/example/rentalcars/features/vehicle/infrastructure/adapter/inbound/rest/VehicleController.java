@@ -1,14 +1,17 @@
 package com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest;
 
+import com.example.rentalcars.features.vehicle.domain.model.Vehicle;
 import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.dto.VehicleRequest;
 import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.dto.VehicleResponse;
 import com.example.rentalcars.features.vehicle.domain.port.inbound.VehicleService;
 import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.mapper.VehicleRestMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,5 +50,13 @@ public class VehicleController {
     public ResponseEntity<Void> deleteVehicle(@PathVariable UUID id) {
         vehicleService.deleteVehicle(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<VehicleResponse>> getAvailableVehicles(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+                                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+
+        List<Vehicle> available = vehicleService.getAvailableVehicles(start, end);
+        return ResponseEntity.ok(vehicleRestMapper.toResponseList(available));
     }
 }

@@ -1,6 +1,7 @@
 package com.example.rentalcars.features.vehicle.domain.port.outbound;
 
 import com.example.rentalcars.features.vehicle.domain.model.Vehicle;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,4 +13,5 @@ public interface VehicleRepository {
     List<Vehicle> findAllVehicles();
     boolean existsByLicensePlate(String licensePlate);
     void deleteById(UUID id);
+    List<Vehicle> findAvailableVehicles(LocalDateTime start, LocalDateTime end);
 }

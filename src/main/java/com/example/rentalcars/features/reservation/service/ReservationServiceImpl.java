@@ -1,5 +1,6 @@
 package com.example.rentalcars.features.reservation.service;
 
+import com.example.rentalcars.core.valueobject.Money;
 import com.example.rentalcars.features.reservation.domain.exception.CarNotAvailableException;
 import com.example.rentalcars.features.reservation.domain.exception.InvalidReservationDatesException;
 import com.example.rentalcars.features.reservation.domain.exception.ReservationNotFoundException;
@@ -40,18 +41,17 @@ public class ReservationServiceImpl implements ReservationService {
             reservation.setUserId(user.getId());
         }
 
-        if (!reservation.isValid()) {
+        if (reservation.getPeriod() == null) {
             throw new InvalidReservationDatesException();
         }
-
         var vehicle = vehicleRepository.findByIdWithLock(reservation.getVehicleId())
                 .orElseThrow(() -> new VehicleNotFoundException(reservation.getVehicleId()));
 
-        if (reservationRepository.existsOverlap(reservation.getVehicleId(), reservation.getStartDate(), reservation.getEndDate())) {
+        if (reservationRepository.existsOverlap(reservation.getVehicleId(), reservation.getPeriod())) {
             throw new CarNotAvailableException();
         }
 
-        reservation.calculateTotal(vehicle.getDailyPrice());
+        reservation.calculateTotal(new Money(vehicle.getDailyPrice(),"EUR"));
         reservation.setStatus(ReservationStatus.PENDING);
         return reservationRepository.save(reservation);
     }
@@ -85,7 +85,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .orElseThrow(() -> new ReservationNotFoundException(reservationId));
 
         validateOwnership(reservation);
-        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservation.cancel();
         reservationRepository.save(reservation);
     }
 
