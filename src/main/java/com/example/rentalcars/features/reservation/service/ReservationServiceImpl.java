@@ -1,6 +1,9 @@
 package com.example.rentalcars.features.reservation.service;
 
 import com.example.rentalcars.core.valueobject.Money;
+import com.example.rentalcars.features.payment.domain.exception.PaymentNotFoundException;
+import com.example.rentalcars.features.payment.domain.port.inbound.PaymentService;
+import com.example.rentalcars.features.payment.domain.port.outbound.PaymentRepository;
 import com.example.rentalcars.features.reservation.domain.exception.CarNotAvailableException;
 import com.example.rentalcars.features.reservation.domain.exception.InvalidReservationDatesException;
 import com.example.rentalcars.features.reservation.domain.exception.ReservationNotFoundException;
@@ -28,6 +31,8 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final VehicleRepository vehicleRepository;
     private final UserRepository userRepository;
+    private final PaymentRepository paymentRepository;
+    private final PaymentService paymentService;
 
     @Override
     @Transactional
@@ -86,6 +91,24 @@ public class ReservationServiceImpl implements ReservationService {
 
         validateOwnership(reservation);
         reservation.cancel();
+        reservationRepository.save(reservation);
+    }
+
+    @Override
+    @Transactional
+    public void cancelReservation(UUID reservationId, String userEmail) {
+        var reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ReservationNotFoundException(reservationId));
+
+        if (reservation.getStatus() == ReservationStatus.CONFIRMED) {
+
+            var payment = paymentRepository.findByReservationId(reservationId)
+                    .orElseThrow(() -> new PaymentNotFoundException("Πληρωμή μη διαθέσιμη"));
+
+            paymentService.refundPayment(payment.getStripePaymentId());
+        }
+
+        reservation.setStatus(ReservationStatus.CANCELLED);
         reservationRepository.save(reservation);
     }
 

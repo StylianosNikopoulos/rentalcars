@@ -9,4 +9,5 @@ public interface ReservationService {
     Reservation getReservationById(UUID id);
     Reservation createReservation(Reservation reservation);
     void cancelReservation(UUID reservationId);
+    void cancelReservation(UUID reservationId, String userEmail);
 }
