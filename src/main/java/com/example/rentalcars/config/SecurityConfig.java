@@ -35,8 +35,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/payments/webhook").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/vehicles/**").permitAll()
                         .requestMatchers("/api/v1/vehicles/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/payments/initiate/**").authenticated()
                         .requestMatchers("/api/v1/users/**").authenticated()
                         .requestMatchers("/api/v1/reservations/**").authenticated()
                         .anyRequest().authenticated()
