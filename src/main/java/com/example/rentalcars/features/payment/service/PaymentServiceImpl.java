@@ -1,12 +1,14 @@
 package com.example.rentalcars.features.payment.service;
 
-import com.example.rentalcars.core.exception.StripePaymentException;
+import com.example.rentalcars.features.payment.domain.exception.InvalidPaymentStatusException;
+import com.example.rentalcars.features.payment.domain.exception.StripePaymentException;
 import com.example.rentalcars.features.payment.domain.exception.PaymentNotFoundException;
 import com.example.rentalcars.features.payment.domain.model.Payment;
 import com.example.rentalcars.features.payment.domain.model.PaymentStatus;
 import com.example.rentalcars.features.payment.domain.port.inbound.PaymentService;
 import com.example.rentalcars.features.payment.domain.port.outbound.PaymentGateway;
 import com.example.rentalcars.features.payment.domain.port.outbound.PaymentRepository;
+import com.example.rentalcars.features.payment.domain.model.PaymentIntentResponse;
 import com.example.rentalcars.features.reservation.domain.exception.ReservationNotFoundException;
 import com.example.rentalcars.features.reservation.domain.model.ReservationStatus;
 import com.example.rentalcars.features.reservation.domain.port.outbound.ReservationRepository;
@@ -31,7 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
         var reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException(reservationId));
 
-        String clientSecret = paymentGateway.createPaymentIntent(
+        PaymentIntentResponse stripeResponse = paymentGateway.createPaymentIntent(
                 reservation.getTotalAmount(),
                 reservationId.toString()
         );
@@ -40,12 +42,12 @@ public class PaymentServiceImpl implements PaymentService {
                 .id(UUID.randomUUID())
                 .reservationId(reservationId)
                 .amount(reservation.getTotalAmount())
-                .stripePaymentId(clientSecret)
+                .stripePaymentId(stripeResponse.getIntentId())
                 .status(PaymentStatus.PENDING)
                 .build();
 
         paymentRepository.save(payment);
-        return clientSecret;
+        return stripeResponse.getClientSecret();
     }
 
     @Override
@@ -68,16 +70,19 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public void refundPayment(String stripePaymentId) {
+        var payment = paymentRepository.findByStripeId(stripePaymentId)
+                .orElseThrow(() -> new PaymentNotFoundException(stripePaymentId));
+
+        if (payment.getStatus() != PaymentStatus.COMPLETED) {
+            throw new InvalidPaymentStatusException("Refund can only be processed for COMPLETED payments. Current status: " + payment.getStatus());
+        }
+
         try {
             RefundCreateParams params = RefundCreateParams.builder()
                     .setPaymentIntent(stripePaymentId)
                     .build();
 
             Refund.create(params);
-
-            var payment = paymentRepository.findByStripeId(stripePaymentId)
-                    .orElseThrow(() -> new PaymentNotFoundException(stripePaymentId));
-
             payment.setStatus(PaymentStatus.REFUNDED);
             paymentRepository.save(payment);
 

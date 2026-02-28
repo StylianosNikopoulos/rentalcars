@@ -40,9 +40,9 @@ public class ReservationController {
         return new ResponseEntity<>(restMapper.toResponse(created), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancel(@PathVariable UUID id) {
-        reservationService.cancelReservation(id);
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<Void> cancel(@PathVariable UUID id, java.security.Principal principal) {
+        reservationService.cancelReservation(id, principal.getName());
+        return ResponseEntity.noContent().build();
     }
 }

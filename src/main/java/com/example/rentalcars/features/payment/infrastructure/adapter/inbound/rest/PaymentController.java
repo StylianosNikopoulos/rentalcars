@@ -4,6 +4,7 @@ import com.example.rentalcars.features.payment.domain.port.inbound.PaymentServic
 import com.example.rentalcars.features.payment.infrastructure.adapter.inbound.rest.dto.PaymentResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,5 +28,12 @@ public class PaymentController {
                 .build();
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{paymentId}/refund")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> handleManualRefund(@PathVariable String paymentId) {
+        paymentService.refundPayment(paymentId);
+        return ResponseEntity.ok("Refund processed successfully");
     }
 }

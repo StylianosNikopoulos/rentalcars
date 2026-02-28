@@ -1,4 +1,4 @@
-package com.example.rentalcars.core.exception;
+package com.example.rentalcars.features.payment.domain.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

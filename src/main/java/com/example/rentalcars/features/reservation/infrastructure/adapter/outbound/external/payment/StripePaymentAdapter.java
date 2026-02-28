@@ -1,7 +1,9 @@
 package com.example.rentalcars.features.reservation.infrastructure.adapter.outbound.external.payment;
 
 import com.example.rentalcars.core.valueobject.Money;
+import com.example.rentalcars.features.payment.domain.exception.StripePaymentException;
 import com.example.rentalcars.features.payment.domain.port.outbound.PaymentGateway;
+import com.example.rentalcars.features.payment.domain.model.PaymentIntentResponse;
 import com.stripe.Stripe;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
@@ -21,7 +23,7 @@ public class StripePaymentAdapter implements PaymentGateway {
     }
 
     @Override
-    public String createPaymentIntent(Money amount, String reservationId) {
+    public PaymentIntentResponse createPaymentIntent(Money amount, String reservationId) {
         try {
             long amountInCents = amount.amount().multiply(new java.math.BigDecimal(100)).longValue();
 
@@ -32,9 +34,9 @@ public class StripePaymentAdapter implements PaymentGateway {
                     .build();
 
             PaymentIntent intent = PaymentIntent.create(params);
-            return intent.getClientSecret();
+            return new PaymentIntentResponse(intent.getId(), intent.getClientSecret());
         } catch (Exception e) {
-            throw new RuntimeException("Stripe payment failed: " + e.getMessage());
+            throw new StripePaymentException("Stripe payment failed: " + e.getMessage());
         }
     }
 }

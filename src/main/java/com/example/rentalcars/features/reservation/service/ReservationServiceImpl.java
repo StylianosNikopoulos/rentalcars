@@ -85,17 +85,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public void cancelReservation(UUID reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new ReservationNotFoundException(reservationId));
-
-        validateOwnership(reservation);
-        reservation.cancel();
-        reservationRepository.save(reservation);
-    }
-
-    @Override
-    @Transactional
     public void cancelReservation(UUID reservationId, String userEmail) {
         var reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException(reservationId));
@@ -103,7 +92,7 @@ public class ReservationServiceImpl implements ReservationService {
         if (reservation.getStatus() == ReservationStatus.CONFIRMED) {
 
             var payment = paymentRepository.findByReservationId(reservationId)
-                    .orElseThrow(() -> new PaymentNotFoundException("Πληρωμή μη διαθέσιμη"));
+                    .orElseThrow(() -> new PaymentNotFoundException("Payment not found"));
 
             paymentService.refundPayment(payment.getStripePaymentId());
         }
