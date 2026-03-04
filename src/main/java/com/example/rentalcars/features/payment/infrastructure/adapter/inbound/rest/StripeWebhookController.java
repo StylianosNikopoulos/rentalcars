@@ -35,6 +35,12 @@ public class StripeWebhookController {
         if ("payment_intent.succeeded".equals(event.getType())) {
             PaymentIntent intent = (PaymentIntent) event.getDataObjectDeserializer().getObject().get();
             paymentService.processSuccessfulPayment(intent.getId());
+        } else if ("payment_intent.payment_failed".equals(event.getType())){
+            PaymentIntent intent = (PaymentIntent) event.getDataObjectDeserializer().getObject().get();
+            paymentService.processFailedPayment(intent.getId());
+
+            String errorMessage = intent.getLastPaymentError() != null ? intent.getLastPaymentError().getMessage() : "Unknown error";
+            System.out.println("Payment failed for intent " + intent.getId() + ": " + errorMessage);
         }
 
         return ResponseEntity.ok().build();

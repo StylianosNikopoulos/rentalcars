@@ -90,4 +90,20 @@ public class PaymentServiceImpl implements PaymentService {
             throw new StripePaymentException("Error communication with Stripe for Refund: " + e.getUserMessage());
         }
     }
+
+    @Override
+    @Transactional
+    public void processFailedPayment(String stripePaymentId) {
+        var payment = paymentRepository.findByStripeId(stripePaymentId)
+                .orElseThrow(()-> new PaymentNotFoundException(stripePaymentId));
+
+        payment.setStatus(PaymentStatus.FAILED);
+        paymentRepository.save(payment);
+
+        var reservation = reservationRepository.findById(payment.getReservationId())
+                .orElseThrow(()-> new ReservationNotFoundException(payment.getReservationId()));
+
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservationRepository.save(reservation);
+    }
 }
