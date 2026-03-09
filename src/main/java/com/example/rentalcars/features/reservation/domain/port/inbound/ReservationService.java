@@ -6,7 +6,10 @@ import java.util.UUID;
 
 public interface ReservationService {
     List<Reservation> getMyReservations();
+    List<Reservation> getAllReservations();
     Reservation getReservationById(UUID id);
     Reservation createReservation(Reservation reservation);
     void cancelReservation(UUID reservationId, String userEmail);
+    void markAsActive(UUID reservationId);
+    void markAsCompleted(UUID reservationId);
 }

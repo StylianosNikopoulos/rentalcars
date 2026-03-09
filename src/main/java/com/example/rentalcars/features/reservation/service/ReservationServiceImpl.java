@@ -75,6 +75,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<Reservation> getAllReservations() {
+        return reservationRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Reservation getReservationById(UUID id) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationNotFoundException(id));
@@ -98,6 +104,34 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         reservation.setStatus(ReservationStatus.CANCELLED);
+        reservationRepository.save(reservation);
+    }
+
+    @Override
+    @Transactional
+    public void markAsActive(UUID reservationId) {
+        var reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ReservationNotFoundException(reservationId));
+
+        if (reservation.getStatus() != ReservationStatus.CONFIRMED){
+            throw new IllegalStateException("The reservation must be CONFIRMED for pick-up to take place. Current status: " + reservation.getStatus());
+        }
+
+        reservation.setStatus(ReservationStatus.ACTIVE);
+        reservationRepository.save(reservation);
+    }
+
+    @Override
+    @Transactional
+    public void markAsCompleted(UUID reservationId) {
+        var reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ReservationNotFoundException(reservationId));
+
+        if (reservation.getStatus() != ReservationStatus.ACTIVE) {
+            throw new IllegalStateException("\n" + "Only ACTIVE reservations can be completed.");
+        }
+
+        reservation.setStatus(ReservationStatus.COMPLETED);
         reservationRepository.save(reservation);
     }
 
