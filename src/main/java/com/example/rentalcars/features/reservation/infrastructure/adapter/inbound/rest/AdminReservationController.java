@@ -22,17 +22,16 @@ public class AdminReservationController {
     private final ReservationRestMapper restMapper;
 
     @PatchMapping("/{id}/pick-up")
-    public ResponseEntity<Void> pickUp(@PathVariable UUID id) {
-        reservationService.markAsActive(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<List<ReservationResponse>> pickUp(@PathVariable UUID id) {
+        List<Reservation> allReservations = reservationService.markAsActive(id);
+        return ResponseEntity.ok(restMapper.toResponseList(allReservations));
     }
 
     @PatchMapping("/{id}/return")
-    public ResponseEntity<Void> returnVehicle(@PathVariable UUID id) {
-        reservationService.markAsCompleted(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<List<ReservationResponse>> returnVehicle(@PathVariable UUID id) {
+        List<Reservation> allReservations = reservationService.markAsCompleted(id);
+        return ResponseEntity.ok(restMapper.toResponseList(allReservations));
     }
-
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getAllReservations() {
         List<Reservation> reservations = reservationService.getAllReservations();

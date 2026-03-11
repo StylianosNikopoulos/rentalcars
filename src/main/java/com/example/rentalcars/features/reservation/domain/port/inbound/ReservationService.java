@@ -10,6 +10,6 @@ public interface ReservationService {
     Reservation getReservationById(UUID id);
     Reservation createReservation(Reservation reservation);
     void cancelReservation(UUID reservationId, String userEmail);
-    void markAsActive(UUID reservationId);
-    void markAsCompleted(UUID reservationId);
+    List<Reservation> markAsActive(UUID reservationId);
+    List<Reservation> markAsCompleted(UUID reservationId);
 }

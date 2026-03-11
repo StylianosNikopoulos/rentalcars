@@ -109,7 +109,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public void markAsActive(UUID reservationId) {
+    public List<Reservation> markAsActive(UUID reservationId) {
         var reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException(reservationId));
 
@@ -119,20 +119,22 @@ public class ReservationServiceImpl implements ReservationService {
 
         reservation.setStatus(ReservationStatus.ACTIVE);
         reservationRepository.save(reservation);
+        return reservationRepository.findAll();
     }
 
     @Override
     @Transactional
-    public void markAsCompleted(UUID reservationId) {
+    public List<Reservation> markAsCompleted(UUID reservationId) {
         var reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException(reservationId));
 
         if (reservation.getStatus() != ReservationStatus.ACTIVE) {
-            throw new IllegalStateException("\n" + "Only ACTIVE reservations can be completed.");
+            throw new IllegalStateException("Only ACTIVE reservations can be completed.");
         }
 
         reservation.setStatus(ReservationStatus.COMPLETED);
         reservationRepository.save(reservation);
+        return reservationRepository.findAll();
     }
 
     // Helper method for security
