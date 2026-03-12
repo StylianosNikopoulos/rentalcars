@@ -1,9 +1,7 @@
 package com.example.rentalcars.features.reservation.service;
 
 import com.example.rentalcars.core.valueobject.Money;
-import com.example.rentalcars.features.payment.domain.exception.PaymentNotFoundException;
 import com.example.rentalcars.features.payment.domain.port.inbound.PaymentService;
-import com.example.rentalcars.features.payment.domain.port.outbound.PaymentRepository;
 import com.example.rentalcars.features.reservation.domain.exception.CarNotAvailableException;
 import com.example.rentalcars.features.reservation.domain.exception.InvalidReservationDatesException;
 import com.example.rentalcars.features.reservation.domain.exception.ReservationNotFoundException;
@@ -11,10 +9,9 @@ import com.example.rentalcars.features.reservation.domain.model.Reservation;
 import com.example.rentalcars.features.reservation.domain.model.ReservationStatus;
 import com.example.rentalcars.features.reservation.domain.port.inbound.ReservationService;
 import com.example.rentalcars.features.reservation.domain.port.outbound.ReservationRepository;
-import com.example.rentalcars.features.user.domain.exception.UserNotFoundException;
-import com.example.rentalcars.features.user.domain.port.outbound.UserRepository;
-import com.example.rentalcars.features.vehicle.domain.exception.VehicleNotFoundException;
-import com.example.rentalcars.features.vehicle.domain.port.outbound.VehicleRepository;
+import com.example.rentalcars.features.user.domain.port.inbound.UserService;
+import com.example.rentalcars.features.vehicle.domain.model.VehicleStatus;
+import com.example.rentalcars.features.vehicle.domain.port.inbound.VehicleService;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,10 +26,9 @@ import java.util.UUID;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final VehicleRepository vehicleRepository;
-    private final UserRepository userRepository;
-    private final PaymentRepository paymentRepository;
     private final PaymentService paymentService;
+    private final VehicleService vehicleService;
+    private final UserService userService;
 
     @Override
     @Transactional
@@ -40,17 +36,14 @@ public class ReservationServiceImpl implements ReservationService {
         var auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (!isAdmin(auth)) {
-            String email = auth.getName();
-            var user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new UserNotFoundException(email));
+            var user = userService.getUserByEmail(auth.getName());
             reservation.setUserId(user.getId());
         }
 
         if (reservation.getPeriod() == null) {
             throw new InvalidReservationDatesException();
         }
-        var vehicle = vehicleRepository.findByIdWithLock(reservation.getVehicleId())
-                .orElseThrow(() -> new VehicleNotFoundException(reservation.getVehicleId()));
+        var vehicle = vehicleService.getVehicleById(reservation.getVehicleId());
 
         if (reservationRepository.existsOverlap(reservation.getVehicleId(), reservation.getPeriod())) {
             throw new CarNotAvailableException();
@@ -65,11 +58,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional(readOnly = true)
     public List<Reservation> getMyReservations() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-
-        var user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(email));
-
+        var user = userService.getUserByEmail(auth.getName());
         return reservationRepository.findByUserId(user.getId());
     }
 
@@ -95,16 +84,16 @@ public class ReservationServiceImpl implements ReservationService {
         var reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException(reservationId));
 
+        validateOwnership(reservation);
+
         if (reservation.getStatus() == ReservationStatus.CONFIRMED) {
-
-            var payment = paymentRepository.findByReservationId(reservationId)
-                    .orElseThrow(() -> new PaymentNotFoundException("Payment not found"));
-
+            var payment = paymentService.getPaymentByReservationId(reservationId);
             paymentService.refundPayment(payment.getStripePaymentId());
         }
 
         reservation.setStatus(ReservationStatus.CANCELLED);
         reservationRepository.save(reservation);
+        vehicleService.updateVehicleStatus(reservation.getVehicleId(), VehicleStatus.AVAILABLE);
     }
 
     @Override
@@ -119,6 +108,8 @@ public class ReservationServiceImpl implements ReservationService {
 
         reservation.setStatus(ReservationStatus.ACTIVE);
         reservationRepository.save(reservation);
+
+        vehicleService.updateVehicleStatus(reservation.getVehicleId(), VehicleStatus.RENTED);
         return reservationRepository.findAll();
     }
 
@@ -134,6 +125,8 @@ public class ReservationServiceImpl implements ReservationService {
 
         reservation.setStatus(ReservationStatus.COMPLETED);
         reservationRepository.save(reservation);
+
+        vehicleService.updateVehicleStatus(reservation.getVehicleId(), VehicleStatus.AVAILABLE);
         return reservationRepository.findAll();
     }
 
@@ -145,9 +138,7 @@ public class ReservationServiceImpl implements ReservationService {
             return;
         }
 
-        String email = auth.getName();
-        var user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(email));
+        var user = userService.getUserByEmail(auth.getName());
 
         if (!reservation.getUserId().equals(user.getId())) {
             throw new AccessDeniedException("You don't have permission to do this action");

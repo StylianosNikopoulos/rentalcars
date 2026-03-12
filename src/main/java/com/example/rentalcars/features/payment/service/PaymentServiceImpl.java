@@ -106,4 +106,10 @@ public class PaymentServiceImpl implements PaymentService {
         reservation.setStatus(ReservationStatus.CANCELLED);
         reservationRepository.save(reservation);
     }
+
+    @Override
+    public Payment getPaymentByReservationId(UUID reservationId) {
+        return paymentRepository.findByReservationId(reservationId)
+                .orElseThrow(() -> new PaymentNotFoundException("Payment not found for reservation: " + reservationId));
+    }
 }
