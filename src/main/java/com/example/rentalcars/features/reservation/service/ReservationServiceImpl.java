@@ -98,6 +98,24 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
+    public void confirmReservation(UUID reservationId) {
+        var reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ReservationNotFoundException(reservationId));
+        reservation.setStatus(ReservationStatus.CONFIRMED);
+        reservationRepository.save(reservation);
+    }
+
+    @Override
+    @Transactional
+    public void cancelReservationInternal(UUID reservationId) {
+        var reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ReservationNotFoundException(reservationId));
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservationRepository.save(reservation);
+    }
+
+    @Override
+    @Transactional
     public List<Reservation> markAsActive(UUID reservationId) {
         var reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException(reservationId));

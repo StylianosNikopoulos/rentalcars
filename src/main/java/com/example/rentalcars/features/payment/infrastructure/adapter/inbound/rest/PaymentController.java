@@ -2,6 +2,7 @@ package com.example.rentalcars.features.payment.infrastructure.adapter.inbound.r
 
 import com.example.rentalcars.features.payment.domain.port.inbound.PaymentService;
 import com.example.rentalcars.features.payment.infrastructure.adapter.inbound.rest.dto.PaymentResponse;
+import com.example.rentalcars.features.reservation.domain.port.inbound.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,10 +19,12 @@ import java.util.UUID;
 public class PaymentController {
 
     private final PaymentService paymentService;
+    private final ReservationService reservationService;
 
     @PostMapping("/initiate/{reservationId}")
     public ResponseEntity<PaymentResponse> initiatePayment(@PathVariable UUID reservationId) {
-        String secret = paymentService.initiatePayment(reservationId);
+        var reservation = reservationService.getReservationById(reservationId);
+        String secret = paymentService.initiatePayment(reservation.getId(), reservation.getTotalAmount());
 
         PaymentResponse response = PaymentResponse.builder()
                 .clientSecret(secret)

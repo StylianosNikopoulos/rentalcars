@@ -1,5 +1,6 @@
 package com.example.rentalcars.features.payment.service;
 
+import com.example.rentalcars.core.valueobject.Money;
 import com.example.rentalcars.features.payment.domain.exception.InvalidPaymentStatusException;
 import com.example.rentalcars.features.payment.domain.exception.StripePaymentException;
 import com.example.rentalcars.features.payment.domain.exception.PaymentNotFoundException;
@@ -9,39 +10,40 @@ import com.example.rentalcars.features.payment.domain.port.inbound.PaymentServic
 import com.example.rentalcars.features.payment.domain.port.outbound.PaymentGateway;
 import com.example.rentalcars.features.payment.domain.port.outbound.PaymentRepository;
 import com.example.rentalcars.features.payment.domain.model.PaymentIntentResponse;
-import com.example.rentalcars.features.reservation.domain.exception.ReservationNotFoundException;
-import com.example.rentalcars.features.reservation.domain.model.ReservationStatus;
-import com.example.rentalcars.features.reservation.domain.port.outbound.ReservationRepository;
+import com.example.rentalcars.features.reservation.domain.port.inbound.ReservationService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Refund;
 import com.stripe.param.RefundCreateParams;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentGateway paymentGateway;
-    private final ReservationRepository reservationRepository;
     private final PaymentRepository paymentRepository;
+    private final ReservationService reservationService;
+
+    public PaymentServiceImpl(PaymentGateway paymentGateway, PaymentRepository paymentRepository, @Lazy ReservationService reservationService) {
+        this.paymentGateway = paymentGateway;
+        this.paymentRepository = paymentRepository;
+        this.reservationService = reservationService;
+    }
 
     @Override
     @Transactional
-    public String initiatePayment(UUID reservationId) {
-        var reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new ReservationNotFoundException(reservationId));
+    public String initiatePayment(UUID reservationId, Money amount) {
 
         PaymentIntentResponse stripeResponse = paymentGateway.createPaymentIntent(
-                reservation.getTotalAmount(),
+                amount,
                 reservationId.toString()
         );
 
         Payment payment = Payment.builder()
                 .id(UUID.randomUUID())
                 .reservationId(reservationId)
-                .amount(reservation.getTotalAmount())
+                .amount(amount)
                 .stripePaymentId(stripeResponse.getIntentId())
                 .status(PaymentStatus.PENDING)
                 .build();
@@ -58,12 +60,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         payment.setStatus(PaymentStatus.COMPLETED);
         paymentRepository.save(payment);
-
-        var reservation = reservationRepository.findById(payment.getReservationId())
-                .orElseThrow(()-> new ReservationNotFoundException(payment.getReservationId()));
-
-        reservation.setStatus(ReservationStatus.CONFIRMED);
-        reservationRepository.save(reservation);
+        reservationService.confirmReservation(payment.getReservationId());
         //TODO: Send Confirmation Email
     }
 
@@ -99,12 +96,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         payment.setStatus(PaymentStatus.FAILED);
         paymentRepository.save(payment);
-
-        var reservation = reservationRepository.findById(payment.getReservationId())
-                .orElseThrow(()-> new ReservationNotFoundException(payment.getReservationId()));
-
-        reservation.setStatus(ReservationStatus.CANCELLED);
-        reservationRepository.save(reservation);
+        reservationService.cancelReservationInternal(payment.getReservationId());
     }
 
     @Override
