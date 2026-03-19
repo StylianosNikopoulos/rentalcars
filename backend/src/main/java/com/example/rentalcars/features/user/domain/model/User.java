@@ -1,17 +1,35 @@
 package com.example.rentalcars.features.user.domain.model;
 
+import com.example.rentalcars.core.domain.AggregateRoot;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
-@Builder
-public class User {
-    private final UUID id;
-    private final String email;
-    private final String passwordHash;
-    private final Role role;
-    private final String firstName;
-    private final String lastName;
-    private final CustomerProfile profile;
+@Setter
+@NoArgsConstructor
+public class User extends AggregateRoot {
+    private  String email;
+    private  String passwordHash;
+    private  Role role;
+    private  String firstName;
+    private  String lastName;
+    private  CustomerProfile profile;
+
+    @Builder
+    public User(UUID id, LocalDateTime createdAt, LocalDateTime updatedAt, String email, String passwordHash, Role role,
+                String firstName, String lastName, CustomerProfile profile) {
+        super(id, createdAt, updatedAt);
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.role = role;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.profile = profile;
+    }
+
 }

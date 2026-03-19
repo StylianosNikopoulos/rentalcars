@@ -4,21 +4,24 @@ import com.example.rentalcars.features.payment.domain.model.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "payments")
-@Getter @Setter @Builder
-@AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class PaymentJpaEntity {
+
     @Id
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(name = "reservation_id", nullable = false)
     private UUID reservationId;
 
-    @Column(unique = true)
+    @Column(name = "stripe_payment_id", unique = true)
     private String stripePaymentId;
 
     @Column(nullable = false)
@@ -31,7 +34,12 @@ public class PaymentJpaEntity {
     @Column(nullable = false)
     private PaymentStatus status;
 
+    @Column(name = "receipt_url")
     private String receiptUrl;
 
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private java.time.LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private java.time.LocalDateTime updatedAt;
 }

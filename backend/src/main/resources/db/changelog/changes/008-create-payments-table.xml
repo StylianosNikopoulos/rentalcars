@@ -27,6 +27,7 @@
             </column>
             <column name="receipt_url" type="TEXT"/>
             <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

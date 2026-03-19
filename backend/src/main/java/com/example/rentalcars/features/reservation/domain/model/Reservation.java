@@ -1,23 +1,33 @@
 package com.example.rentalcars.features.reservation.domain.model;
 
+import com.example.rentalcars.core.domain.AggregateRoot;
 import com.example.rentalcars.core.valueobject.DateRange;
 import com.example.rentalcars.core.valueobject.Money;
 import lombok.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class Reservation {
-    private UUID id;
+public class Reservation extends AggregateRoot {
     private UUID userId;
     private UUID vehicleId;
     private DateRange period;
     private Money totalAmount;
     private ReservationStatus status;
+
+    @Builder
+    public Reservation(UUID id, LocalDateTime createdAt, LocalDateTime updatedAt, UUID userId, UUID vehicleId, DateRange period,
+                       Money totalAmount, ReservationStatus status) {
+        super(id, createdAt, updatedAt);
+        this.userId = userId;
+        this.vehicleId = vehicleId;
+        this.period = period;
+        this.totalAmount = totalAmount;
+        this.status = status;
+    }
 
     public void cancel() {
         this.status = ReservationStatus.CANCELLED;

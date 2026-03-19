@@ -1,18 +1,16 @@
 package com.example.rentalcars.features.vehicle.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.example.rentalcars.core.domain.AggregateRoot;
+import lombok.*;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-public class Vehicle {
-    private UUID id;
+@NoArgsConstructor
+public class Vehicle extends AggregateRoot {
     private String brand;
     private String model;
     private int year;
@@ -21,4 +19,19 @@ public class Vehicle {
     private VehicleStatus status;
     private BigDecimal dailyPrice;
     private Long version;
+
+    @Builder
+    public Vehicle(UUID id, LocalDateTime createdAt, LocalDateTime updatedAt, String brand, String model, int year, FuelType fuelType,
+                   LicensePlate licensePlate, VehicleStatus status,
+                   BigDecimal dailyPrice, Long version) {
+        super(id, createdAt, updatedAt);
+        this.brand = brand;
+        this.model = model;
+        this.year = year;
+        this.fuelType = fuelType;
+        this.licensePlate = licensePlate;
+        this.status = status;
+        this.dailyPrice = dailyPrice;
+        this.version = version;
+    }
 }
