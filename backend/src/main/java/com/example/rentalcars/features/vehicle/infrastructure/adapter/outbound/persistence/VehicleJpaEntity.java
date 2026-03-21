@@ -3,8 +3,8 @@ package com.example.rentalcars.features.vehicle.infrastructure.adapter.outbound.
 import com.example.rentalcars.features.vehicle.domain.model.FuelType;
 import com.example.rentalcars.features.vehicle.domain.model.VehicleStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -13,9 +13,11 @@ import java.util.UUID;
 @Table(name = "vehicles")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class VehicleJpaEntity {
     @Id
-    @GeneratedValue(strategy =  GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)

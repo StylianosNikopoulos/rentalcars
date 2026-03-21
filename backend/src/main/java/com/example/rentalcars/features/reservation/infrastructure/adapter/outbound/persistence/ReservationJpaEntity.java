@@ -18,7 +18,6 @@ import java.util.UUID;
 public class ReservationJpaEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
