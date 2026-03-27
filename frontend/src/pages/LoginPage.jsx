@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import toast from 'react-hot-toast';
 import { useNavigate, Link } from 'react-router-dom';
 import '../assets/styles/auth.css';
 
@@ -10,14 +11,17 @@ const LoginPage = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await login({ email, password });
-            navigate('/'); 
-        } catch (error) {
-            alert("Login failed! Check your credentials.");
-        }
-    };
+            e.preventDefault();
+            const loadingToast = toast.loading('Authenticating...');
+            
+            try {
+                await login({ email, password });
+                toast.success('Welcome back!', { id: loadingToast });
+                navigate('/'); 
+            } catch (error) {
+                toast.error('Invalid email or password!', { id: loadingToast });
+            }
+        };
 
     return (
         <div className="auth-container">

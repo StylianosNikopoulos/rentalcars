@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import toast from 'react-hot-toast';
 import { useNavigate, Link } from 'react-router-dom';
 import '../assets/styles/auth.css';
 
@@ -16,11 +17,13 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const loadingToast = toast.loading('Creating account...');
         try {
             await register(formData);
+            toast.success('Account created successfully!', { id: loadingToast });
             navigate('/');
         } catch (error) {
-            alert("Registration failed!");
+            toast.error('Registration failed. Please try again.', { id: loadingToast });
         }
     };
 
