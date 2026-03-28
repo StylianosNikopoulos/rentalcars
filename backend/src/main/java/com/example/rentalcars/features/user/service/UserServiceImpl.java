@@ -2,6 +2,7 @@ package com.example.rentalcars.features.user.service;
 
 import com.example.rentalcars.core.exception.BusinessException;
 import com.example.rentalcars.features.user.domain.model.CustomerProfile;
+import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UpdateUserRequest;
 import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UserRequest;
 import com.example.rentalcars.features.user.domain.model.Role;
 import com.example.rentalcars.features.user.domain.model.User;
@@ -69,6 +70,29 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User update(UUID id, UpdateUserRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        validateOwnership(user);
+
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void delete(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        validateOwnership(user);
+        userRepository.deleteById(id);
     }
 
     // Helper method for security

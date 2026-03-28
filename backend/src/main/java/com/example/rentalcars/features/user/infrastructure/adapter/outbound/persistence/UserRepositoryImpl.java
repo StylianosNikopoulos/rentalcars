@@ -34,4 +34,9 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> findById(UUID id) {
         return jpaRepository.findById(id).map(userPersistenceMapper::toDomain);
     }
+
+    @Override
+    public void deleteById(UUID id) {
+        jpaRepository.deleteById(id);
+    }
 }

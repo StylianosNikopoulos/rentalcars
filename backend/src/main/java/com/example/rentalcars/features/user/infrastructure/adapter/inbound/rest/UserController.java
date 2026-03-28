@@ -1,5 +1,7 @@
 package com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest;
 
+import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UpdateUserRequest;
+import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UserRequest;
 import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UserResponse;
 import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.mapper.UserMapper;
 import com.example.rentalcars.features.user.domain.port.inbound.UserService;
@@ -26,5 +28,17 @@ public class UserController {
     public ResponseEntity<UserResponse> getUserByEmail(@PathVariable String email) {
         var user = userService.getUserByEmail(email);
         return ResponseEntity.ok(userMapper.toResponse(user));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id, @RequestBody UpdateUserRequest request) {
+        var updatedUser = userService.update(id, request);
+        return ResponseEntity.ok(userMapper.toResponse(updatedUser));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

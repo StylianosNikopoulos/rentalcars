@@ -39,7 +39,7 @@ public class UserJpaEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private CustomerProfileEntity profile;
 
     @PrePersist

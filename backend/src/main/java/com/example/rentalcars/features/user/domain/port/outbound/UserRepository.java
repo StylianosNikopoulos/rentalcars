@@ -8,4 +8,5 @@ public interface UserRepository {
     User save(User user);
     Optional<User> findByEmail(String email);
     Optional<User> findById(UUID id);
+    void deleteById(UUID id);
 }
