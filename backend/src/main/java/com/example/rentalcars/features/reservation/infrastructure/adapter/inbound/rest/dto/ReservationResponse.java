@@ -14,9 +14,11 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ReservationResponse {
     private UUID id;
+    private String vehicleName;
+    private String vehicleBrand;
+    private LocalDateTime startDate;
     private UUID userId;
     private UUID vehicleId;
-    private LocalDateTime startDate;
     private LocalDateTime endDate;
     private BigDecimal totalAmount;
     private String status;

@@ -14,16 +14,21 @@ import java.util.UUID;
 public class Reservation extends AggregateRoot {
     private UUID userId;
     private UUID vehicleId;
+    private String vehicleName;
+    private String vehicleBrand;
     private DateRange period;
     private Money totalAmount;
     private ReservationStatus status;
 
     @Builder
-    public Reservation(UUID id, LocalDateTime createdAt, LocalDateTime updatedAt, UUID userId, UUID vehicleId, DateRange period,
-                       Money totalAmount, ReservationStatus status) {
+    public Reservation(UUID id, LocalDateTime createdAt, LocalDateTime updatedAt,
+                       UUID userId, UUID vehicleId, String vehicleName, String vehicleBrand,
+                       DateRange period, Money totalAmount, ReservationStatus status) {
         super(id, createdAt, updatedAt);
         this.userId = userId;
         this.vehicleId = vehicleId;
+        this.vehicleName = vehicleName;
+        this.vehicleBrand = vehicleBrand;
         this.period = period;
         this.totalAmount = totalAmount;
         this.status = status;

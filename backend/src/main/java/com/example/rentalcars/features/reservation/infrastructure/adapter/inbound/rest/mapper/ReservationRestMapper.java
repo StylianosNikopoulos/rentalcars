@@ -14,6 +14,10 @@ public interface ReservationRestMapper {
     Reservation toDomain(ReservationRequest request);
 
     @Mapping(target = "totalAmount", source = "totalAmount.amount")
+    @Mapping(target = "startDate", source = "period.start")
+    @Mapping(target = "endDate", source = "period.end")
+    @Mapping(target = "vehicleName", source = "vehicleName")
+    @Mapping(target = "vehicleBrand", source = "vehicleBrand")
     ReservationResponse toResponse(Reservation domain);
     List<ReservationResponse> toResponseList(List<Reservation> domains);
 }

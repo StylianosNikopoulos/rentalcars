@@ -48,7 +48,8 @@ public class ReservationServiceImpl implements ReservationService {
         if (reservationRepository.existsOverlap(reservation.getVehicleId(), reservation.getPeriod())) {
             throw new CarNotAvailableException();
         }
-
+        reservation.setVehicleName(vehicle.getModel());
+        reservation.setVehicleBrand(vehicle.getBrand());
         reservation.calculateTotal(new Money(vehicle.getDailyPrice(),"EUR"));
         reservation.setStatus(ReservationStatus.PENDING);
         return reservationRepository.save(reservation);

@@ -40,6 +40,12 @@ public class ReservationJpaEntity {
     @Column(nullable = false)
     private ReservationStatus status;
 
+    @Column(name = "vehicle_name")
+    private String vehicleName;
+
+    @Column(name = "vehicle_brand")
+    private String vehicleBrand;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
