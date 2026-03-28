@@ -9,15 +9,12 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user && user.accessToken) {
-            config.headers.Authorization = `Bearer ${user.accessToken}`;
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (userData && userData.token) {
+            config.headers.Authorization = `Bearer ${userData.token}`;
         }
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
-
 export default api;

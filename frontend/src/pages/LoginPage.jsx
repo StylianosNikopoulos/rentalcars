@@ -11,17 +11,18 @@ const LoginPage = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-            e.preventDefault();
-            const loadingToast = toast.loading('Authenticating...');
+        e.preventDefault();
+        const loadingToast = toast.loading('Authenticating...');
+        
+        try {
+            await login({ email, password });
+            toast.success('Welcome back!', { id: loadingToast });
             
-            try {
-                await login({ email, password });
-                toast.success('Welcome back!', { id: loadingToast });
-                navigate('/'); 
-            } catch (error) {
-                toast.error('Invalid email or password!', { id: loadingToast });
-            }
-        };
+            navigate('/', { replace: true }); 
+        } catch (error) {
+            toast.error('Invalid email or password!', { id: loadingToast });
+        }
+    };
 
     return (
         <div className="auth-container">
