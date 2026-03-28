@@ -50,7 +50,7 @@ const Home = () => {
                                         <div className="car-specs">{car.type} / AUTOMATIC / {car.fuelType || 'EV'}</div>
                                     </div>
                                     <div className="car-price-tag">
-                                        <div className="price-value">${car.pricePerDay}</div>
+                                        <div className="price-value">${car.dailyPrice}</div>
                                         <div style={{fontSize: '0.7rem', color: '#555'}}>PER DAY</div>
                                     </div>
                                 </div>

@@ -51,8 +51,10 @@ const VehicleDetailsPage = () => {
                 
                 <div className="vehicle-info-section">
                     <h1>{vehicle.brand} {vehicle.model}</h1>
-                    <p className="type-tag">{vehicle.type} - {vehicle.fuelType}</p>
-                    <h2 className="price">${vehicle.pricePerDay} / day</h2>
+                    <p className="type-tag">{vehicle.year}</p>
+                    <p className="type-tag">{vehicle.licensePlate}</p>
+                    <p className="type-tag">{vehicle.type} {vehicle.fuelType}</p>
+                    <h2 className="price">${vehicle.dailyPrice} / day</h2>
                     
                     <form onSubmit={handleBooking} className="booking-form" style={{ marginTop: '2rem' }}>
                         <div className="form-group">

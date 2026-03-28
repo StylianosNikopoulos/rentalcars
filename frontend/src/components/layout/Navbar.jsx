@@ -22,7 +22,7 @@ const Navbar = () => {
                        <span className="welcome-msg">
                            Welcome, {user.user?.email?.split('@')[0] || 'User'}
                        </span>
-                       <Link to="/profile">My Bookings</Link>
+                       <Link to="/profile">Reservations</Link>
                        <Link to="/vehicles">Vehicles</Link>
                        <button onClick={handleLogout} className="logout-btn">Logout</button>
                     </>

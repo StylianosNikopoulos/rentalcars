@@ -32,7 +32,6 @@ const VehiclesPage = () => {
         <div className="vehicles-page" style={{ padding: '2rem' }}>
             <div className="vehicles-header" style={{ marginBottom: '2rem', textAlign: 'center' }}>
                 <h1>Our Complete Fleet</h1>
-                <p>Browse through our selection of premium vehicles</p>
                 
                 {/* Search Bar */}
                 <input 
@@ -70,7 +69,7 @@ const VehiclesPage = () => {
                                     <div className="car-specs">{car.type} / {car.fuelType}</div>
                                 </div>
                                 <div className="car-price-tag">
-                                    <div className="price-value">${car.pricePerDay}</div>
+                                    <div className="price-value">${car.dailyPrice}</div>
                                     <div style={{fontSize: '0.7rem', color: '#555'}}>PER DAY</div>
                                 </div>
                             </div>
