@@ -1,0 +1,114 @@
+.details-container {
+    padding: 2rem 5%; 
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 80vh;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+.vehicle-image-section {
+    width: 100%;
+}
+
+.vehicle-image-section img {
+    width: 100%; 
+    height: auto; 
+    max-height: 600px; 
+    border-radius: 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    object-fit: cover;
+    display: block;
+}
+
+.vehicle-info-section h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem); 
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+    line-height: 1.1;
+}
+
+.price-display {
+    font-size: 2rem;
+    color: var(--primary);
+    font-weight: 800;
+    margin: 1.5rem 0;
+}
+
+.specs-badge-container {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.spec-badge {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.booking-card {
+    background: #151515;
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    position: sticky; 
+    top: 100px;
+}
+
+
+@media (max-width: 968px) {
+    .details-container {
+        padding: 1rem 1.5rem;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr; 
+        gap: 2rem;
+    }
+
+    .vehicle-image-section img {
+        border-radius: 20px; 
+        max-height: 400px;
+    }
+
+    .vehicle-info-section h1 {
+        text-align: center;
+    }
+
+    .specs-badge-container {
+        justify-content: center;
+    }
+
+    .price-display {
+        text-align: center;
+    }
+
+    .booking-card {
+        padding: 1.5rem;
+        position: static; 
+    }
+}
+
+@media (max-width: 480px) {
+    .vehicle-info-section h1 {
+        font-size: 1.8rem;
+    }
+    
+    .spec-badge {
+        font-size: 0.65rem;
+        padding: 4px 8px;
+    }
+}

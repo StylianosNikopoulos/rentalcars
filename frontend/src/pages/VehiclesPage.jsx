@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import vehicleService from '../services/vehicleService';
-import '../assets/styles/home.css'; 
+import '../assets/styles/vehicles.css'; 
 
 const VehiclesPage = () => {
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const [sortOrder, setSortOrder] = useState("default"); 
+    
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -15,7 +19,7 @@ const VehiclesPage = () => {
                 const data = await vehicleService.getAllVehicles();
                 setVehicles(data);
             } catch (error) {
-                console.error("Error fetching all vehicles", error);
+                console.error("Error fetching vehicles", error);
             } finally {
                 setLoading(false);
             }
@@ -23,69 +27,106 @@ const VehiclesPage = () => {
         fetchAll();
     }, []);
 
-    const filteredVehicles = vehicles.filter(car => 
-        car.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        car.model.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [currentPage]);
+
+    const getProcessedVehicles = () => {
+        let filtered = vehicles.filter(car => 
+            car.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            car.model.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        if (sortOrder === "low") {
+            filtered.sort((a, b) => a.dailyPrice - b.dailyPrice);
+        } else if (sortOrder === "high") {
+            filtered.sort((a, b) => b.dailyPrice - a.dailyPrice);
+        }
+
+        return filtered;
+    };
+
+    const filteredVehicles = getProcessedVehicles();
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredVehicles.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredVehicles.length / itemsPerPage);
+
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1); 
+    };
 
     return (
-        <div className="vehicles-page" style={{ padding: '2rem' }}>
-            <div className="vehicles-header" style={{ marginBottom: '2rem', textAlign: 'center' }}>
-                <h1>Our Complete Fleet</h1>
+        <div className="vehicles-page">
+            <div className="vehicles-header">
+                <h1>Our Premium Fleet</h1>
                 
-                {/* Search Bar */}
-                <input 
-                    type="text" 
-                    placeholder="Search brand or model..." 
-                    className="search-input"
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{
-                        padding: '10px',
-                        width: '100%',
-                        maxWidth: '400px',
-                        borderRadius: '20px',
-                        border: '1px solid #ddd',
-                        marginTop: '1rem'
-                    }}
-                />
+                <div className="sort-container">
+                    <select 
+                        className="sort-select" 
+                        onChange={(e) => {
+                            setSortOrder(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                    >
+                        <option value="default">Sort By: Featured</option>
+                        <option value="low">Price: Low to High</option>
+                        <option value="high">Price: High to Low</option>
+                    </select>
+                </div>
+
+                <div className="filters-bar">
+                    <div className="search-container">
+                        <input 
+                            type="text" 
+                            placeholder="Search brand or model..." 
+                            className="search-input"
+                            onChange={handleSearch}
+                        />
+                    </div>
+                </div>
             </div>
 
             {loading ? (
-                <div className="loader">LOADING FLEET...</div>
+                <div className="loader">FETCHING FLEET...</div>
             ) : (
-                <div className="vehicle-grid">
-                    {filteredVehicles.map(car => (
-                        <div key={car.id} className="vehicle-item">
-                            <div className="vehicle-img-wrapper">
-                                <img 
-                                    src={car.imageUrl || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070'} 
-                                    alt={car.model} 
-                                    className="vehicle-img" 
-                                />
-                            </div>
-                            <div className="vehicle-details">
-                                <div>
-                                    <h3 className="car-name">{car.brand} {car.model}</h3>
-                                    <div className="car-specs">{car.type} / {car.fuelType}</div>
+                <>
+                    <div className="vehicle-grid">
+                        {currentItems.map(car => (
+                            <div key={car.id} className="vehicle-item" onClick={() => navigate(`/vehicle/${car.id}`)}>
+                                <div className="vehicle-img-wrapper">
+                                    <img src={car.imageUrl || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070'} alt={car.model} className="vehicle-img" />
                                 </div>
-                                <div className="car-price-tag">
-                                    <div className="price-value">${car.dailyPrice}</div>
-                                    <div style={{fontSize: '0.7rem', color: '#555'}}>PER DAY</div>
+                                <div className="vehicle-details">
+                                    <div>
+                                        <h3 className="car-name">{car.brand} {car.model}</h3>
+                                        <div className="car-specs">{car.type} • {car.fuelType}</div>
+                                    </div>
+                                    <div className="car-price-tag">
+                                        <div className="price-value">${car.dailyPrice}</div>
+                                        <div className="price-label">PER DAY</div>
+                                    </div>
                                 </div>
+                                <button className="rent-btn-minimal">View Details</button>
                             </div>
-                            <button 
-                                className="rent-btn-minimal" 
-                                onClick={() => navigate(`/vehicle/${car.id}`)}
-                            >
-                                Book This Car
-                            </button>
+                        ))}
+                    </div>
+
+                    {/* PAGINATION */}
+                    {totalPages > 1 && (
+                        <div className="pagination">
+                            <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="page-btn">PREVIOUS</button>
+                            <span className="page-info">Page {currentPage} of {totalPages}</span>
+                            <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} className="page-btn">NEXT</button>
                         </div>
-                    ))}
-                </div>
+                    )}
+                </>
             )}
             
             {filteredVehicles.length === 0 && !loading && (
-                <p style={{ textAlign: 'center', marginTop: '2rem' }}>No vehicles found matching your search.</p>
+                <div className="no-results">No vehicles matching your criteria were found.</div>
             )}
         </div>
     );

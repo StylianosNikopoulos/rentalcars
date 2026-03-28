@@ -34,35 +34,37 @@ const Home = () => {
                 {loading ? (
                     <div className="loader">INITIALIZING...</div>
                 ) : (
-                    <div className="vehicle-grid">
-                        {vehicles.map(car => (
-                            <div key={car.id} className="vehicle-item">
-                                <div className="vehicle-img-wrapper">
-                                    <img 
-                                        src={car.imageUrl || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070'} 
-                                        alt={car.model} 
-                                        className="vehicle-img" 
-                                    />
-                                </div>
-                                <div className="vehicle-details">
-                                    <div>
-                                        <h3 className="car-name">{car.brand} {car.model}</h3>
-                                        <div className="car-specs">{car.type} / AUTOMATIC / {car.fuelType || 'EV'}</div>
-                                    </div>
-                                    <div className="car-price-tag">
-                                        <div className="price-value">${car.dailyPrice}</div>
-                                        <div style={{fontSize: '0.7rem', color: '#555'}}>PER DAY</div>
-                                    </div>
-                                </div>
-                                <button 
-                                    className="rent-btn-minimal" 
-                                    onClick={() => navigate(`/vehicle/${car.id}`)}
-                                >
-                                    View Details
-                                </button>
+                <div className="vehicle-grid">
+                    {vehicles.map(car => (
+                        <div 
+                            key={car.id} 
+                            className="vehicle-item" 
+                            onClick={() => navigate(`/vehicle/${car.id}`)} 
+                            style={{ cursor: 'pointer' }} 
+                        >
+                            <div className="vehicle-img-wrapper">
+                                <img 
+                                    src={car.imageUrl || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070'} 
+                                    alt={car.model} 
+                                    className="vehicle-img" 
+                                />
                             </div>
-                        ))}
-                    </div>
+                            <div className="vehicle-details">
+                                <div>
+                                    <h3 className="car-name">{car.brand} {car.model}</h3>
+                                    <div className="car-specs">{car.type} / AUTOMATIC / {car.fuelType || 'EV'}</div>
+                                </div>
+                                <div className="car-price-tag">
+                                    <div className="price-value">${car.dailyPrice}</div>
+                                    <div style={{fontSize: '0.7rem', color: '#555'}}>PER DAY</div>
+                                </div>
+                            </div>
+                            <button className="rent-btn-minimal">
+                                View Details
+                            </button>
+                        </div>
+                    ))}
+                </div>
                 )}
                 
                 <div style={{ textAlign: 'center', marginTop: '2rem' }}>
