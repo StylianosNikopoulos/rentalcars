@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import vehicleService from '../services/vehicleService';
+import reservationService from '../services/reservationService'; 
 import toast from 'react-hot-toast';
 import '../assets/styles/details.css';
 
@@ -27,9 +28,31 @@ const VehicleDetailsPage = () => {
     }, [id, navigate]);
 
     const handleBooking = async (e) => {
-        e.preventDefault();
-        toast.success(`Booking request sent for ${vehicle.brand}!`);
-        navigate('/profile');
+        e.preventDefault(); 
+
+        const bookingData = {
+            vehicleId: vehicle.id,
+            startDate: bookingDates.startDate + "T10:00:00", 
+            endDate: bookingDates.endDate + "T10:00:00"  
+        };
+
+        if (!bookingData.startDate || !bookingData.endDate) {
+            toast.error("Please select both dates");
+            return;
+        }
+
+        try {
+            await reservationService.createReservation(bookingData);
+            toast.success("Reservation successful!");
+            
+            setTimeout(() => {
+                navigate('/reservations');
+            }, 1500);
+            
+        } catch (error) {
+            console.error("Booking Error:", error);
+            toast.error(error.response?.data?.message || "Booking failed");
+        }
     };
 
     if (loading) return <div className="loader">Loading details...</div>;
@@ -63,6 +86,7 @@ const VehicleDetailsPage = () => {
                                     type="date" 
                                     required 
                                     min={new Date().toISOString().split('T')[0]}
+                                    value={bookingDates.startDate}
                                     onChange={(e) => setBookingDates({...bookingDates, startDate: e.target.value})}
                                 />
                             </div>
@@ -72,6 +96,7 @@ const VehicleDetailsPage = () => {
                                     type="date" 
                                     required 
                                     min={bookingDates.startDate || new Date().toISOString().split('T')[0]}
+                                    value={bookingDates.endDate}
                                     onChange={(e) => setBookingDates({...bookingDates, endDate: e.target.value})}
                                 />
                             </div>

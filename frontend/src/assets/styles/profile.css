@@ -1,0 +1,154 @@
+.profile-container {
+    max-width: 900px;
+    margin: 4rem auto;
+    padding: 2rem;
+    min-height: 80vh;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.profile-header h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+}
+
+.profile-card {
+    background: #151515;
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    text-align: center;
+}
+
+.avatar-circle {
+    width: 120px;
+    height: 120px;
+    background: var(--primary);
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+}
+
+.info-section {
+    background: #151515;
+    padding: 2.5rem;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+}
+
+.info-group {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #222;
+    padding-bottom: 1rem;
+}
+
+.info-group:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    display: block;
+    color: #666;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.info-value {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    background: rgba(255, 77, 0, 0.1);
+    color: var(--primary);
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.edit-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.edit-form input {
+    width: 100%;
+    padding: 12px;
+    background: #0a0a0a;
+    border: 1px solid #333;
+    color: white;
+    border-radius: 8px;
+    margin-top: 5px;
+}
+
+.delete-btn {
+    background: transparent;
+    border: 1px solid #ff4d00;
+    color: #ff4d00;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.delete-btn:hover {
+    background: #ff4d00;
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 77, 0, 0.4);
+}
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-top: 8px;
+}
+
+.status-badge.confirmed { background: rgba(0, 255, 100, 0.1); color: #00ff64; }
+.status-badge.pending { background: rgba(255, 200, 0, 0.1); color: #ffc800; }
+.status-badge.cancelled { background: rgba(255, 0, 0, 0.1); color: #ff0000; }
+
+.cancel-btn-small {
+    background: transparent;
+    border: 1px solid #444;
+    color: #888;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cancel-btn-small:hover {
+    border-color: #ff4d00;
+    color: #ff4d00;
+}
+
+@media (max-width: 768px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}

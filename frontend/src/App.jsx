@@ -12,6 +12,7 @@ import ProfilePage from './pages/ProfilePage';
 import VehicleDetailsPage from './pages/VehicleDetailsPage';
 import VehiclesPage from './pages/VehiclesPage';
 import NotFound from './pages/NotFound'; 
+import MyReservationPage from './pages/MyReservationPage';
 
 function App() {
   return (
@@ -37,6 +38,10 @@ function App() {
                 path="/vehicle/:id" 
                 element={<ProtectedRoute><VehicleDetailsPage /></ProtectedRoute>} 
             />
+            <Route 
+                path="/reservations" 
+                element={<ProtectedRoute><MyReservationPage /></ProtectedRoute>} 
+            />     
 
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -10,7 +10,7 @@ const Navbar = () => {
     const handleLogout = () => {
         logout();
         toast.success('Logged out successfully');
-        navigate('/login');
+        navigate('/');
     };
 
     return (
@@ -19,11 +19,12 @@ const Navbar = () => {
             <div className="nav-links">
                 {user ? (
                     <>
-                       <span className="welcome-msg">
+                       <span>
                            Welcome, {user.user?.email?.split('@')[0] || 'User'}
                        </span>
-                       <Link to="/profile">Reservations</Link>
                        <Link to="/vehicles">Vehicles</Link>
+                       <Link to="/reservations">Reservations</Link>
+                       <Link to="/profile">Profile</Link>
                        <button onClick={handleLogout} className="logout-btn">Logout</button>
                     </>
                 ) : (

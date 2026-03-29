@@ -340,8 +340,6 @@ body {
     color: white;
 }
 
-
-
 @media (max-width: 768px) {
     .navbar {
             flex-direction: column; 
@@ -413,3 +411,4 @@ body {
         text-align: left;
     }
 }
+

@@ -1,0 +1,142 @@
+.reservations-container {
+    max-width: 900px; 
+    margin: 4rem auto; 
+    padding: 0 20px;
+}
+
+.reservations-header {
+    margin-bottom: 2.5rem;
+    text-align: left; 
+    border-left: 4px solid #ff4d00;
+    padding-left: 1.5rem;
+}
+
+.reservations-header h2 {
+    font-size: 2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.reservations-header p {
+    color: #888;
+    margin-top: 5px;
+}
+
+.res-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.res-card:hover {
+    border-color: #ff4d00;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.res-main-details {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 8px;
+}
+
+.res-main-details h4 {
+    font-size: 1.25rem;
+    margin: 0;
+    color: #fff;
+}
+
+.res-date {
+    color: #aaa;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.cancel-btn-premium {
+    background: transparent;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.cancel-btn-premium:hover {
+    background: #ff0000;
+    border-color: #c10000;
+    color: white;
+}
+
+.checkOut-btn-premium {
+    background: transparent;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.checkOut-btn-premium:hover {
+    background: #ff4d00;
+    border-color: #ff4d00;
+    color: white;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.status-badge.confirmed { background: rgba(0, 255, 127, 0.1); color: #00ff7f; }
+.status-badge.pending { background: rgba(255, 170, 0, 0.1); color: #ffaa00; }
+.status-badge.cancelled { background: rgba(255, 0, 0, 0.1); color: #ff4444; }
+
+.empty-state {
+    text-align: center;
+    padding: 5rem;
+    background: #111;
+    border-radius: 20px;
+    border: 2px dashed #333;
+}
+
+.res-price {
+    margin-top: 10px;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.res-price strong {
+    color: #ff4d00; 
+}
+
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    color: #ff4d00;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.res-date i {
+    margin-right: 8px;
+    color: #ff4d00;
+}
+
