@@ -25,6 +25,8 @@
             <column name="total_amount" type="DECIMAL(19, 2)">
                 <constraints nullable="false"/>
             </column>
+            <column name="vehicle_name" type="VARCHAR(255)"/>
+            <column name="vehicle_brand" type="VARCHAR(255)"/>
             <column name="status" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
