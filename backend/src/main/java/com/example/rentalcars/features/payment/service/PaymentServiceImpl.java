@@ -9,7 +9,8 @@ import com.example.rentalcars.features.payment.domain.model.PaymentStatus;
 import com.example.rentalcars.features.payment.domain.port.inbound.PaymentService;
 import com.example.rentalcars.features.payment.domain.port.outbound.PaymentGateway;
 import com.example.rentalcars.features.payment.domain.port.outbound.PaymentRepository;
-import com.example.rentalcars.features.payment.domain.model.PaymentIntentResponse;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.checkout.SessionCreateParams;
 import com.example.rentalcars.features.reservation.domain.port.inbound.ReservationService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Refund;
@@ -34,22 +35,42 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public String initiatePayment(UUID reservationId, Money amount) {
+        try {
+            SessionCreateParams params = SessionCreateParams.builder()
+                    .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
+                    .setMode(SessionCreateParams.Mode.PAYMENT)
+                    .setSuccessUrl("http://localhost:5173/reservations?success=true")
+                    .setCancelUrl("http://localhost:5173/reservations?canceled=true")
+                    .addLineItem(SessionCreateParams.LineItem.builder()
+                            .setQuantity(1L)
+                            .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
+                                    .setCurrency("eur")
+                                    .setUnitAmount((long) (amount.amount().doubleValue() * 100))
+                                    .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                            .setName("Rental Car" + reservationId.toString().substring(0, 8))
+                                            .build())
+                                    .build())
+                            .build())
+                    .putMetadata("reservationId", reservationId.toString())
+                    .build();
 
-        PaymentIntentResponse stripeResponse = paymentGateway.createPaymentIntent(
-                amount,
-                reservationId.toString()
-        );
+            Session session = Session.create(params);
 
-        Payment payment = Payment.builder()
-                .id(UUID.randomUUID())
-                .reservationId(reservationId)
-                .amount(amount)
-                .stripePaymentId(stripeResponse.getIntentId())
-                .status(PaymentStatus.PENDING)
-                .build();
+            Payment payment = Payment.builder()
+                    .id(UUID.randomUUID())
+                    .reservationId(reservationId)
+                    .amount(amount)
+                    .stripePaymentId(session.getId())
+                    .status(PaymentStatus.PENDING)
+                    .build();
 
-        paymentRepository.save(payment);
-        return stripeResponse.getClientSecret();
+            paymentRepository.save(payment);
+
+            return session.getUrl();
+
+        } catch (StripeException e) {
+            throw new StripePaymentException("Stripe Session Creation Failed: " + e.getMessage());
+        }
     }
 
     @Override

@@ -1,15 +1,14 @@
 package com.example.rentalcars.features.payment.infrastructure.adapter.inbound.rest;
 
 import com.example.rentalcars.features.payment.domain.port.inbound.PaymentService;
-import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
-import com.stripe.model.PaymentIntent;
+import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Value;
 
 @RestController
 @RequestMapping("/api/v1/payments/webhook")
@@ -23,26 +22,53 @@ public class StripeWebhookController {
     @PostMapping
     public ResponseEntity<String> handleStripeEvent(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
         Event event;
-
         try {
             event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
-        } catch (SignatureVerificationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid signature");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Webhook error");
         }
 
-        if ("payment_intent.succeeded".equals(event.getType())) {
-            PaymentIntent intent = (PaymentIntent) event.getDataObjectDeserializer().getObject().get();
-            paymentService.processSuccessfulPayment(intent.getId());
-        } else if ("payment_intent.payment_failed".equals(event.getType())){
-            PaymentIntent intent = (PaymentIntent) event.getDataObjectDeserializer().getObject().get();
-            paymentService.processFailedPayment(intent.getId());
+        var dataObjectDeserializer = event.getDataObjectDeserializer();
 
-            String errorMessage = intent.getLastPaymentError() != null ? intent.getLastPaymentError().getMessage() : "Unknown error";
-            System.out.println("Payment failed for intent " + intent.getId() + ": " + errorMessage);
+        if ("checkout.session.completed".equals(event.getType())) {
+            Session session = getSessionFromEvent(dataObjectDeserializer);
+            if (session != null) {
+                try {
+                    paymentService.processSuccessfulPayment(session.getId());
+                } catch (Exception e) {
+                    System.err.println("Error processing success: " + e.getMessage());
+                }
+            }
+        }
+        else if ("checkout.session.expired".equals(event.getType())) {
+            Session session = getSessionFromEvent(dataObjectDeserializer);
+            if (session != null) {
+                paymentService.processFailedPayment(session.getId());
+            }
+        }
+        else if ("payment_intent.payment_failed".equals(event.getType())) {
+            try {
+                if (dataObjectDeserializer.getObject().isPresent()) {
+                    var pi = (com.stripe.model.PaymentIntent) dataObjectDeserializer.getObject().get();
+                }
+            } catch (Exception e) {
+                System.err.println("Could not deserialize PaymentIntent");
+            }
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    private Session getSessionFromEvent(com.stripe.model.EventDataObjectDeserializer deserializer) {
+        try {
+            if (deserializer.getObject().isPresent()) {
+                return (Session) deserializer.getObject().get();
+            } else {
+                return (Session) deserializer.deserializeUnsafe();
+            }
+        } catch (com.stripe.exception.EventDataObjectDeserializationException e) {
+            System.err.println("Deserialization failed: " + e.getMessage());
+            return null;
+        }
     }
 }
