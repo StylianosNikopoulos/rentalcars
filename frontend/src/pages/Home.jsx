@@ -52,7 +52,7 @@ const Home = () => {
                             <div className="vehicle-details">
                                 <div>
                                     <h3 className="car-name">{car.brand} {car.model}</h3>
-                                    <div className="car-specs">{car.type} / AUTOMATIC / {car.fuelType || 'EV'}</div>
+                                    <div className="car-specs">{car.type} • {car.fuelType || 'EV'}</div>
                                 </div>
                                 <div className="car-price-tag">
                                     <div className="price-value">${car.dailyPrice}</div>
