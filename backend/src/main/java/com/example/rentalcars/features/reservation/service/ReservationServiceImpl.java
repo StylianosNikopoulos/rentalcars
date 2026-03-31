@@ -60,7 +60,11 @@ public class ReservationServiceImpl implements ReservationService {
     public List<Reservation> getMyReservations() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var user = userService.getUserByEmail(auth.getName());
-        return reservationRepository.findByUserId(user.getId());
+        List<Reservation> reservations = reservationRepository.findByUserId(user.getId());
+
+        return reservations.stream()
+                .sorted((r1,r2)-> Integer.compare(getStatusPriority(r1.getStatus()), getStatusPriority(r2.getStatus())))
+                .toList();
     }
 
     @Override
@@ -168,5 +172,17 @@ public class ReservationServiceImpl implements ReservationService {
     private boolean isAdmin(Authentication auth) {
         return auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    private int getStatusPriority(ReservationStatus status){
+        if (status == null) return 99;
+        return switch (status) {
+            case PENDING -> 1;
+            case CONFIRMED -> 2;
+            case COMPLETED   -> 3;
+            case ACTIVE    -> 4;
+            case CANCELLED -> 5;
+            default -> 6;
+        };
     }
 }
