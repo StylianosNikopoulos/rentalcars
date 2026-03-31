@@ -1,0 +1,63 @@
+.swal-fix-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.8) !important; 
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 9999 !important;
+}
+
+.swal-custom-popup {
+    background: #151515 !important;
+    border: 1px solid #333 !important;
+    border-radius: 0px !important;
+    width: 90% !important;
+    max-width: 400px !important;
+    padding: 2rem !important;
+    margin: auto !important;
+}
+
+.swal-custom-title {
+    color: #fff !important;
+    font-size: 1.4rem !important;
+    font-weight: 900 !important;
+    text-transform: uppercase;
+}
+
+.swal-custom-html {
+    color: #888 !important;
+    margin: 1rem 0 2rem 0 !important;
+}
+
+.swal-custom-actions {
+    display: flex !important;
+    gap: 10px !important;
+    width: 100% !important;
+}
+
+.swal-btn {
+    flex: 1;
+    padding: 12px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase;
+    border: none !important;
+    cursor: pointer;
+}
+
+.swal-btn-confirm { background: #ff4d00 !important; color: white !important; }
+.swal-btn-cancel { background: #333 !important; color: white !important; }
+
+@media (max-width: 480px) {
+    .swal-custom-actions {
+        flex-direction: column !important;
+    }
+    .swal-btn { width: 100% !important; }
+}
+
+body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
+    overflow: hidden !important;
+}

@@ -15,6 +15,11 @@ const RegisterPage = () => {
     const { register } = useAuth();
     const navigate = useNavigate();
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const loadingToast = toast.loading('Creating account...');
@@ -34,19 +39,19 @@ const RegisterPage = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>First Name</label>
-                        <input type="text" onChange={(e) => setFormData({...formData, firstName: e.target.value})} required />
+                        <input name="firstName" type="text" onChange={handleChange} required />
                     </div>
                     <div className="form-group">
                         <label>Last Name</label>
-                        <input type="text" onChange={(e) => setFormData({...formData, lastName: e.target.value})} required />
+                        <input name="lastName" type="text" onChange={handleChange} required />
                     </div>
                     <div className="form-group">
                         <label>Email</label>
-                        <input type="email" onChange={(e) => setFormData({...formData, email: e.target.value})} required />
+                        <input name="email" type="email" onChange={handleChange} required />
                     </div>
                     <div className="form-group">
                         <label>Password</label>
-                        <input type="password" onChange={(e) => setFormData({...formData, password: e.target.value})} required />
+                        <input name="password" type="password" onChange={handleChange} required />
                     </div>
                     <button type="submit" className="auth-button">Register</button>
                 </form>

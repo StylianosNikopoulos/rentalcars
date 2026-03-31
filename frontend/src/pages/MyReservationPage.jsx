@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import reservationService from '../services/reservationService';
-import toast from 'react-hot-toast';
-import '../assets/styles/reservations.css'; 
-import Swal from 'sweetalert2'; 
 import paymentService from '../services/paymentService';
+import toast from 'react-hot-toast';
+import Swal from 'sweetalert2'; 
+import '../assets/styles/reservations.css'; 
+import '../assets/styles/swal-custom.css';
 
 const MyReservationPage = () => {
     const navigate = useNavigate();
     const [reservations, setReservations] = useState([]);
     const [loading, setLoading] = useState(true);
-    
     const [currentPage, setCurrentPage] = useState(1);
     const bookingsPerPage = 3;
 
@@ -20,13 +20,11 @@ const MyReservationPage = () => {
 
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
-        
         if (query.get("success")) {
-            toast.success("Payment completed! Your reservation has been confirmed..");
+            toast.success("Payment completed! Your reservation has been confirmed.");
             fetchReservations(); 
             window.history.replaceState({}, document.title, window.location.pathname);
         }
-
         if (query.get("canceled")) {
             toast.error("Payment cancelled.");
             window.history.replaceState({}, document.title, window.location.pathname);
@@ -49,48 +47,55 @@ const MyReservationPage = () => {
     const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
     const currentBookings = reservations.slice(indexOfFirstBooking, indexOfLastBooking);
 
-    const handleCancel = async (id) => {
-        const result = await Swal.fire({
-            title: 'ARE YOU SURE?',
-            text: "This action is permanent and cannot be undone!",
+    const handleCancel = (reservationId) => {
+        Swal.fire({
+            title: 'CANCEL RESERVATION?',
+            text: "This action will cancel your booking. Are you sure?",
             icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#ff4d00',
-            cancelButtonColor: '#333',
-            confirmButtonText: 'YES, CANCEL IT',
+            iconColor: '#ff4d00',
             background: '#151515',
-            color: '#fff',
+            showCancelButton: true,
+            confirmButtonText: 'YES, CANCEL IT',
+            cancelButtonText: 'NO, KEEP IT',
+            target: '.reservations-container', 
+            heightAuto: false, 
+            
+            buttonsStyling: false,
             customClass: {
-                popup: 'swal-custom-dark'
+                container: 'swal-fix-overlay', 
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-html',
+                actions: 'swal-custom-actions',
+                confirmButton: 'swal-btn swal-btn-confirm',
+                cancelButton: 'swal-btn swal-btn-cancel'
+            }
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const loadingToast = toast.loading("Canceling reservation...");
+                try {
+                    await reservationService.cancelReservation(reservationId);
+                    toast.success("Reservation Canceled Successfully", { id: loadingToast });
+                    fetchReservations(); 
+                } catch (error) {
+                    toast.error("Could not cancel reservation", { id: loadingToast });
+                }
             }
         });
-
-        if (result.isConfirmed) {
-            try {
-                await reservationService.cancelReservation(id);
-                toast.success("Reservation cancelled");
-                fetchReservations(); 
-            } catch (error) {
-                toast.error("Could not cancel reservation");
-            }
-        }
     };
 
     const handleCheckOut = async (res) => {
+        const loadingToast = toast.loading("Redirecting to Secure Payment...");
         try {
-            const loadingToast = toast.loading("Redirecting to Secure Payment...");
             const data = await paymentService.initiatePayment(res.id);
-            
             toast.dismiss(loadingToast);
-
             if (data && data.url) {
                 window.location.href = data.url; 
             } else {
                 toast.error("Payment URL not found");
             }
         } catch (error) {
-            toast.dismiss();
-            console.error("Payment Error:", error);
+            toast.dismiss(loadingToast);
             toast.error("Failed to initialize payment");
         }
     };
@@ -101,12 +106,15 @@ const MyReservationPage = () => {
         <div className="reservations-container">
             <div className="reservations-header">
                 <h2>My Reservations</h2>
-                <p>Showing page {currentPage} of {totalPages || 1}</p>
+                <p>Manage your reservations and payments</p>
             </div>
 
             {reservations.length === 0 ? (
                 <div className="empty-state">
                     <p>You have no active reservations.</p>
+                    <button onClick={() => navigate('/fleet')} className="checkOut-btn-premium" style={{width: 'auto', marginTop: '1rem'}}>
+                        Browse Fleet
+                    </button>
                 </div>
             ) : (
                 <>
@@ -116,7 +124,7 @@ const MyReservationPage = () => {
                                 <div className="res-info">
                                     <div className="res-main-details">
                                         <h4>{res.vehicleBrand} {res.vehicleName}</h4>
-                                        <span className={`status-badge ${res.status.toLowerCase().replace(' ', '_')}`}>
+                                        <span className={`status-badge ${res.status.toLowerCase().replace(/\s+/g, '_')}`}>
                                             {res.status.replace('_', ' ')}
                                         </span>
                                     </div>
@@ -156,11 +164,11 @@ const MyReservationPage = () => {
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
                             >
-                                Previous
+                                <i className="fas fa-chevron-left"></i> Previous
                             </button>
 
                             <span className="page-info">
-                                Page {currentPage} of {totalPages}
+                                {currentPage} / {totalPages}
                             </span>
 
                             <button 
@@ -168,7 +176,7 @@ const MyReservationPage = () => {
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                 disabled={currentPage === totalPages}
                             >
-                                Next
+                                Next <i className="fas fa-chevron-right"></i>
                             </button>
                         </div>
                     )}

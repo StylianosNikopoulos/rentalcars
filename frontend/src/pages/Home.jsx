@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import vehicleService from '../services/vehicleService'; 
 import '../assets/styles/home.css';
+import '../assets/styles/footer.css';
 
 const Home = () => {
     const [vehicles, setVehicles] = useState([]);
@@ -25,14 +26,33 @@ const Home = () => {
     return (
         <div className="home-page">
             <header className="hero">
-                <h1>Premium Car Rentals</h1>
-                <p>Drive your dream car today. Affordable prices, world-class service.</p>
+                <div className="hero-content">
+                    <span className="hero-badge">Luxury & Performance</span>
+                    <h1>Experience <br/><span className="text-outline">The Freedom</span></h1>
+                    <p>Unlock the journey of your life with our exclusive fleet of world-class automobiles.</p>
+                    
+                    <div className="search-widget">
+                        <div className="input-group">
+                            <label>Dates</label>
+                            <input type="date" />
+                        </div>
+                        <button className="search-btn" onClick={() => navigate('/vehicles')}>
+                            Find Your Car
+                        </button>
+                    </div>
+                </div>
             </header>
 
             <section className="vehicle-container">
-                <h2>Featured Fleet</h2>
+                <div className="section-header">
+                    <h2>Featured Fleet</h2>
+                    <p>Select from our hand-picked top-tier vehicles for your next trip.</p>
+                </div>
+
                 {loading ? (
-                    <div className="loader">INITIALIZING...</div>
+                    <div className="loader-wrapper">
+                        <div className="minimal-loader"></div>
+                    </div>
                 ) : (
                 <div className="vehicle-grid">
                     {vehicles.map(car => (
@@ -40,7 +60,6 @@ const Home = () => {
                             key={car.id} 
                             className="vehicle-item" 
                             onClick={() => navigate(`/vehicle/${car.id}`)} 
-                            style={{ cursor: 'pointer' }} 
                         >
                             <div className="vehicle-img-wrapper">
                                 <img 
@@ -48,28 +67,30 @@ const Home = () => {
                                     alt={car.model} 
                                     className="vehicle-img" 
                                 />
+                                <div className="img-overlay"></div>
+                                <div className="category-tag">{car.type}</div>
                             </div>
                             <div className="vehicle-details">
-                                <div>
-                                    <h3 className="car-name">{car.brand} {car.model}</h3>
-                                    <div className="car-specs">{car.type} • {car.fuelType || 'EV'}</div>
+                                <div className="info">
+                                    <h3 className="car-name">{car.brand} <span>{car.model}</span></h3>
+                                    <div className="car-specs">
+                                        <span>Turbocharged</span> • <span>Automatic</span> • <span>{car.fuelType || 'EV'}</span>
+                                    </div>
                                 </div>
                                 <div className="car-price-tag">
-                                    <div className="price-value">${car.dailyPrice}</div>
-                                    <div style={{fontSize: '0.7rem', color: '#555'}}>PER DAY</div>
+                                    <span className="price-value">€{car.dailyPrice}</span>
+                                    <span className="price-period">/day</span>
                                 </div>
                             </div>
-                            <button className="rent-btn-minimal">
-                                View Details
-                            </button>
                         </div>
                     ))}
                 </div>
                 )}
                 
-                <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                    <button className="rent-btn-minimal" onClick={() => navigate('/vehicles')}>
-                        View All Vehicles
+                <div className="view-all-wrapper">
+                    <button className="explore-btn" onClick={() => navigate('/vehicles')}>
+                        Explore Full Collection
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </button>
                 </div>
             </section>

@@ -58,56 +58,76 @@ const VehicleDetailsPage = () => {
     if (loading) return <div className="loader">Loading details...</div>;
     if (!vehicle) return null;
 
-    return (
-        <div className="details-container">
-            <div className="details-grid">
-                <div className="vehicle-image-section">
-                    <img src={vehicle.imageUrl || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070'} alt={vehicle.model} />
+return (
+    <div className="details-container">
+        <div className="details-header">
+            <div className="header-main">
+                <h1>{vehicle.brand} <span>{vehicle.model}</span></h1>
+                <div className="price-tag">
+                    <span className="amount">${vehicle.dailyPrice}</span>
+                    <span className="per-day">/ day</span>
                 </div>
-                
-                <div className="vehicle-info-section">
-                    <h1>{vehicle.brand} {vehicle.model}</h1>
-                    
-                    <div className="specs-badge-container">
-                        <span className="spec-badge">{vehicle.type}</span>
-                        <span className="spec-badge">{vehicle.fuelType}</span>
-                        <span className="spec-badge">{vehicle.year}</span>
-                        <span className="spec-badge">{vehicle.licensePlate}</span>
-                    </div>
+            </div>
+            
+            <div className="specs-badge-container">
+                <span className="spec-badge">
+                    <i className="fas fa-car"></i> {vehicle.type}
+                </span>
+                <span className="spec-badge">
+                    <i className="fas fa-gas-pump"></i> {vehicle.fuelType}
+                </span>
+                <span className="spec-badge">
+                    <i className="fas fa-calendar-alt"></i> {vehicle.year}
+                </span>
+                <span className="spec-badge">
+                    <i className="fas fa-id-card"></i> {vehicle.licensePlate}
+                </span>
+            </div>
+        </div>
 
-                    <div className="price-display">${vehicle.dailyPrice} <span style={{fontSize: '1rem', color: '#666'}}>/ day</span></div>
-                    
-                    <div className="booking-card">
-                        <h3>Reserve this vehicle</h3>
-                        <form onSubmit={handleBooking}>
-                            <div className="form-group">
-                                <label>Pick-up Date</label>
-                                <input 
-                                    type="date" 
-                                    required 
-                                    min={new Date().toISOString().split('T')[0]}
-                                    value={bookingDates.startDate}
-                                    onChange={(e) => setBookingDates({...bookingDates, startDate: e.target.value})}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Return Date</label>
-                                <input 
-                                    type="date" 
-                                    required 
-                                    min={bookingDates.startDate || new Date().toISOString().split('T')[0]}
-                                    value={bookingDates.endDate}
-                                    onChange={(e) => setBookingDates({...bookingDates, endDate: e.target.value})}
-                                />
-                            </div>
-                            <button type="submit" className="rent-btn-minimal" style={{width: '100%', padding: '15px'}}>
-                                Confirm Reservation
-                            </button>
-                        </form>
+        <div className="details-grid-v2">
+            <div className="vehicle-main-image">
+                <img 
+                    src={vehicle.imageUrl || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070'} 
+                    alt={vehicle.model} 
+                />
+            </div>
+            
+            <div className="booking-sidebar">
+                <div className="booking-card">
+                    <div className="card-header">
+                        <h3>Book Reservation</h3>
+                        <p>Select your dates and confirm</p>
                     </div>
+                    <form onSubmit={handleBooking}>
+                        <div className="form-group">
+                            <label>Pick-up Date</label>
+                            <input 
+                                type="date" 
+                                required 
+                                min={new Date().toISOString().split('T')[0]}
+                                value={bookingDates.startDate}
+                                onChange={(e) => setBookingDates({...bookingDates, startDate: e.target.value})}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Return Date</label>
+                            <input 
+                                type="date" 
+                                required 
+                                min={bookingDates.startDate || new Date().toISOString().split('T')[0]}
+                                value={bookingDates.endDate}
+                                onChange={(e) => setBookingDates({...bookingDates, endDate: e.target.value})}
+                            />
+                        </div>
+                        <button type="submit" className="confirm-glow-btn">
+                            Confirm
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
     );
 };
 

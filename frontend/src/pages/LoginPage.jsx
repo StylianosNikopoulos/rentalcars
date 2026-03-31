@@ -5,19 +5,20 @@ import { useNavigate, Link } from 'react-router-dom';
 import '../assets/styles/auth.css';
 
 const LoginPage = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [credentials, setCredentials] = useState({ email: '', password: '' });
     const { login } = useAuth();
     const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        setCredentials({ ...credentials, [e.target.type]: e.target.value });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const loadingToast = toast.loading('Authenticating...');
-        
         try {
-            await login({ email, password });
+            await login(credentials);
             toast.success('Welcome back!', { id: loadingToast });
-            
             navigate('/', { replace: true }); 
         } catch (error) {
             toast.error('Invalid email or password!', { id: loadingToast });
@@ -31,15 +32,15 @@ const LoginPage = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>Email</label>
-                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                        <input type="email" value={credentials.email} onChange={handleChange} required />
                     </div>
                     <div className="form-group">
                         <label>Password</label>
-                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                        <input type="password" value={credentials.password} onChange={handleChange} required />
                     </div>
                     <button type="submit" className="auth-button">Sign In</button>
                 </form>
-                <Link to="/register" className="auth-link">Don't have an account? Register here</Link>
+                <Link to="/register" className="auth-link">Don't have an account? Register</Link>
             </div>
         </div>
     );

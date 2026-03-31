@@ -4,6 +4,7 @@ import userService from '../services/userService';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import '../assets/styles/profile.css';
+import '../assets/styles/swal-custom.css';
 import Swal from 'sweetalert2';
 
 const ProfilePage = () => {
@@ -11,7 +12,6 @@ const ProfilePage = () => {
     const navigate = useNavigate();
     const [fullUser, setFullUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({ firstName: '', lastName: '' });
 
@@ -35,91 +35,100 @@ const ProfilePage = () => {
 
     const handleUpdate = async (e) => {
         e.preventDefault();
-        
-        const updatePayload = {
-            firstName: editData.firstName,
-            lastName: editData.lastName
-        };
-
         try {
-            const updated = await userService.updateUser(fullUser.id, updatePayload);
-            
+            const updated = await userService.updateUser(fullUser.id, {
+                firstName: editData.firstName,
+                lastName: editData.lastName
+            });
             setFullUser(updated);
-            setIsEditing(false); 
-            toast.success("Profile updated successfully!");
+            setIsEditing(false);
+            toast.success("Profile updated!");
         } catch (error) {
-            console.error("Update error:", error.response?.data);
-            toast.error("Failed to update profile. Please check the fields.");
+            toast.error("Update failed.");
         }
     };
 
     const handleDeleteAccount = () => {
-        Swal.fire({
-            title: 'ARE YOU SURE?',
-            text: "This action is permanent and cannot be undone!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#ff4d00',
-            cancelButtonColor: '#333',
-            confirmButtonText: 'YES, DELETE IT',
-            background: '#151515',
-            color: '#fff',
-            customClass: {
-                popup: 'swal-custom-dark'
-            }
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    await userService.deleteUser(fullUser.id);
-                    toast.success("Account Deleted");
-                    logout();
-                    navigate('/');
-                } catch (error) {
-                    toast.error("Error during deletion");
+            Swal.fire({
+                title: 'ARE YOU SURE?',
+                text: "This action cannot be undone!",
+                icon: 'warning',
+                iconColor: '#ff4d00',
+                background: '#151515',
+                showCancelButton: true,
+                confirmButtonText: 'DELETE',
+                cancelButtonText: 'CANCEL',
+                
+                target: '.profile-container', 
+                heightAuto: false, 
+                
+                buttonsStyling: false,
+                customClass: {
+                    container: 'swal-fix-overlay', 
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-html',
+                    actions: 'swal-custom-actions',
+                    confirmButton: 'swal-btn swal-btn-confirm',
+                    cancelButton: 'swal-btn swal-btn-cancel'
                 }
-            }
-        });
-    };
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        await userService.deleteUser(fullUser.id);
+                        toast.success("Account deleted");
+                        logout();
+                        navigate('/');
+                    } catch (error) {
+                        toast.error("Error during deletion");
+                    }
+                }
+            });
+        };
 
-    if (loading) return <div className="loader">LOADING PROFILE...</div>;
+    if (loading) return <div className="loader-container"><div className="loader"></div></div>;
 
     return (
         <div className="profile-container">
-            <div className="profile-header">
-                <h1>Member Profile</h1>
-            </div>
+            <header className="profile-header">
+                <h1>Member Account</h1>
+                <p>Exclusive Access & Identity Settings</p>
+            </header>
 
             <div className="profile-grid">
-                <div className="profile-card">
+                <aside className="profile-card">
                     <div className="avatar-circle">
-                        {fullUser?.firstName?.charAt(0).toUpperCase() || "U"}
+                        {fullUser?.firstName?.charAt(0).toUpperCase()}
                     </div>
                     <h3>{fullUser?.firstName} {fullUser?.lastName}</h3>
                     <span className="role-badge">{fullUser?.role || 'CUSTOMER'}</span>
                     
-                    <div style={{ marginTop: '2rem' }}>
-                        <button className="rent-btn-minimal" onClick={() => setIsEditing(!isEditing)}>
-                            {isEditing ? "Cancel Edit" : "Edit Profile"}
+                    <div style={{ marginTop: '2.5rem' }}>
+                        <button 
+                            className={isEditing ? "discard-btn" : "confirm-glow-btn"} 
+                            onClick={() => setIsEditing(!isEditing)}
+                        >
+                            {isEditing ? "Discard Changes" : "Modify Profile"}
                         </button>
                     </div>
-                </div>
+                </aside>
 
-                <div className="info-section">
+                <main className="info-section">
                     {!isEditing ? (
-                        <>
+                        <div className="info-display">
                             <div className="info-group">
-                                <span className="info-label">Email Address</span>
+                                <label className="info-label">Email Address</label>
                                 <span className="info-value">{fullUser?.email}</span>
                             </div>
                             <div className="info-group">
-                                <span className="info-label">First Name</span>
+                                <label className="info-label">Given Name</label>
                                 <span className="info-value">{fullUser?.firstName}</span>
                             </div>
                             <div className="info-group">
-                                <span className="info-label">Last Name</span>
+                                <label className="info-label">Family Name</label>
                                 <span className="info-value">{fullUser?.lastName}</span>
                             </div>
-                        </>
+                        </div>
                     ) : (
                         <form onSubmit={handleUpdate} className="edit-form">
                             <div className="form-group">
@@ -128,6 +137,7 @@ const ProfilePage = () => {
                                     type="text" 
                                     value={editData.firstName}
                                     onChange={(e) => setEditData({...editData, firstName: e.target.value})}
+                                    required
                                 />
                             </div>
                             <div className="form-group">
@@ -136,19 +146,23 @@ const ProfilePage = () => {
                                     type="text" 
                                     value={editData.lastName}
                                     onChange={(e) => setEditData({...editData, lastName: e.target.value})}
+                                    required
                                 />
                             </div>
-                            <button type="submit" className="auth-button">Save Changes</button>
+                            <button type="submit" className="confirm-glow-btn">Save Updates</button>
                         </form>
                     )}
 
-                    <div className="danger-zone" style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid #333' }}>
-                        <h4 style={{ color: '#ff4d00', marginBottom: '1rem' }}>Danger Zone</h4>
+                    <section className="danger-zone">
+                        <h4>Security & Privacy</h4>
+                        <p style={{color: '#555', fontSize: '0.85rem', marginBottom: '1.5rem'}}>
+                            Once you delete your account, there is no going back. Please be certain.
+                        </p>
                         <button className="delete-btn" onClick={handleDeleteAccount}>
-                            Delete Account
+                            Terminate Account
                         </button>
-                    </div>
-                </div>
+                    </section>
+                </main>
             </div>
         </div>
     );

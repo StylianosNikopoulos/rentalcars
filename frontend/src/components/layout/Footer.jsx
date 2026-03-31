@@ -4,36 +4,36 @@ import { Link } from 'react-router-dom';
 const Footer = () => {
     return (
         <footer className="footer">
-            <div className="footer-content">
-                <div className="footer-brand">
-                    <Link to="/" className="footer-logo">RentalCar</Link>
-                    <p>Redefining the art of car rental. Premium fleet, seamless execution, and the thrill of the drive.</p>
+            <div className="footer-container">
+                <div className="footer-top">
+                    <div className="footer-brand">
+                        <Link to="/" className="footer-logo">RENTAL<span>CAR</span></Link>
+                        <p className="footer-tagline">
+                            Premium fleet. Seamless execution. <br/> The thrill of the drive.
+                        </p>
+                    </div>
+
+                    <div className="footer-grid">
+                        <div className="footer-nav">
+                            <Link to="/">About</Link>
+                            <Link to="/">Terms</Link>
+                            <Link to="/">Privacy</Link>
+                        </div>
+                        <div className="footer-contact">
+                            <a href="mailto:info@rentalcar.com">info@rentalcar.com</a>
+                            <a href="tel:+30231055555">+30 231 055 555</a>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="footer-section">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><Link to="/">About Us</Link></li>
-                        <li><Link to="/">Terms</Link></li>
-                        <li><Link to="/">Privacy Policy</Link></li>
-                    </ul>
-                </div>
+                <div className="footer-divider"></div>
 
-                <div className="footer-section">
-                    <h4>Contact</h4>
-                    <ul>
-                        <li><a href="mailto:info@rentalcar.com">info@rentalcar.com</a></li>
-                        <li><a href="tel:+1234567890">+30 231 055 555</a></li>
-                        <li>Athens, Greece</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div className="footer-bottom">
-                <p>&copy; {new Date().getFullYear()} rentalcar. All Rights Reserved.</p>
-                <div className="social-links">
-                    <a href="#">Instagram</a>
-                    <a href="#">Facebook</a>
+                <div className="footer-bottom">
+                    <p className="copyright">&copy; {new Date().getFullYear()} RENTALCAR. ATHENS, GR.</p>
+                    <div className="footer-socials">
+                        <a href="#" target="_blank" rel="noreferrer">INSTAGRAM</a>
+                        <a href="#" target="_blank" rel="noreferrer">FACEBOOK</a>
+                    </div>
                 </div>
             </div>
         </footer>

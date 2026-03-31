@@ -1,154 +1,219 @@
+/* CONTAINER & LAYOUT */
 .profile-container {
-    max-width: 900px;
-    margin: 4rem auto;
-    padding: 2rem;
-    min-height: 80vh;
+    max-width: 1100px;
+    margin: 8rem auto 4rem;
+    padding: 0 25px;
+    min-height: 85vh;
 }
 
+/* HEADER SECTION */
 .profile-header {
-    text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
+    text-align: left;
+    border-left: 2px solid var(--primary);
+    padding-left: 2rem;
 }
 
 .profile-header h1 {
-    font-size: 3rem;
-    font-weight: 900;
-    text-transform: uppercase;
+    font-size: 2.5rem;
+    font-weight: 800;
     letter-spacing: -1px;
+    color: #fff;
+    margin: 0;
 }
 
+.profile-header p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* GRID SYSTEM */
 .profile-grid {
     display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 2rem;
+    grid-template-columns: 350px 1fr;
+    gap: 3rem;
+    align-items: start;
 }
 
+/* LEFT SIDE CARD - THE AVATAR */
 .profile-card {
-    background: #151515;
-    padding: 2rem;
-    border-radius: 20px;
-    border: 1px solid var(--glass-border);
+    background: #111;
+    padding: 3rem 2rem;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
     text-align: center;
+    position: sticky;
+    top: 120px;
 }
 
 .avatar-circle {
-    width: 120px;
-    height: 120px;
-    background: var(--primary);
-    border-radius: 50%;
-    margin: 0 auto 1.5rem;
+    width: 140px;
+    height: 140px;
+    background: linear-gradient(135deg, var(--primary), #ff8000);
+    border-radius: 40px; 
+    margin: 0 auto 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3rem;
-    font-weight: bold;
+    font-size: 4rem;
+    font-weight: 800;
     color: white;
-    text-transform: uppercase;
+    box-shadow: 0 20px 40px rgba(255, 77, 0, 0.2);
 }
 
+.profile-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--primary);
+    border: 1px solid rgba(255, 77, 0, 0.2);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+/* RIGHT SIDE - INFO SECTION */
 .info-section {
-    background: #151515;
-    padding: 2.5rem;
-    border-radius: 20px;
-    border: 1px solid var(--glass-border);
+    background: #111;
+    padding: 3rem;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .info-group {
-    margin-bottom: 2rem;
-    border-bottom: 1px solid #222;
-    padding-bottom: 1rem;
-}
-
-.info-group:last-child {
-    border-bottom: none;
+    margin-bottom: 2.5rem;
 }
 
 .info-label {
     display: block;
-    color: #666;
-    font-size: 0.8rem;
+    color: #555;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.8rem;
 }
 
 .info-value {
     font-size: 1.2rem;
     font-weight: 500;
-    color: var(--text-main);
+    color: #eee;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    display: block;
 }
 
-.role-badge {
-    display: inline-block;
-    padding: 5px 15px;
-    background: rgba(255, 77, 0, 0.1);
-    color: var(--primary);
-    border-radius: 50px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    margin-top: 10px;
+.confirm-glow-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 20px rgba(255, 77, 0, 0.2);
 }
 
+.confirm-glow-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+    box-shadow: 0 15px 30px rgba(255, 77, 0, 0.3);
+}
+
+.discard-btn {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    color: #ff4444;
+    border: 1px solid rgba(255, 68, 68, 0.2);
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.discard-btn:hover {
+    background: rgba(255, 68, 68, 0.1);
+    border-color: #ff4444;
+}
+
+/* EDIT FORM */
 .edit-form .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.edit-form label {
+    font-size: 0.7rem;
+    color: var(--primary);
+    font-weight: 800;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 10px;
 }
 
 .edit-form input {
     width: 100%;
-    padding: 12px;
-    background: #0a0a0a;
-    border: 1px solid #333;
+    padding: 15px;
+    background: #080808;
+    border: 1px solid #222;
     color: white;
-    border-radius: 8px;
-    margin-top: 5px;
+    border-radius: 12px;
+    font-family: inherit;
+}
+
+/* DANGER ZONE */
+.danger-zone {
+    margin-top: 4rem;
+    padding: 2.5rem;
+    background: rgba(255, 0, 0, 0.02);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 0, 0, 0.1);
+}
+
+.danger-zone h4 {
+    color: #ff4444;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
 }
 
 .delete-btn {
     background: transparent;
-    border: 1px solid #ff4d00;
-    color: #ff4d00;
-    padding: 10px 20px;
-    border-radius: 8px;
+    border: 1px solid rgba(255, 68, 68, 0.3);
+    color: #ff4444;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 700;
     cursor: pointer;
-    font-weight: bold;
     transition: 0.3s;
 }
 
 .delete-btn:hover {
-    background: #ff4d00;
+    background: #ff4444;
     color: white;
-    box-shadow: 0 0 15px rgba(255, 77, 0, 0.4);
-}
-.status-badge {
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    display: inline-block;
-    margin-top: 8px;
 }
 
-.status-badge.confirmed { background: rgba(0, 255, 100, 0.1); color: #00ff64; }
-.status-badge.pending { background: rgba(255, 200, 0, 0.1); color: #ffc800; }
-.status-badge.cancelled { background: rgba(255, 0, 0, 0.1); color: #ff0000; }
-
-.cancel-btn-small {
-    background: transparent;
-    border: 1px solid #444;
-    color: #888;
-    padding: 8px 15px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
+@media (max-width: 900px) {
+    .profile-grid { grid-template-columns: 1fr; }
+    .profile-card { position: relative; top: 0; }
+    .profile-header { text-align: center; border-left: none; padding-left: 0; }
 }
 
-.cancel-btn-small:hover {
-    border-color: #ff4d00;
-    color: #ff4d00;
-}
-
-@media (max-width: 768px) {
-    .profile-grid {
-        grid-template-columns: 1fr;
-    }
-}
