@@ -112,7 +112,7 @@ const MyReservationPage = () => {
             {reservations.length === 0 ? (
                 <div className="empty-state">
                     <p>You have no active reservations.</p>
-                    <button onClick={() => navigate('/fleet')} className="checkOut-btn-premium" style={{width: 'auto', marginTop: '1rem'}}>
+                    <button onClick={() => navigate('/vehicles')} className="checkOut-btn-premium" style={{width: 'auto', marginTop: '1rem'}}>
                         Browse Fleet
                     </button>
                 </div>
