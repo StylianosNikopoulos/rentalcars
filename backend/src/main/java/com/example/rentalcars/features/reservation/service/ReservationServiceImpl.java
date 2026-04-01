@@ -35,10 +35,8 @@ public class ReservationServiceImpl implements ReservationService {
     public Reservation createReservation(Reservation reservation) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (!isAdmin(auth)) {
-            var user = userService.getUserByEmail(auth.getName());
-            reservation.setUserId(user.getId());
-        }
+        var user = userService.getUserByEmail(auth.getName());
+        reservation.setUserId(user.getId());
 
         if (reservation.getPeriod() == null) {
             throw new InvalidReservationDatesException();
