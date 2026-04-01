@@ -1,6 +1,7 @@
 package com.example.rentalcars.features.reservation.infrastructure.adapter.inbound.rest.dto;
 
 import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,7 @@ public class ReservationRequest {
     private UUID vehicleId;
 
     @NotNull
-    @Future(message = "Start date must be in the future")
+    @FutureOrPresent(message = "Start date cannot be in the past")
     private LocalDateTime startDate;
 
     @NotNull

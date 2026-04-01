@@ -39,8 +39,13 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setUserId(user.getId());
 
         if (reservation.getPeriod() == null) {
-            throw new InvalidReservationDatesException();
+            throw new InvalidReservationDatesException("Reservation period is missing.");
         }
+
+        if (reservation.getPeriod().isPast()) {
+            throw new InvalidReservationDatesException("Pickup date cannot be in the past.");
+        }
+
         var vehicle = vehicleService.getVehicleById(reservation.getVehicleId());
 
         if (reservationRepository.existsOverlap(reservation.getVehicleId(), reservation.getPeriod())) {

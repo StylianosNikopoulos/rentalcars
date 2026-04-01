@@ -12,4 +12,5 @@ public interface UserService {
     User register(UserRequest request);
     User update(UUID id, UpdateUserRequest request);
     void delete(UUID id);
+    boolean existsByEmail(String email);
 }

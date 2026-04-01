@@ -1,6 +1,8 @@
 package com.example.rentalcars.core.valueobject;
 
 import com.example.rentalcars.core.exception.BusinessException;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Duration;
 
@@ -16,7 +18,7 @@ public record DateRange(LocalDateTime start, LocalDateTime end) {
         return Duration.between(start, end).toDays();
     }
 
-    public boolean overlaps(DateRange other) {
-        return start.isBefore(other.end()) && other.start().isBefore(end);
+    public boolean isPast() {
+        return start.toLocalDate().isBefore(LocalDate.now());
     }
 }

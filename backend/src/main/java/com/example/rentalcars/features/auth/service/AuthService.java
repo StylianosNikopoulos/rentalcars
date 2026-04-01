@@ -1,5 +1,7 @@
 package com.example.rentalcars.features.auth.service;
 
+import com.example.rentalcars.features.auth.domain.exception.EmailAlreadyExistsException;
+import com.example.rentalcars.features.auth.domain.exception.InvalidCredentialsException;
 import com.example.rentalcars.features.auth.domain.port.inbound.AuthUseCase;
 import com.example.rentalcars.features.auth.domain.port.outbound.IdentityPort;
 import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.AuthResponse;
@@ -22,7 +24,12 @@ public class AuthService implements AuthUseCase {
 
     @Override
     public AuthResponse login(LoginRequest request) {
-        identityPort.authenticate(request.getEmail(), request.getPassword());
+        try {
+            identityPort.authenticate(request.getEmail(), request.getPassword());
+        } catch (Exception e) {
+            throw new InvalidCredentialsException();
+        }
+
         var user = userService.getInternalUserByEmail(request.getEmail());
         var token = identityPort.generateToken(request.getEmail());
 
@@ -35,6 +42,10 @@ public class AuthService implements AuthUseCase {
     @Override
     @Transactional
     public AuthResponse register(RegisterRequest request) {
+        if (userService.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyExistsException();
+        }
+
         var userRequest = UserRequest.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())
