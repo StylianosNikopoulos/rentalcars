@@ -21,4 +21,6 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
             @Param(("startDate")) LocalDateTime startDate,
             @Param("endDate")LocalDateTime endDate
             );
+
+    List<ReservationJpaEntity> findByVehicleId(UUID vehicleId);
 }

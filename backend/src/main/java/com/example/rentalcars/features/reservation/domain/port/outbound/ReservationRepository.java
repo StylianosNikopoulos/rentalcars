@@ -11,5 +11,6 @@ public interface ReservationRepository {
     Optional<Reservation> findById (UUID id);
     List<Reservation> findByUserId(UUID userId);
     List<Reservation> findAll();
+    List<Reservation> findByVehicleId(UUID vehicleId);
     boolean existsOverlap(UUID vehicleId, DateRange period);
 }

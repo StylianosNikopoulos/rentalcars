@@ -11,6 +11,7 @@ public interface ReservationService {
     Reservation createReservation(Reservation reservation);
     List<Reservation> markAsActive(UUID reservationId);
     List<Reservation> markAsCompleted(UUID reservationId);
+    List<Reservation> getReservationsByVehicleId(UUID vehicleId);
     void cancelReservation(UUID reservationId, String userEmail);
     void cancelReservationInternal(UUID reservationId);
     void confirmReservation(UUID reservationId);

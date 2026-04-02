@@ -45,4 +45,10 @@ public class ReservationController {
         reservationService.cancelReservation(id, principal.getName());
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/vehicle/{vehicleId}")
+    public ResponseEntity<List<ReservationResponse>> getByVehicle(@PathVariable UUID vehicleId) {
+        List<Reservation> reservations = reservationService.getReservationsByVehicleId(vehicleId);
+        return ResponseEntity.ok(restMapper.toResponseList(reservations));
+    }
 }

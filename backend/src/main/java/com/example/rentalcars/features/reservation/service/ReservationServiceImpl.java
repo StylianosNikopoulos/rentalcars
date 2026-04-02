@@ -156,6 +156,13 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationRepository.findAll();
     }
 
+    @Override
+    public List<Reservation> getReservationsByVehicleId(UUID vehicleId) {
+        return reservationRepository.findByVehicleId(vehicleId).stream()
+                .filter(res -> res.getStatus() != ReservationStatus.CANCELLED)
+                .toList();
+    }
+
     // Helper method for security
     private void validateOwnership(Reservation reservation) {
         var auth = SecurityContextHolder.getContext().getAuthentication();

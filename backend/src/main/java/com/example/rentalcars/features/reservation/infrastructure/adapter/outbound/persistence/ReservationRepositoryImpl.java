@@ -49,6 +49,13 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
+    public List<Reservation> findByVehicleId(UUID vehicleId) {
+        return jpaRepository.findByVehicleId(vehicleId).stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public boolean existsOverlap(UUID vehicleId, DateRange period) {
         return jpaRepository.existsOverlappingReservations(vehicleId, period.start(), period.end());
     }

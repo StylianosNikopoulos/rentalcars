@@ -16,10 +16,9 @@ public class ReservationResponse {
     private UUID id;
     private String vehicleName;
     private String vehicleBrand;
-    private LocalDateTime startDate;
     private UUID userId;
     private UUID vehicleId;
-    private LocalDateTime endDate;
+    private DateRangeResponse period;
     private BigDecimal totalAmount;
     private String status;
 }
