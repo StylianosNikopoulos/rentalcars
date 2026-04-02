@@ -21,7 +21,13 @@ const LoginPage = () => {
             toast.success('Welcome back!', { id: loadingToast });
             navigate('/', { replace: true }); 
         } catch (error) {
-            toast.error('Invalid email or password!', { id: loadingToast });
+            const errorCode = error.response?.data?.code;
+
+            if (errorCode === "INVALID_CREDENTIALS") {
+                toast.error("Invalid email or password.", { id: loadingToast });
+            } else {
+                toast.error(error.response?.data?.message || "Login failed.", { id: loadingToast });
+            }
         }
     };
 

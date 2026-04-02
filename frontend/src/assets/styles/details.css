@@ -163,3 +163,24 @@
         height: 400px;
     }
 }
+
+/* CALENDAR */
+.custom-datepicker-input {
+    width: 100%;
+    padding: 12px;
+    background: #111;
+    border: 1px solid #333;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.price-summary {
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(255, 77, 0, 0.1);
+    border: 1px dashed #ff4d00;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

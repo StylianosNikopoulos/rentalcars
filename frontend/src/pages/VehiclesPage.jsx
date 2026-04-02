@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; 
 import vehicleService from '../services/vehicleService';
 import '../assets/styles/vehicles.css'; 
 
@@ -12,11 +12,22 @@ const VehiclesPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
     const navigate = useNavigate();
+    const location = useLocation(); 
 
     useEffect(() => {
-        const fetchAll = async () => {
+        const fetchVehicles = async () => {
+            setLoading(true);
             try {
-                const data = await vehicleService.getAllVehicles();
+                const queryParams = new URLSearchParams(location.search);
+                const start = queryParams.get('start');
+                const end = queryParams.get('end');
+
+                let data;
+                if (start && end) {
+                    data = await vehicleService.getAvailableVehicles(start, end);
+                } else {
+                    data = await vehicleService.getAllVehicles();
+                }
                 setVehicles(data);
             } catch (error) {
                 console.error("Error fetching vehicles", error);
@@ -24,12 +35,13 @@ const VehiclesPage = () => {
                 setLoading(false);
             }
         };
-        fetchAll();
-    }, []);
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [currentPage]);
+        fetchVehicles();
+    }, [location.search]); 
+
+    const queryParams = new URLSearchParams(location.search);
+    const selectedStart = queryParams.get('start');
+    const selectedEnd = queryParams.get('end');
 
     const getProcessedVehicles = () => {
         let filtered = vehicles.filter(car => 
@@ -42,12 +54,10 @@ const VehiclesPage = () => {
         } else if (sortOrder === "high") {
             filtered.sort((a, b) => b.dailyPrice - a.dailyPrice);
         }
-
         return filtered;
     };
 
     const filteredVehicles = getProcessedVehicles();
-
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = filteredVehicles.slice(indexOfFirstItem, indexOfLastItem);
@@ -58,10 +68,35 @@ const VehiclesPage = () => {
         setCurrentPage(1); 
     };
 
+    const formatDate = (dateString) => {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        }); 
+    };
+
     return (
         <div className="vehicles-page">
             <div className="vehicles-header">
                 <h1>Our Premium Fleet</h1>
+
+{selectedStart && selectedEnd && (
+    <div className="availability-info-banner">
+        <div className="availability-text">
+            <i className="far fa-calendar-check"></i>
+            <span>Showing available fleet for: </span>
+            <strong>{formatDate(selectedStart)}</strong>
+            <span className="date-separator">→</span>
+            <strong>{formatDate(selectedEnd)}</strong>
+        </div>
+        <button className="clear-dates-btn" onClick={() => navigate('/vehicles')}>
+            RESET DATES
+        </button>
+    </div>
+)}
                 
                 <div className="sort-container">
                     <select 
@@ -105,7 +140,7 @@ const VehiclesPage = () => {
                                         <div className="car-specs">{car.type} • {car.fuelType}</div>
                                     </div>
                                     <div className="car-price-tag">
-                                        <div className="price-value">${car.dailyPrice}</div>
+                                        <div className="price-value">€{car.dailyPrice}</div>
                                         <div className="price-label">PER DAY</div>
                                     </div>
                                 </div>
@@ -113,8 +148,6 @@ const VehiclesPage = () => {
                             </div>
                         ))}
                     </div>
-
-                    {/* PAGINATION */}
                     {totalPages > 1 && (
                         <div className="pagination">
                             <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="page-btn">PREVIOUS</button>

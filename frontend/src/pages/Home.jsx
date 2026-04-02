@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 import vehicleService from '../services/vehicleService'; 
+import toast from 'react-hot-toast'; 
 import '../assets/styles/home.css';
 import '../assets/styles/footer.css';
 
 const Home = () => {
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
+    
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    
     const navigate = useNavigate(); 
 
     useEffect(() => {
@@ -23,6 +30,18 @@ const Home = () => {
         fetchVehicles();
     }, []);
 
+    const handleSearch = () => {
+        if (!startDate || !endDate) {
+            toast.error("Please select both pickup and return dates");
+            return;
+        }
+
+        const sDate = startDate.toISOString().split('T')[0];
+        const eDate = endDate.toISOString().split('T')[0];
+
+        navigate(`/vehicles?start=${sDate}&end=${eDate}`);
+    };
+
     return (
         <div className="home-page">
             <header className="hero">
@@ -33,65 +52,56 @@ const Home = () => {
                     
                     <div className="search-widget">
                         <div className="input-group">
-                            <label>Dates</label>
-                            <input type="date" />
+                            <label>Rental Period</label>
+                            <DatePicker
+                                selectsRange={true}
+                                startDate={startDate}
+                                endDate={endDate}
+                                onChange={(update) => {
+                                    const [start, end] = update;
+                                    setStartDate(start);
+                                    setEndDate(end);
+                                }}
+                                minDate={new Date()}
+                                isClearable={true}
+                                placeholderText="Select Dates"
+                                className="custom-datepicker-input" 
+                                dateFormat="dd/MM/yyyy"
+                            />
                         </div>
-                        <button className="search-btn" onClick={() => navigate('/vehicles')}>
+                        <button className="search-btn" onClick={handleSearch}>
                             Find Your Car
                         </button>
                     </div>
                 </div>
             </header>
 
-            <section className="vehicle-container">
+            <section className="features-section">
                 <div className="section-header">
-                    <h2>Featured Fleet</h2>
-                    <p>Select from our hand-picked top-tier vehicles for your next trip.</p>
+                    <h2>Why Drive With Us</h2>
                 </div>
-
-                {loading ? (
-                    <div className="loader-wrapper">
-                        <div className="minimal-loader"></div>
-                    </div>
-                ) : (
-                <div className="vehicle-grid">
-                    {vehicles.map(car => (
-                        <div 
-                            key={car.id} 
-                            className="vehicle-item" 
-                            onClick={() => navigate(`/vehicle/${car.id}`)} 
-                        >
-                            <div className="vehicle-img-wrapper">
-                                <img 
-                                    src={car.imageUrl || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070'} 
-                                    alt={car.model} 
-                                    className="vehicle-img" 
-                                />
-                                <div className="img-overlay"></div>
-                                <div className="category-tag">{car.type}</div>
-                            </div>
-                            <div className="vehicle-details">
-                                <div className="info">
-                                    <h3 className="car-name">{car.brand} <span>{car.model}</span></h3>
-                                    <div className="car-specs">
-                                        <span>Turbocharged</span> • <span>Automatic</span> • <span>{car.fuelType || 'EV'}</span>
-                                    </div>
-                                </div>
-                                <div className="car-price-tag">
-                                    <span className="price-value">€{car.dailyPrice}</span>
-                                    <span className="price-period">/day</span>
-                                </div>
-                            </div>
+                <div className="features-grid">
+                    <div className="feature-card">
+                        <div className="feature-icon">
+                            <i className="fas fa-shield-alt"></i>
                         </div>
-                    ))}
-                </div>
-                )}
-                
-                <div className="view-all-wrapper">
-                    <button className="explore-btn" onClick={() => navigate('/vehicles')}>
-                        Explore Full Collection
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </button>
+                        <h3>Fully Insured</h3>
+                        <p>Comprehensive coverage for total peace of mind on every mile you drive.</p>
+                    </div>
+                    <div className="feature-card">
+                        <div className="feature-icon">
+                            <i className="fas fa-road"></i>
+                        </div>
+                        <h3>Unlimited Miles</h3>
+                        <p>No boundaries, no limits. Explore the destination at your own pace.</p>
+                    </div>
+                    <div className="feature-card">
+                        <div className="feature-icon">
+                            <i className="fas fa-headset"></i>
+                        </div>
+                        <h3>24/7 Support</h3>
+                        <p>Our dedicated team is always a call away, anywhere, anytime.</p>
+                    </div>
                 </div>
             </section>
         </div>

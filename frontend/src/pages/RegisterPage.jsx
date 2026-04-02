@@ -23,12 +23,22 @@ const RegisterPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const loadingToast = toast.loading('Creating account...');
+        
         try {
             await register(formData);
+            
             toast.success('Account created successfully!', { id: loadingToast });
-            navigate('/');
+            navigate('/'); 
         } catch (error) {
-            toast.error('Registration failed. Please try again.', { id: loadingToast });
+            const errorCode = error.response?.data?.code;
+
+            if (errorCode === "EMAIL_ALREADY_EXISTS") {
+                toast.error("This email is already registered", { id: loadingToast });
+            } else if (errorCode === "INVALID_DATES") { 
+                toast.error("The provided dates are invalid.", { id: loadingToast });
+            } else {
+                toast.error(error.response?.data?.message || "Registration failed. Please try again.", { id: loadingToast });
+            }
         }
     };
 
@@ -39,19 +49,19 @@ const RegisterPage = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>First Name</label>
-                        <input name="firstName" type="text" onChange={handleChange} required />
+                        <input name="firstName" value={formData.firstName} type="text" onChange={handleChange} required />
                     </div>
                     <div className="form-group">
                         <label>Last Name</label>
-                        <input name="lastName" type="text" onChange={handleChange} required />
+                        <input name="lastName" value={formData.lastName} type="text" onChange={handleChange} required />
                     </div>
                     <div className="form-group">
                         <label>Email</label>
-                        <input name="email" type="email" onChange={handleChange} required />
+                        <input name="email" value={formData.email} type="email" onChange={handleChange} required />
                     </div>
                     <div className="form-group">
                         <label>Password</label>
-                        <input name="password" type="password" onChange={handleChange} required />
+                        <input name="password" value={formData.password} type="password" onChange={handleChange} required />
                     </div>
                     <button type="submit" className="auth-button">Register</button>
                 </form>
@@ -60,5 +70,4 @@ const RegisterPage = () => {
         </div>
     );
 };
-
 export default RegisterPage;
