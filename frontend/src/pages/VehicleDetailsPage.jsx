@@ -3,10 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import vehicleService from '../services/vehicleService';
-import reservationService from '../services/reservationService'; 
+import reservationService from '../services/reservationService';
 import toast from 'react-hot-toast';
 import '../assets/styles/details.css';
-
 const VehicleDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -15,21 +14,49 @@ const VehicleDetailsPage = () => {
     
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [bookedDates, setBookedDates] = useState([]);
 
     useEffect(() => {
-        const fetchVehicle = async () => {
+        const fetchAllData = async () => {
             try {
-                const data = await vehicleService.getVehicleById(id);
-                setVehicle(data);
+        const [vehicleData, reservationsData] = await Promise.all([
+            vehicleService.getVehicleById(id),
+            reservationService.getVehicleReservations(id).catch(err => {
+                console.error("Reservations fetch failed:", err);
+                return []; 
+            })
+        ]);
+
+        setVehicle(vehicleData);
+
+        const safeReservations = Array.isArray(reservationsData) ? reservationsData : [];
+        const intervals = safeReservations.map(res => {
+            if (res.period && res.period.start && res.period.end) {
+                const dStart = new Date(res.period.start);
+                const dEnd = new Date(res.period.end);
+
+                dStart.setHours(0, 0, 0, 0);
+                dEnd.setHours(23, 59, 59, 999); 
+
+                return {
+                    start: dStart,
+                    end: dEnd
+                };
+            }
+            return null;
+        }).filter(i => i !== null);
+
+        setBookedDates(intervals);
             } catch (error) {
-                toast.error("Vehicle not found");
-                navigate('/vehicles');
+                console.error("Error fetching data:", error);
+                setBookedDates([]); 
+                toast.error("Could not load availability");
             } finally {
                 setLoading(false);
             }
         };
-        fetchVehicle();
-    }, [id, navigate]);
+        fetchAllData();
+    }, [id]);
 
     const handleBooking = async (e) => {
         e.preventDefault(); 
@@ -112,7 +139,8 @@ const VehicleDetailsPage = () => {
                                         setStartDate(start);
                                         setEndDate(end);
                                     }}
-                                    minDate={new Date()}
+                                    minDate={new Date(new Date().setDate(new Date().getDate() + 1))}
+                                    excludeDateIntervals={bookedDates}
                                     isClearable={true}
                                     placeholderText="Click to select dates"
                                     className="custom-datepicker-input" 

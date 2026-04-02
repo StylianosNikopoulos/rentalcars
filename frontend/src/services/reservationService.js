@@ -19,6 +19,11 @@ const reservationService = {
     cancelReservation: async (id) => {
         const response = await api.patch(`/reservations/${id}/cancel`);
         return response.data;
+    },
+
+    getVehicleReservations: async (vehicleId) => {
+        const response = await api.get(`/reservations/vehicle/${vehicleId}`);
+        return response.data; 
     }
 };
 

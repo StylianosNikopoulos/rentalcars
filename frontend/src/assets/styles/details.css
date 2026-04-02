@@ -184,3 +184,15 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.react-datepicker__day--disabled {
+    color: #ff4d4d !important;
+    text-decoration: line-through;
+    background-color: #f0f0f0 !important;
+    cursor: not-allowed;
+}
+
+.react-datepicker__day--excluded {
+    background-color: #ffe6e6 !important;
+    color: #ccc !important;
+}

@@ -131,8 +131,8 @@ const MyReservationPage = () => {
                                     
                                     <p className="res-date">
                                         <i className="far fa-calendar-alt"></i> 
-                                        {res.startDate ? new Date(res.startDate).toLocaleDateString() : 'N/A'} — 
-                                        {res.endDate ? new Date(res.endDate).toLocaleDateString() : 'N/A'}
+                                        {res.period?.start ? new Date(res.period.start).toLocaleDateString() : 'N/A'} — 
+                                        {res.period?.end ? new Date(res.period.end).toLocaleDateString() : 'N/A'}
                                     </p>
 
                                     <p className="res-price">
