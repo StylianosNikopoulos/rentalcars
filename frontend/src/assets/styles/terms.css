@@ -1,0 +1,130 @@
+.terms-container {
+    padding: 120px 10% 80px;
+    background: var(--bg-dark);
+    min-height: 100vh;
+}
+
+.terms-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.terms-header h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 3.5rem;
+    text-transform: uppercase;
+}
+
+.text-primary {
+    color: var(--primary);
+}
+
+.subtitle {
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.terms-content {
+    max-width: 900px;
+    margin: 0 auto;
+    background: rgba(15, 15, 15, 0.8);
+    border: 1px solid var(--glass-border);
+    padding: 40px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.terms-section {
+    margin-bottom: 40px;
+}
+
+.terms-section h2 {
+    color: var(--primary);
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    font-family: 'Outfit', sans-serif;
+}
+
+.terms-section p, .terms-section li {
+    color: #ccc;
+    line-height: 1.8;
+}
+
+.terms-section ul {
+    margin-top: 15px;
+    list-style: none;
+    padding-left: 0;
+}
+
+.terms-section li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.terms-section li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+}
+
+@media (max-width: 1024px) {
+    .terms-container {
+        padding: 100px 5% 60px;
+    }
+    
+    .terms-header h1 {
+        font-size: 2.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .terms-container {
+        padding: 80px 20px 40px;
+    }
+
+    .terms-header {
+        margin-bottom: 40px;
+    }
+
+    .terms-header h1 {
+        font-size: 2.2rem;
+        line-height: 1.1;
+    }
+
+    .subtitle {
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+
+    .terms-content {
+        padding: 25px;
+        border-radius: 15px;
+    }
+
+    .terms-section h2 {
+        font-size: 1.3rem;
+    }
+
+    .terms-section p, .terms-section li {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .terms-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .terms-content {
+        padding: 20px;
+        background: rgba(10, 10, 10, 0.95);
+    }
+
+    .terms-section {
+        margin-bottom: 30px;
+    }
+}

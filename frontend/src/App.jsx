@@ -13,6 +13,7 @@ import VehicleDetailsPage from './pages/VehicleDetailsPage';
 import VehiclesPage from './pages/VehiclesPage';
 import NotFound from './pages/NotFound'; 
 import MyReservationPage from './pages/MyReservationPage';
+import TermsPage from './pages/TermsPage';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -63,7 +64,8 @@ function App() {
             <Route path="/vehicles" element={<ProtectedRoute><VehiclesPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
             <Route path="/vehicle/:id" element={<ProtectedRoute><VehicleDetailsPage /></ProtectedRoute>} />
-            <Route path="/reservations" element={<ProtectedRoute><MyReservationPage /></ProtectedRoute>} />     
+            <Route path="/reservations" element={<ProtectedRoute><MyReservationPage /></ProtectedRoute>} />  
+            <Route path="/terms" element={<TermsPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

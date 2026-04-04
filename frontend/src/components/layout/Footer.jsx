@@ -16,7 +16,7 @@ const Footer = () => {
                     <div className="footer-grid">
                         <div className="footer-nav">
                             <Link to="/">About</Link>
-                            <Link to="/">Terms</Link>
+                            <Link to="/terms">Terms</Link>
                             <Link to="/">Privacy</Link>
                         </div>
                         <div className="footer-contact">

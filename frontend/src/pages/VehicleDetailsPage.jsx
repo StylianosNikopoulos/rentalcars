@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom'; 
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import vehicleService from '../services/vehicleService';
@@ -21,6 +21,8 @@ const VehicleDetailsPage = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [bookedDates, setBookedDates] = useState([]);
+    
+    const [acceptedTerms, setAcceptedTerms] = useState(false);
 
     useEffect(() => {
         const fetchAllData = async () => {
@@ -61,6 +63,12 @@ const VehicleDetailsPage = () => {
 
     const handleBooking = async (e) => {
         e.preventDefault(); 
+    
+        if (!acceptedTerms) {
+            toast.error("You must accept the Terms and GDPR policy to continue");
+            return;
+        }
+
         if (!startDate || !endDate) {
             toast.error("Please select both dates");
             return;
@@ -175,6 +183,20 @@ const VehicleDetailsPage = () => {
                                     </strong>
                                 </div>
                             )}
+                            <div className="terms-checkbox-group">
+                                <label className="checkbox-container">
+                                    <input 
+                                        type="checkbox" 
+                                        checked={acceptedTerms} 
+                                        onChange={(e) => setAcceptedTerms(e.target.checked)}
+                                    />
+                                    <span className="checkmark"></span>
+                                    <span className="checkbox-text">
+                                        I have read and agree to the 
+                                        <Link to="/terms" target="_blank">Terms & GDPR Policy</Link>
+                                    </span>
+                                </label>
+                            </div>
                             <button type="submit" className="confirm-glow-btn">
                                 Confirm
                             </button>
