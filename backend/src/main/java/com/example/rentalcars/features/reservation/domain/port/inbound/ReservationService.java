@@ -15,4 +15,5 @@ public interface ReservationService {
     void cancelReservation(UUID reservationId, String userEmail);
     void cancelReservationInternal(UUID reservationId);
     void confirmReservation(UUID reservationId);
+    void cancelAllActiveReservationsByUserId(UUID userId);
 }

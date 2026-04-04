@@ -1,6 +1,7 @@
 package com.example.rentalcars.features.user.service;
 
 import com.example.rentalcars.core.exception.BusinessException;
+import com.example.rentalcars.features.reservation.domain.port.inbound.ReservationService;
 import com.example.rentalcars.features.user.domain.model.CustomerProfile;
 import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UpdateUserRequest;
 import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UserRequest;
@@ -10,7 +11,7 @@ import com.example.rentalcars.features.user.domain.port.outbound.UserRepository;
 import com.example.rentalcars.features.user.domain.exception.UserNotFoundException;
 import com.example.rentalcars.features.user.domain.port.inbound.UserService;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,11 +20,20 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ReservationService reservationService;
+
+    public UserServiceImpl(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            @Lazy ReservationService reservationService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.reservationService = reservationService;
+    }
 
     @Override
     public User getUserById(UUID id) {
@@ -97,9 +107,22 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
 
         validateOwnership(user);
-        userRepository.deleteById(id);
-    }
+        reservationService.cancelAllActiveReservationsByUserId(id);
 
+        user.setFirstName("Deleted");
+        user.setLastName("User");
+        user.setEmail("deleted_" + id + "@system.local");
+        user.setPasswordHash("DELETED_" + UUID.randomUUID());
+
+        if (user.getProfile() != null) {
+            CustomerProfile profile = user.getProfile();
+            profile.setPhoneNumber(null);
+            profile.setAddress(null);
+            profile.setDriverLicenseNumber(null);
+        }
+
+        userRepository.save(user);
+    }
     // Helper method for security
     private void validateOwnership(User user) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

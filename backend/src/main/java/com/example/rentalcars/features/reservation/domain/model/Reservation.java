@@ -35,7 +35,7 @@ public class Reservation extends AggregateRoot {
     }
 
     public void cancel() {
-        this.status = ReservationStatus.CANCELLED;
+        this.status = ReservationStatus.CANCELED;
     }
 
     public void calculateTotal(Money dailyPrice) {

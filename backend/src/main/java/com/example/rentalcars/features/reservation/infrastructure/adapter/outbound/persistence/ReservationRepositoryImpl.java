@@ -2,6 +2,7 @@ package com.example.rentalcars.features.reservation.infrastructure.adapter.outbo
 
 import com.example.rentalcars.core.valueobject.DateRange;
 import com.example.rentalcars.features.reservation.domain.model.Reservation;
+import com.example.rentalcars.features.reservation.domain.model.ReservationStatus;
 import com.example.rentalcars.features.reservation.domain.port.outbound.ReservationRepository;
 import com.example.rentalcars.features.user.infrastructure.adapter.outbound.persistence.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +59,13 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     @Override
     public boolean existsOverlap(UUID vehicleId, DateRange period) {
         return jpaRepository.existsOverlappingReservations(vehicleId, period.start(), period.end());
+    }
+
+    @Override
+    public List<Reservation> findAllByUserIdAndStatusIn(UUID userId, List<ReservationStatus> statuses) {
+        return jpaRepository.findAllByUserIdAndStatusIn(userId, statuses)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
     }
 }

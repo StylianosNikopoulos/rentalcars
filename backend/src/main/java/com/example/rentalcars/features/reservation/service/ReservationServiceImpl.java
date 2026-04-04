@@ -99,7 +99,7 @@ public class ReservationServiceImpl implements ReservationService {
             paymentService.refundPayment(payment.getStripePaymentId());
         }
 
-        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservation.setStatus(ReservationStatus.CANCELED);
         reservationRepository.save(reservation);
         vehicleService.updateVehicleStatus(reservation.getVehicleId(), VehicleStatus.AVAILABLE);
     }
@@ -115,10 +115,24 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
+    public void cancelAllActiveReservationsByUserId(UUID userId) {
+        List<Reservation> activeReservations = reservationRepository.findAllByUserIdAndStatusIn(
+                userId,
+                List.of(ReservationStatus.PENDING, ReservationStatus.CONFIRMED)
+        );
+
+        for (Reservation res : activeReservations) {
+            res.setStatus(ReservationStatus.CANCELED);
+            reservationRepository.save(res);
+        }
+    }
+
+    @Override
+    @Transactional
     public void cancelReservationInternal(UUID reservationId) {
         var reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException(reservationId));
-        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservation.setStatus(ReservationStatus.CANCELED);
         reservationRepository.save(reservation);
     }
 
@@ -159,7 +173,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<Reservation> getReservationsByVehicleId(UUID vehicleId) {
         return reservationRepository.findByVehicleId(vehicleId).stream()
-                .filter(res -> res.getStatus() != ReservationStatus.CANCELLED)
+                .filter(res -> res.getStatus() != ReservationStatus.CANCELED)
                 .toList();
     }
 
@@ -191,7 +205,7 @@ public class ReservationServiceImpl implements ReservationService {
             case CONFIRMED -> 2;
             case COMPLETED   -> 3;
             case ACTIVE    -> 4;
-            case CANCELLED -> 5;
+            case CANCELED -> 5;
             default -> 6;
         };
     }

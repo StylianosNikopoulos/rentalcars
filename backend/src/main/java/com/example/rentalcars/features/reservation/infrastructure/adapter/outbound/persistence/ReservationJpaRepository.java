@@ -1,5 +1,6 @@
 package com.example.rentalcars.features.reservation.infrastructure.adapter.outbound.persistence;
 
+import com.example.rentalcars.features.reservation.domain.model.ReservationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +24,4 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
             );
 
     List<ReservationJpaEntity> findByVehicleId(UUID vehicleId);
-}
+    List<ReservationJpaEntity> findAllByUserIdAndStatusIn(UUID userId, List<ReservationStatus> statuses);}
