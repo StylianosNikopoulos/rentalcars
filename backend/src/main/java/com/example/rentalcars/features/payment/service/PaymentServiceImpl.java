@@ -16,6 +16,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Refund;
 import com.stripe.param.RefundCreateParams;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
@@ -25,6 +26,9 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentGateway paymentGateway;
     private final PaymentRepository paymentRepository;
     private final ReservationService reservationService;
+
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
 
     public PaymentServiceImpl(PaymentGateway paymentGateway, PaymentRepository paymentRepository, @Lazy ReservationService reservationService) {
         this.paymentGateway = paymentGateway;
@@ -39,8 +43,8 @@ public class PaymentServiceImpl implements PaymentService {
             SessionCreateParams params = SessionCreateParams.builder()
                     .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                     .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl("http://localhost:5173/reservations?success=true")
-                    .setCancelUrl("http://localhost:5173/reservations?canceled=true")
+                    .setSuccessUrl(frontendUrl + "/reservations?success=true")
+                    .setCancelUrl(frontendUrl + "/reservations?canceled=true")
                     .addLineItem(SessionCreateParams.LineItem.builder()
                             .setQuantity(1L)
                             .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
