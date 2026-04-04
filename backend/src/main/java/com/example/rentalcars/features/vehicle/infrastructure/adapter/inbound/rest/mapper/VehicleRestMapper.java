@@ -1,6 +1,8 @@
 package com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.mapper;
 
 import com.example.rentalcars.features.vehicle.domain.model.Vehicle;
+import com.example.rentalcars.features.vehicle.domain.model.VehicleImage;
+import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.dto.VehicleImageResponse;
 import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.dto.VehicleResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,4 +15,6 @@ public interface VehicleRestMapper {
     VehicleResponse toResponse(Vehicle domain);
 
     List<VehicleResponse> toResponseList(List<Vehicle> domains);
+
+    VehicleImageResponse toImageResponse(VehicleImage domain);
 }

@@ -4,6 +4,7 @@ import com.example.rentalcars.features.vehicle.domain.model.FuelType;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class VehicleRequest {
@@ -25,4 +26,10 @@ public class VehicleRequest {
     @NotNull(message = "Daily price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private BigDecimal dailyPrice;
+
+    @NotEmpty(message = "At least one image is required")
+    private List<String> imageUrls;
+
+    @NotBlank(message = "Main image URL is required")
+    private String mainImageUrl;
 }

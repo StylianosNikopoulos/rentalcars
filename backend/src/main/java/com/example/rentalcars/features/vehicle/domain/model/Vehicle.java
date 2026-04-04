@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -19,11 +20,13 @@ public class Vehicle extends AggregateRoot {
     private VehicleStatus status;
     private BigDecimal dailyPrice;
     private Long version;
+    private List<VehicleImage> images;
 
     @Builder
     public Vehicle(UUID id, LocalDateTime createdAt, LocalDateTime updatedAt, String brand, String model, int year, FuelType fuelType,
                    LicensePlate licensePlate, VehicleStatus status,
-                   BigDecimal dailyPrice, Long version) {
+                   BigDecimal dailyPrice, Long version,
+                   List<VehicleImage> images) {
         super(id, createdAt, updatedAt);
         this.brand = brand;
         this.model = model;
@@ -33,5 +36,6 @@ public class Vehicle extends AggregateRoot {
         this.status = status;
         this.dailyPrice = dailyPrice;
         this.version = version;
+        this.images = images;
     }
 }

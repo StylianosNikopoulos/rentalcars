@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet author="db" id="007-insert-basic-users">
+    <changeSet author="db" id="008-insert-basic-users">
         <insert tableName="users">
             <column name="id" value="b67f8a07-a579-40d6-ab8e-e3301b815afd"/>
             <column name="email" value="admin@example.com"/>

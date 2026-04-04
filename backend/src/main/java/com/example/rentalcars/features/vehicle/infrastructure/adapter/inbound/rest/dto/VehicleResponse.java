@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import lombok.Builder;
 import lombok.Data;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -22,4 +23,5 @@ public class VehicleResponse {
     @Enumerated(EnumType.STRING)
     private VehicleStatus status;
     private BigDecimal dailyPrice;
+    private List<VehicleImageResponse> images;
 }

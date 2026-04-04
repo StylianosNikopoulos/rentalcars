@@ -7,6 +7,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -58,5 +60,13 @@ public class VehicleJpaEntity {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VehicleImageJpaEntity> images = new ArrayList<>();
+
+    public void addImage(VehicleImageJpaEntity image) {
+        images.add(image);
+        image.setVehicle(this);
     }
 }

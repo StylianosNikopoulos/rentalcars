@@ -5,28 +5,26 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet author="db" id="008-create-payments-table">
-        <createTable tableName="payments">
+    <changeSet author="db" id="005-create-images-table">
+        <createTable tableName="vehicle_images">
             <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="reservation_id" type="UUID">
-                <constraints nullable="false" foreignKeyName="fk_payment_reservation" referencedTableName="reservations" referencedColumnNames="id"/>
+            <column name="vehicle_id" type="UUID">
+                <constraints nullable="false"
+                             foreignKeyName="fk_vehicle_images_vehicle"
+                             referencedTableName="vehicles"
+                             referencedColumnNames="id"/>
             </column>
-            <column name="stripe_payment_id" type="VARCHAR(255)">
-                <constraints unique="true"/>
-            </column>
-            <column name="amount" type="DECIMAL(19, 2)">
+            <column name="url" type="VARCHAR(500)">
                 <constraints nullable="false"/>
             </column>
-            <column name="currency" type="VARCHAR(3)" defaultValue="EUR">
+            <column name="is_main" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="VARCHAR(50)">
+            <column name="created_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="receipt_url" type="TEXT"/>
-            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="updated_at" type="TIMESTAMP"/>
         </createTable>
     </changeSet>
