@@ -6,6 +6,12 @@ import vehicleService from '../services/vehicleService';
 import reservationService from '../services/reservationService';
 import toast from 'react-hot-toast';
 import '../assets/styles/details.css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Mousewheel, Keyboard } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
 const VehicleDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -19,34 +25,29 @@ const VehicleDetailsPage = () => {
     useEffect(() => {
         const fetchAllData = async () => {
             try {
-        const [vehicleData, reservationsData] = await Promise.all([
-            vehicleService.getVehicleById(id),
-            reservationService.getVehicleReservations(id).catch(err => {
-                console.error("Reservations fetch failed:", err);
-                return []; 
-            })
-        ]);
+                const [vehicleData, reservationsData] = await Promise.all([
+                    vehicleService.getVehicleById(id),
+                    reservationService.getVehicleReservations(id).catch(err => {
+                        console.error("Reservations fetch failed:", err);
+                        return []; 
+                    })
+                ]);
+      
+                setVehicle(vehicleData);
 
-        setVehicle(vehicleData);
+                const safeReservations = Array.isArray(reservationsData) ? reservationsData : [];
+                const intervals = safeReservations.map(res => {
+                    if (res.period && res.period.start && res.period.end) {
+                        const dStart = new Date(res.period.start);
+                        const dEnd = new Date(res.period.end);
+                        dStart.setHours(0, 0, 0, 0);
+                        dEnd.setHours(23, 59, 59, 999); 
+                        return { start: dStart, end: dEnd };
+                    }
+                    return null;
+                }).filter(i => i !== null);
 
-        const safeReservations = Array.isArray(reservationsData) ? reservationsData : [];
-        const intervals = safeReservations.map(res => {
-            if (res.period && res.period.start && res.period.end) {
-                const dStart = new Date(res.period.start);
-                const dEnd = new Date(res.period.end);
-
-                dStart.setHours(0, 0, 0, 0);
-                dEnd.setHours(23, 59, 59, 999); 
-
-                return {
-                    start: dStart,
-                    end: dEnd
-                };
-            }
-            return null;
-        }).filter(i => i !== null);
-
-        setBookedDates(intervals);
+                setBookedDates(intervals);
             } catch (error) {
                 console.error("Error fetching data:", error);
                 setBookedDates([]); 
@@ -60,20 +61,18 @@ const VehicleDetailsPage = () => {
 
     const handleBooking = async (e) => {
         e.preventDefault(); 
-
         if (!startDate || !endDate) {
             toast.error("Please select both dates");
             return;
         }
 
-    const formatForBackend = (date) => {
-        if (!date) return null;
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        
-        return `${year}-${month}-${day}T10:00:00`;
-    };
+        const formatForBackend = (date) => {
+            if (!date) return null;
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}T10:00:00`;
+        };
 
         const bookingData = {
             vehicleId: vehicle.id,
@@ -92,7 +91,11 @@ const VehicleDetailsPage = () => {
     };
 
     if (loading) return <div className="loader">Loading details...</div>;
-    if (!vehicle) return null;
+    if (!vehicle) return <div className="error">Vehicle not found</div>;
+
+    const allImages = vehicle.images && vehicle.images.length > 0 
+        ? vehicle.images 
+        : [{ url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070' }];
 
     return (
         <div className="details-container">
@@ -106,7 +109,7 @@ const VehicleDetailsPage = () => {
                 </div>
                 
                 <div className="specs-badge-container">
-                    <span className="spec-badge"><i className="fas fa-car"></i> {vehicle.type}</span>
+                    <span className="spec-badge"><i className="fas fa-car"></i> {vehicle.brand}</span>
                     <span className="spec-badge"><i className="fas fa-gas-pump"></i> {vehicle.fuelType}</span>
                     <span className="spec-badge"><i className="fas fa-calendar-alt"></i> {vehicle.year}</span>
                     <span className="spec-badge"><i className="fas fa-id-card"></i> {vehicle.licensePlate}</span>
@@ -114,11 +117,28 @@ const VehicleDetailsPage = () => {
             </div>
 
             <div className="details-grid-v2">
-                <div className="vehicle-main-image">
-                    <img 
-                        src={vehicle.imageUrl || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070'} 
-                        alt={vehicle.model} 
-                    />
+                <div className="vehicle-image-section">
+                    <div className="vehicle-main-image-swiper">
+                        <Swiper
+                            navigation={true}
+                            pagination={{ clickable: true }}
+                            mousewheel={true}
+                            keyboard={true}
+                            modules={[Navigation, Pagination, Mousewheel, Keyboard]}
+                            className="mySwiper"
+                            grabCursor={true}
+                        >
+                            {allImages.map((img, index) => (
+                                <SwiperSlide key={index}>
+                                    <img 
+                                        src={img.url} 
+                                        alt={`${vehicle.brand} ${index}`} 
+                                        style={{ width: '100%', height: '500px', borderRadius: '12px', objectFit: 'cover' }}
+                                    />
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    </div>
                 </div>
                 
                 <div className="booking-sidebar">

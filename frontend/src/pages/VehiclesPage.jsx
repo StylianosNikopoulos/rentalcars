@@ -83,20 +83,20 @@ const VehiclesPage = () => {
             <div className="vehicles-header">
                 <h1>Our Premium Fleet</h1>
 
-{selectedStart && selectedEnd && (
-    <div className="availability-info-banner">
-        <div className="availability-text">
-            <i className="far fa-calendar-check"></i>
-            <span>Showing available fleet for: </span>
-            <strong>{formatDate(selectedStart)}</strong>
-            <span className="date-separator">→</span>
-            <strong>{formatDate(selectedEnd)}</strong>
-        </div>
-        <button className="clear-dates-btn" onClick={() => navigate('/vehicles')}>
-            RESET DATES
-        </button>
-    </div>
-)}
+                {selectedStart && selectedEnd && (
+                    <div className="availability-info-banner">
+                        <div className="availability-text">
+                            <i className="far fa-calendar-check"></i>
+                            <span>Showing available fleet for: </span>
+                            <strong>{formatDate(selectedStart)}</strong>
+                            <span className="date-separator">→</span>
+                            <strong>{formatDate(selectedEnd)}</strong>
+                        </div>
+                        <button className="clear-dates-btn" onClick={() => navigate('/vehicles')}>
+                            RESET DATES
+                        </button>
+                    </div>
+                )}
                 
                 <div className="sort-container">
                     <select 
@@ -131,9 +131,17 @@ const VehiclesPage = () => {
                     <div className="vehicle-grid">
                         {currentItems.map(car => (
                             <div key={car.id} className="vehicle-item" onClick={() => navigate(`/vehicle/${car.id}`)}>
-                                <div className="vehicle-img-wrapper">
-                                    <img src={car.imageUrl || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070'} alt={car.model} className="vehicle-img" />
-                                </div>
+                            <div className="vehicle-img-wrapper">
+                                <img 
+                                    src={
+                                        car.images && car.images.length > 0 
+                                            ? (car.images.find(img => img.isMain)?.url || car.images[0].url) 
+                                            : 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070'
+                                    } 
+                                    alt={`${car.brand} ${car.model}`} 
+                                    className="vehicle-img" 
+                                />
+                            </div>
                                 <div className="vehicle-details">
                                     <div>
                                         <h3 className="car-name">{car.brand} {car.model}</h3>

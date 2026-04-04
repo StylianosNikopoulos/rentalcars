@@ -196,3 +196,27 @@
     background-color: #ffe6e6 !important;
     color: #ccc !important;
 }
+
+.vehicle-main-image-swiper {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.swiper-button-next, .swiper-button-prev {
+    color: #ff4d4d !important;
+}
+
+.swiper-pagination-bullet-active {
+    background: #ff4d4d !important;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+}
