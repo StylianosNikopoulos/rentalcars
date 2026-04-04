@@ -220,3 +220,88 @@
     height: 500px;
     object-fit: cover;
 }
+
+/*SWIPER & DATEPICKER RESPONSIVE */
+@media (max-width: 1024px) {
+    .details-grid-v2 {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 2rem !important;
+    }
+
+    .vehicle-image-section, 
+    .booking-sidebar {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .vehicle-main-image-swiper, .mySwiper {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 10;
+        margin: 0 auto !important;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative !important;
+    }
+
+    .swiper-slide {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .swiper-slide img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center;
+        display: block;
+    }
+
+    .details-container {
+        padding: 5rem 1rem 2rem !important;
+    }
+
+    .header-main {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+    }
+
+    .price-tag {
+        text-align: left !important;
+    }
+
+    .price-tag .amount {
+        font-size: 2.5rem;
+    }
+
+    .react-datepicker-wrapper {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .custom-datepicker-input {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 16px !important;
+        padding: 15px !important;
+    }
+
+    .booking-card {
+        padding: 2rem !important;
+        border-radius: 25px !important;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 480px) {
+    .vehicle-main-image-swiper, .mySwiper {
+        aspect-ratio: 4 / 3; 
+    }
+    
+    .details-header h1 {
+        font-size: 2rem;
+    }
+}
+

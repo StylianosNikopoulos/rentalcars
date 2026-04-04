@@ -133,7 +133,7 @@ const VehicleDetailsPage = () => {
                                     <img 
                                         src={img.url} 
                                         alt={`${vehicle.brand} ${index}`} 
-                                        style={{ width: '100%', height: '500px', borderRadius: '12px', objectFit: 'cover' }}
+                                        className="swiper-vehicle-img"
                                     />
                                 </SwiperSlide>
                             ))}
