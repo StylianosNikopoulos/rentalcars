@@ -141,7 +141,7 @@ const MyReservationPage = () => {
                                 </div>
 
                                 <div className="res-actions">
-                                    {(res.status.toUpperCase() !== 'CANCELLED' && res.status.toUpperCase() !== 'CONFIRMED') && (
+                                    {res.status.toUpperCase() !== 'CANCELED' && res.status.toUpperCase() !== 'CONFIRMED' && (
                                         <button onClick={() => handleCancel(res.id)} className="cancel-btn-premium">
                                             Cancel
                                         </button>

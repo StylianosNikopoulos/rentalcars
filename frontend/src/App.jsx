@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/layout/Navbar'; 
@@ -14,10 +14,21 @@ import VehiclesPage from './pages/VehiclesPage';
 import NotFound from './pages/NotFound'; 
 import MyReservationPage from './pages/MyReservationPage';
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
+
 function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop /> 
         <Toaster 
           position="top-center" 
           reverseOrder={false}
@@ -41,7 +52,9 @@ function App() {
             duration: 4000,
           }}
         />
+        
         <Navbar />
+        
         <main style={{ minHeight: '80vh' }}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -54,6 +67,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
+        
         <Footer />
       </Router>
     </AuthProvider>

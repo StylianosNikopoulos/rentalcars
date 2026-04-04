@@ -76,7 +76,7 @@
 
 .status-badge.confirmed { background: rgba(0, 255, 127, 0.1); color: #00ff7f; }
 .status-badge.pending { background: rgba(255, 170, 0, 0.1); color: #ffaa00; }
-.status-badge.cancelled { background: rgba(255, 0, 0, 0.1); color: #ff4444; }
+.status-badge.canceled { background: rgba(255, 0, 0, 0.1); color: #ff4444; }
 
 .res-date {
     color: #888;
