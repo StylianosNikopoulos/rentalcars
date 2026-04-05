@@ -16,7 +16,7 @@
                              referencedTableName="vehicles"
                              referencedColumnNames="id"/>
             </column>
-            <column name="url" type="VARCHAR(500)">
+            <column name="url" type="TEXT">
                 <constraints nullable="false"/>
             </column>
             <column name="is_main" type="BOOLEAN" defaultValueBoolean="false">

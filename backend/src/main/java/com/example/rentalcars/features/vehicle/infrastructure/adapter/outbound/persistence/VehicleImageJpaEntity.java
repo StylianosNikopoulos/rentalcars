@@ -17,7 +17,7 @@ public class VehicleImageJpaEntity {
     @Id
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String url;
 
     @Column(name = "is_main", nullable = false)
