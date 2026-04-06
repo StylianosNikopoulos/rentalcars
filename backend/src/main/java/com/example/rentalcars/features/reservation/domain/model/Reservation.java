@@ -19,11 +19,12 @@ public class Reservation extends AggregateRoot {
     private DateRange period;
     private Money totalAmount;
     private ReservationStatus status;
+    private String email;
 
     @Builder
     public Reservation(UUID id, LocalDateTime createdAt, LocalDateTime updatedAt,
                        UUID userId, UUID vehicleId, String vehicleName, String vehicleBrand,
-                       DateRange period, Money totalAmount, ReservationStatus status) {
+                       DateRange period, Money totalAmount, ReservationStatus status, String email) {
         super(id, createdAt, updatedAt);
         this.userId = userId;
         this.vehicleId = vehicleId;
@@ -32,6 +33,7 @@ public class Reservation extends AggregateRoot {
         this.period = period;
         this.totalAmount = totalAmount;
         this.status = status;
+        this.email = email;
     }
 
     public void cancel() {

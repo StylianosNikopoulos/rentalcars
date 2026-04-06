@@ -18,6 +18,7 @@ public interface ReservationRestMapper {
     @Mapping(target = "period.end", source = "period.end")
     @Mapping(target = "vehicleName", source = "vehicleName")
     @Mapping(target = "vehicleBrand", source = "vehicleBrand")
+    @Mapping(target = "email", source = "email")
     ReservationResponse toResponse(Reservation domain);
     List<ReservationResponse> toResponseList(List<Reservation> domains);
 }

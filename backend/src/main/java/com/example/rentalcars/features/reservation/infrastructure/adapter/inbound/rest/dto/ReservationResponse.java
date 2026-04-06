@@ -21,4 +21,5 @@ public class ReservationResponse {
     private DateRangeResponse period;
     private BigDecimal totalAmount;
     private String status;
+    private String email;
 }

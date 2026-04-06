@@ -55,6 +55,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setVehicleBrand(vehicle.getBrand());
         reservation.calculateTotal(new Money(vehicle.getDailyPrice(),"EUR"));
         reservation.setStatus(ReservationStatus.PENDING);
+        reservation.setEmail(user.getEmail());
         return reservationRepository.save(reservation);
     }
 
@@ -73,9 +74,20 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional(readOnly = true)
     public List<Reservation> getAllReservations() {
-        return reservationRepository.findAll();
-    }
+        List<Reservation> reservations = reservationRepository.findAll();
 
+        for (Reservation res : reservations) {
+            try {
+                var user = userService.getUserById(res.getUserId());
+                if (user != null) {
+                    res.setEmail(user.getEmail());
+                }
+            } catch (Exception e) {
+                res.setEmail("Unknown User");
+            }
+        }
+        return reservations;
+    }
     @Override
     @Transactional(readOnly = true)
     public Reservation getReservationById(UUID id) {

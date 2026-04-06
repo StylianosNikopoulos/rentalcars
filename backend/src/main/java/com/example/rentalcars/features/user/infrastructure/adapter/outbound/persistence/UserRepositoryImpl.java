@@ -4,6 +4,8 @@ import com.example.rentalcars.features.user.domain.model.User;
 import com.example.rentalcars.features.user.domain.port.outbound.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,6 +35,14 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> findById(UUID id) {
         return jpaRepository.findById(id).map(userPersistenceMapper::toDomain);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return jpaRepository.findAll()
+                .stream()
+                .map(userPersistenceMapper::toDomain)
+                .toList();
     }
 
     @Override
