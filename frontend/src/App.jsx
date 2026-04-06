@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { useAuth } from './hooks/useAuth';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/layout/Navbar'; 
 import Footer from './components/layout/Footer';
@@ -14,14 +15,23 @@ import VehiclesPage from './pages/VehiclesPage';
 import NotFound from './pages/NotFound'; 
 import MyReservationPage from './pages/MyReservationPage';
 import TermsPage from './pages/TermsPage';
+import AboutPage from './pages/AboutPage';
+import AdminPage from './pages/AdminPage';
+
+// Helper component για προστασία της Admin σελίδας
+const AdminRoute = ({ children }) => {
+  const { user } = useAuth();
+  const isAdmin = user?.user?.role === 'ADMIN' || user?.role === 'ADMIN';
+
+  if (!user) return <Navigate to="/login" replace />;
+  if (!isAdmin) return <Navigate to="/" replace />;
+  
+  return children;
+};
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
   return null;
 };
 
@@ -30,29 +40,10 @@ function App() {
     <AuthProvider>
       <Router>
         <ScrollToTop /> 
-        <Toaster 
-          position="top-center" 
-          reverseOrder={false}
-          toastOptions={{
-            className: 'react-hot-toast', 
-            style: {
-              background: '#151515',
-              color: '#fff',
-              border: '1px solid #333',
-              borderRadius: '0px', 
-              fontSize: '14px',
-              padding: '12px 20px',
-            },
-            success: {
-              iconTheme: { primary: '#ff4d00', secondary: '#fff' },
-              style: { border: '1px solid rgba(255, 77, 0, 0.5)' }
-            },
-            error: {
-              style: { border: '1px solid #ff0000' }
-            },
-            duration: 4000,
-          }}
-        />
+        <Toaster position="top-center" toastOptions={{
+            style: { background: '#151515', color: '#fff', border: '1px solid #333' },
+            success: { iconTheme: { primary: '#ff4d00', secondary: '#fff' } }
+        }} />
         
         <Navbar />
         
@@ -61,11 +52,18 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            
+            {/* User Routes */}
             <Route path="/vehicles" element={<ProtectedRoute><VehiclesPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
             <Route path="/vehicle/:id" element={<ProtectedRoute><VehicleDetailsPage /></ProtectedRoute>} />
             <Route path="/reservations" element={<ProtectedRoute><MyReservationPage /></ProtectedRoute>} />  
-            <Route path="/terms" element={<TermsPage />} />
+            
+            {/* Admin Route */}
+            <Route path="/admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

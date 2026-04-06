@@ -1,6 +1,11 @@
 import api from '../api/axios';
 
 const reservationService = {
+    
+    getAllReservations: async () => {
+        const response = await api.get('/admin/reservations');
+        return response.data;
+    },
     getMyReservations: async () => {
         const response = await api.get('/reservations/me');
         return response.data;

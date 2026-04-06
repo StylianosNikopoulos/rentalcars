@@ -1,0 +1,111 @@
+.about-container {
+    padding: 140px 10% 80px;
+    background: var(--bg-dark);
+    min-height: 100vh;
+}
+
+.portfolio-alert {
+    max-width: 900px;
+    margin: 0 auto 80px;
+    background: rgba(255, 77, 0, 0.05);
+    border: 1px dashed var(--primary);
+    border-radius: 15px;
+    padding: 25px;
+}
+
+.alert-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.alert-content i {
+    font-size: 2.5rem;
+    color: var(--primary);
+}
+
+.alert-text h4 {
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.alert-text p {
+    color: #e0e0e0;
+    line-height: 1.6;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.about-card {
+    background: rgba(15, 15, 15, 0.6);
+    border: 1px solid var(--glass-border);
+    padding: 40px 30px;
+    border-radius: 20px;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-align: center;
+}
+
+.about-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+    background: rgba(20, 20, 20, 0.8);
+}
+
+.about-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 25px;
+    filter: drop-shadow(0 0 10px var(--primary-glow));
+}
+
+.about-card h3 {
+    font-family: 'Outfit', sans-serif;
+    color: white;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    font-size: 1.3rem;
+}
+
+.about-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+
+.about-cta-section {
+    text-align: center;
+    margin-top: 100px;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 50px;
+}
+
+.about-cta-section p {
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+@media (max-width: 768px) {
+    .about-container {
+        padding: 100px 5% 50px;
+    }
+
+    .alert-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-header h1 {
+        font-size: 2.5rem;
+    }
+}
