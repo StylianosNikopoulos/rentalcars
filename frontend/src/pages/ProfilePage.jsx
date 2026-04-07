@@ -155,12 +155,20 @@ const ProfilePage = () => {
 
                     <section className="danger-zone">
                         <h4>Security & Privacy</h4>
-                        <p style={{color: '#555', fontSize: '0.85rem', marginBottom: '1.5rem'}}>
-                            Once you delete your account, there is no going back. Please be certain.
-                        </p>
-                        <button className="delete-btn" onClick={handleDeleteAccount}>
-                            Terminate Account
-                        </button>
+                        {fullUser?.role !== 'ADMIN' ? (
+                            <>
+                                <p style={{ color: '#555', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
+                                    Once you delete your account, there is no going back. Please be certain.
+                                </p>
+                                <button className="delete-btn" onClick={handleDeleteAccount}>
+                                    Terminate Account
+                                </button>
+                            </>
+                        ) : (
+                            <p style={{ color: '#ff4d00', fontSize: '0.85rem', fontWeight: '600' }}>
+                                Administrator accounts cannot be self-terminated.
+                            </p>
+                        )}
                     </section>
                 </main>
             </div>

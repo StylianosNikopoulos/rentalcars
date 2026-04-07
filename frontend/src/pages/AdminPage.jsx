@@ -172,20 +172,31 @@ const AdminPage = () => {
     const openUpdateModal = (vehicle) => {
         setIsEditMode(true);
         setCurrentVehicleId(vehicle.id);
-        const formattedImages = vehicle.imageUrls.map(url => ({
-            url: url,
-            isMain: url === vehicle.mainImageUrl
-        }));
-        
+
+        const rawImages = vehicle.imageUrls || vehicle.images || [];
+        const formattedImages = rawImages.map(item => {
+            if (typeof item === 'object') {
+                return {
+                    url: item.url,
+                    isMain: item.main || item.url === vehicle.mainImageUrl
+                };
+            }
+            return {
+                url: item,
+                isMain: item === vehicle.mainImageUrl
+            };
+        });
+
         setNewVehicle({
-            brand: vehicle.brand,
-            model: vehicle.model,
-            dailyPrice: vehicle.dailyPrice,
-            fuelType: vehicle.fuelType,
-            licensePlate: vehicle.licensePlate,
-            year: vehicle.year,
+            brand: vehicle.brand || '',
+            model: vehicle.model || '',
+            dailyPrice: vehicle.dailyPrice || '',
+            fuelType: vehicle.fuelType || '',
+            licensePlate: vehicle.licensePlate || '',
+            year: vehicle.year || new Date().getFullYear(),
             images: formattedImages
         });
+
         setIsModalOpen(true);
     };
 
@@ -225,8 +236,10 @@ const AdminPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const mainImg = newVehicle.images.find(img => img.isMain)?.url || "";
-        const allUrls = newVehicle.images.map(img => img.url);
+
+        const urlsArray = newVehicle.images.map(img => img.url);
+        const mainImgObj = newVehicle.images.find(img => img.isMain);
+        const mainUrlString = mainImgObj ? mainImgObj.url : (urlsArray[0] || "");
 
         const payload = {
             brand: newVehicle.brand,
@@ -235,9 +248,16 @@ const AdminPage = () => {
             fuelType: newVehicle.fuelType,
             licensePlate: newVehicle.licensePlate,
             dailyPrice: parseFloat(newVehicle.dailyPrice),
-            imageUrls: allUrls,
-            mainImageUrl: mainImg
+            imageUrls: urlsArray,
+            mainImageUrl: mainUrlString
         };
+
+        if (urlsArray.length === 0) {
+            toast.error("At least one image is required");
+            return;
+        }
+
+        const loadingToast = toast.loading(isEditMode ? "Updating vehicle..." : "Creating vehicle...");
 
         try {
             if (isEditMode) {
@@ -245,14 +265,17 @@ const AdminPage = () => {
             } else {
                 await vehicleService.createVehicle(payload);
             }
+            
+            toast.success(isEditMode ? "Vehicle updated" : "Vehicle created", { id: loadingToast });
             loadVehicles();
             closeModal();
-            toast.success(isEditMode ? "Vehicle updated" : "Vehicle created");
-        } catch (error) { 
-            toast.error("Error saving vehicle");
+        } catch (error) {
+            console.error("FULL ERROR:", error.response?.data);
+            const serverMsg = error.response?.data?.message || "Error saving vehicle";
+            toast.error(serverMsg, { id: loadingToast });
         }
     };
-
+    
     const closeModal = () => {
         setIsModalOpen(false);
         setIsEditMode(false);
@@ -286,7 +309,14 @@ const AdminPage = () => {
                 <div className="admin-content">
                     {activeTab === 'vehicles' && (
                         <div className="admin-section">
-                            <button className="add-btn" onClick={() => setIsModalOpen(true)}>+ Add Vehicle</button>
+                            <button className="add-btn" onClick={() => {
+                                setIsEditMode(false);
+                                setCurrentVehicleId(null);
+                                setNewVehicle({ brand: '', model: '', dailyPrice: '', fuelType: '', licensePlate: '', year: 2024, images: [] });
+                                setIsModalOpen(true);
+                            }}>
+                                + Add Vehicle
+                            </button>
                             <table className="admin-table">
                                 <thead>
                                     <tr>

@@ -18,7 +18,6 @@ import TermsPage from './pages/TermsPage';
 import AboutPage from './pages/AboutPage';
 import AdminPage from './pages/AdminPage';
 
-// Helper component για προστασία της Admin σελίδας
 const AdminRoute = ({ children }) => {
   const { user } = useAuth();
   const isAdmin = user?.user?.role === 'ADMIN' || user?.role === 'ADMIN';
