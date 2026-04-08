@@ -321,13 +321,14 @@
 }
 
 /* FORMS */
-.form-group {
+.admin-form-group {
     display: flex;
     gap: 15px;
     margin-bottom: 15px;
 }
 
-.form-group input, .admin-select {
+.admin-form-group input, 
+.admin-select {
     flex: 1;
     background: #000;
     border: 1px solid var(--glass-border);
@@ -396,8 +397,9 @@
 }
 
 @media (max-width: 768px) {
-    .admin-container {
+    .admin-form-group {
         flex-direction: column;
+        gap: 10px;
     }
 
     .admin-sidebar {

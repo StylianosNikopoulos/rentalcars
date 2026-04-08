@@ -36,7 +36,6 @@ const Navbar = () => {
                        <span className="welcome-msg">
                            Hello, {user.user?.email?.split('@')[0] || 'User'}
                        </span>
-                       <Link to="/vehicles" onClick={() => setIsMobileMenuOpen(false)}>Vehicles</Link>
                        <Link to="/reservations" onClick={() => setIsMobileMenuOpen(false)}>Reservations</Link>
                        
                        {isAdmin && (
@@ -50,6 +49,7 @@ const Navbar = () => {
                     </>
                 ) : (
                     <>
+                        <Link to="/vehicles" onClick={() => setIsMobileMenuOpen(false)}>Vehicles</Link>
                         <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>Login</Link>
                         <Link to="/register" className="register-nav-btn" onClick={() => setIsMobileMenuOpen(false)}>Register</Link>
                     </>

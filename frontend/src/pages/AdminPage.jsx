@@ -75,7 +75,6 @@ const AdminPage = () => {
             confirmButtonText: 'YES, CANCEL IT',
             cancelButtonText: 'NO, KEEP IT',
             buttonsStyling: false,
-            buttonsStyling: false,
             customClass: {
                 container: 'swal-fix-overlay', 
                 popup: 'swal-custom-popup',
@@ -437,7 +436,7 @@ const AdminPage = () => {
                     <div className="admin-modal glass-morphism">
                         <h3>{isEditMode ? 'Update Vehicle' : 'Add New Vehicle'}</h3>
                         <form onSubmit={handleSubmit}>
-                            <div className="form-group">
+                            <div className="admin-form-group">
                                 <input type="text" placeholder="Brand" required value={newVehicle.brand} onChange={e => setNewVehicle({...newVehicle, brand: e.target.value})} />
                                 <input type="text" placeholder="Model" required value={newVehicle.model} onChange={e => setNewVehicle({...newVehicle, model: e.target.value})} />
                             </div>
@@ -456,7 +455,7 @@ const AdminPage = () => {
                                 <label className="add-more-photos"><i className="fas fa-plus"></i><input type="file" multiple accept="image/*" onChange={handleImagesChange} hidden /></label>
                             </div>
 
-                            <div className="form-group mt-20">
+                            <div className="admin-form-group mt-20">
                                 <input type="number" step="0.01" className="no-spinners" placeholder="Price/Day" required value={newVehicle.dailyPrice} onChange={e => setNewVehicle({...newVehicle, dailyPrice: e.target.value})} />
                                 <div className="flex-1">
                                     <input type="text" placeholder="Plate (ABC-1234)" className={plateError ? 'input-error' : ''} required value={newVehicle.licensePlate} onChange={handlePlateChange} />
@@ -464,7 +463,7 @@ const AdminPage = () => {
                                 </div>
                             </div>
 
-                            <div className="form-group">
+                            <div className="admin-form-group">
                                 <input type="number" placeholder="Year" value={newVehicle.year} onChange={e => setNewVehicle({...newVehicle, year: e.target.value})} />
                                 <div className="select-wrapper">
                                     <select className="admin-select" required value={newVehicle.fuelType} onChange={e => setNewVehicle({...newVehicle, fuelType: e.target.value})}>

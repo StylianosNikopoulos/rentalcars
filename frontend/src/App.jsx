@@ -53,11 +53,11 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/vehicles" element={<VehiclesPage />}/>
+            <Route path="/vehicle/:id" element={<VehicleDetailsPage />}/>
             
             {/* User Routes */}
-            <Route path="/vehicles" element={<ProtectedRoute><VehiclesPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-            <Route path="/vehicle/:id" element={<ProtectedRoute><VehicleDetailsPage /></ProtectedRoute>} />
             <Route path="/reservations" element={<ProtectedRoute><MyReservationPage /></ProtectedRoute>} />  
             
             {/* Admin Route */}

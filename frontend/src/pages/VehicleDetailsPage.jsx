@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom'; 
+import { useAuth } from '../hooks/useAuth';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import vehicleService from '../services/vehicleService';
@@ -15,6 +16,7 @@ import 'swiper/css/pagination';
 const VehicleDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [vehicle, setVehicle] = useState(null);
     const [loading, setLoading] = useState(true);
     
@@ -64,6 +66,12 @@ const VehicleDetailsPage = () => {
     const handleBooking = async (e) => {
         e.preventDefault(); 
     
+        if (!user) {
+            toast.error("Please login to make a reservation");
+            navigate('/login');
+            return;
+        }
+
         if (!acceptedTerms) {
             toast.error("You must accept the Terms and GDPR policy to continue");
             return;
@@ -198,7 +206,7 @@ const VehicleDetailsPage = () => {
                                 </label>
                             </div>
                             <button type="submit" className="confirm-glow-btn">
-                                Confirm
+                                {user ? 'Confirm Reservation' : 'Login to Book'}
                             </button>
                         </form>
                     </div>
