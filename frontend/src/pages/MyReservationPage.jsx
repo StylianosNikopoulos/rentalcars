@@ -7,6 +7,56 @@ import Swal from 'sweetalert2';
 import '../assets/styles/reservations.css'; 
 import '../assets/styles/swal-custom.css';
 
+const ReservationTimer = ({ createdAt, onExpire }) => {
+    const calculateTimeLeft = () => {
+        if (!createdAt) return 0;
+
+        const createdDate = new Date(createdAt);
+        
+        if (isNaN(createdDate.getTime())) return 0;
+
+        const expirationTime = createdDate.getTime() + (60 * 60 * 1000);
+        const now = new Date().getTime();
+        const difference = expirationTime - now;
+
+        return difference > 0 ? difference : 0;
+    };
+    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+    useEffect(() => {
+        setTimeLeft(calculateTimeLeft());
+    }, [createdAt]);
+
+    useEffect(() => {
+        if (timeLeft <= 0) null;
+
+        const timer = setInterval(() => {
+            const nextTime = calculateTimeLeft();
+            setTimeLeft(nextTime);
+            
+            if (nextTime <= 0) {
+                clearInterval(timer);
+                onExpire();
+            }
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [timeLeft]);
+
+    if (timeLeft <= 0) {
+        return <span className="timer-expired" style={{color: '#ff4d4d', fontSize: '0.75rem', fontWeight: 'bold'}}>Time Expired</span>;
+    }
+
+    const minutes = Math.floor((timeLeft / 1000 / 60) % 60);
+    const seconds = Math.floor((timeLeft / 1000) % 60);
+
+    return (
+        <span className="res-timer" style={{color: '#ff4d00', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px'}}>
+            <i className="fas fa-history"></i> {minutes}m {seconds < 10 ? `0${seconds}` : seconds}s
+        </span>
+    );
+};
+
 const MyReservationPage = () => {
     const navigate = useNavigate();
     const [reservations, setReservations] = useState([]);
@@ -59,7 +109,6 @@ const MyReservationPage = () => {
             cancelButtonText: 'NO, KEEP IT',
             target: '.reservations-container', 
             heightAuto: false, 
-            
             buttonsStyling: false,
             customClass: {
                 container: 'swal-fix-overlay', 
@@ -113,7 +162,7 @@ const MyReservationPage = () => {
                 <div className="empty-state">
                     <p>You have no active reservations.</p>
                     <button onClick={() => navigate('/vehicles')} className="checkOut-btn-premium" style={{width: 'auto', marginTop: '1rem'}}>
-                        Browse Fleet
+                        Browse Vehicles
                     </button>
                 </div>
             ) : (
@@ -124,9 +173,17 @@ const MyReservationPage = () => {
                                 <div className="res-info">
                                     <div className="res-main-details">
                                         <h4>{res.vehicleBrand} {res.vehicleName}</h4>
-                                        <span className={`status-badge ${res.status.toLowerCase().replace(/\s+/g, '_')}`}>
-                                            {res.status.replace('_', ' ')}
-                                        </span>
+                                        <div className="status-container">
+                                            <span className={`status-badge ${res.status.toLowerCase().replace(/\s+/g, '_')}`}>
+                                                {res.status.replace('_', ' ')}
+                                            </span>
+                                            {res.status.toUpperCase() === 'PENDING' && (
+                                                <ReservationTimer 
+                                                    createdAt={res.createdAt} 
+                                                    onExpire={fetchReservations} 
+                                                />
+                                            )}
+                                        </div>
                                     </div>
                                     
                                     <p className="res-date">

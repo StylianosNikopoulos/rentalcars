@@ -33,19 +33,21 @@ const Navbar = () => {
             <div className={`nav-links ${isMobileMenuOpen ? "active" : ""}`}>
                 {user ? (
                     <>
-                       <span className="welcome-msg">
-                           Hello, {user.user?.email?.split('@')[0] || 'User'}
-                       </span>
-                       <Link to="/reservations" onClick={() => setIsMobileMenuOpen(false)}>Reservations</Link>
-                       
-                       {isAdmin && (
-                           <Link to="/admin" className="admin-link-highlight" onClick={() => setIsMobileMenuOpen(false)}>
-                               Admin Panel
-                           </Link>
-                       )}
+                    <span className="welcome-msg">
+                        Hello, {user.user?.email?.split('@')[0] || 'User'}
+                    </span>
 
-                       <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)}>Profile</Link>
-                       <button onClick={handleLogout} className="logout-btn">Logout</button>
+                    <Link to="/vehicles" onClick={() => setIsMobileMenuOpen(false)}>Vehicles</Link>
+                    <Link to="/reservations" onClick={() => setIsMobileMenuOpen(false)}>Reservations</Link>
+                    
+                    {isAdmin && (
+                        <Link to="/admin" className="admin-link-highlight" onClick={() => setIsMobileMenuOpen(false)}>
+                            Admin Panel
+                        </Link>
+                    )}
+
+                    <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)}>Profile</Link>
+                    <button onClick={handleLogout} className="logout-btn">Logout</button>
                     </>
                 ) : (
                     <>
