@@ -4,6 +4,7 @@ import com.example.rentalcars.core.valueobject.DateRange;
 import com.example.rentalcars.features.reservation.domain.model.Reservation;
 import com.example.rentalcars.features.reservation.domain.model.ReservationStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,4 +16,6 @@ public interface ReservationRepository {
     List<Reservation> findAll();
     List<Reservation> findByVehicleId(UUID vehicleId);
     boolean existsOverlap(UUID vehicleId, DateRange period);
-    List<Reservation> findAllByUserIdAndStatusIn(UUID userId, List<ReservationStatus> statuses);}
+    List<Reservation> findAllByUserIdAndStatusIn(UUID userId, List<ReservationStatus> statuses);
+    List<Reservation> findAllExpiredPending(LocalDateTime threshold);
+}

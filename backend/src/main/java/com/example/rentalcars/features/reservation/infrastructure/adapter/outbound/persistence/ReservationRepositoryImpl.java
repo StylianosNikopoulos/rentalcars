@@ -7,6 +7,8 @@ import com.example.rentalcars.features.reservation.domain.port.outbound.Reservat
 import com.example.rentalcars.features.user.infrastructure.adapter.outbound.persistence.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -67,5 +69,13 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public List<Reservation> findAllExpiredPending(LocalDateTime threshold) {
+        return jpaRepository.findAllByStatusAndCreatedAtBefore(ReservationStatus.PENDING, threshold)
+                .stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
     }
 }

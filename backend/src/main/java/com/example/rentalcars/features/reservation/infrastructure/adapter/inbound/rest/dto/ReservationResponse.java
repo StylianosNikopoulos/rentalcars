@@ -22,4 +22,5 @@ public class ReservationResponse {
     private BigDecimal totalAmount;
     private String status;
     private String email;
+    private LocalDateTime createdAt;
 }

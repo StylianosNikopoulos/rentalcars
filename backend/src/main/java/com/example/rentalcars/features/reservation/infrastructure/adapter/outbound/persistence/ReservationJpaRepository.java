@@ -24,4 +24,6 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
             );
 
     List<ReservationJpaEntity> findByVehicleId(UUID vehicleId);
-    List<ReservationJpaEntity> findAllByUserIdAndStatusIn(UUID userId, List<ReservationStatus> statuses);}
+    List<ReservationJpaEntity> findAllByUserIdAndStatusIn(UUID userId, List<ReservationStatus> statuses);
+    List<ReservationJpaEntity> findAllByStatusAndCreatedAtBefore(ReservationStatus status, LocalDateTime dateTime);
+}
