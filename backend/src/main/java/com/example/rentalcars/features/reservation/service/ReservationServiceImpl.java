@@ -213,12 +213,12 @@ public class ReservationServiceImpl implements ReservationService {
     private int getStatusPriority(ReservationStatus status){
         if (status == null) return 99;
         return switch (status) {
-            case PENDING -> 1;
-            case CONFIRMED -> 2;
-            case COMPLETED   -> 3;
-            case ACTIVE    -> 4;
-            case CANCELED -> 5;
-            default -> 6;
+            case ACTIVE    -> 1;
+            case PENDING   -> 2;
+            case CONFIRMED -> 3;
+            case COMPLETED -> 4;
+            case CANCELED  -> 5;
+            default        -> 6;
         };
     }
 }

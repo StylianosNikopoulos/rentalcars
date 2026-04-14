@@ -19,42 +19,42 @@ import java.util.stream.Collectors;
 public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final ReservationJpaRepository jpaRepository;
-    private final ReservationPersistenceMapper mapper;
+    private final ReservationPersistenceMapper reservationMapper;
     private final UserJpaRepository userJpaRepository;
 
     @Override
     public Reservation save(Reservation reservation) {
-        var entity = mapper.toEntity(reservation);
+        var entity = reservationMapper.toEntity(reservation);
         if (reservation.getUserId() != null) {
             entity.setUser(userJpaRepository.getReferenceById(reservation.getUserId()));
         }
         var saved = jpaRepository.save(entity);
-        return mapper.toDomain(saved);
+        return reservationMapper.toDomain(saved);
     }
 
     @Override
     public Optional<Reservation> findById(UUID id) {
-        return jpaRepository.findById(id).map(mapper::toDomain);
+        return jpaRepository.findById(id).map(reservationMapper::toDomain);
     }
 
     @Override
     public List<Reservation> findByUserId(UUID userId) {
         return jpaRepository.findByUserId(userId).stream()
-                .map(mapper::toDomain)
+                .map(reservationMapper::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Reservation> findAll() {
         return jpaRepository.findAll().stream()
-                .map(mapper::toDomain)
+                .map(reservationMapper::toDomain)
                 .toList();
     }
 
     @Override
     public List<Reservation> findByVehicleId(UUID vehicleId) {
         return jpaRepository.findByVehicleId(vehicleId).stream()
-                .map(mapper::toDomain)
+                .map(reservationMapper::toDomain)
                 .toList();
     }
 
@@ -67,7 +67,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public List<Reservation> findAllByUserIdAndStatusIn(UUID userId, List<ReservationStatus> statuses) {
         return jpaRepository.findAllByUserIdAndStatusIn(userId, statuses)
                 .stream()
-                .map(mapper::toDomain)
+                .map(reservationMapper::toDomain)
                 .toList();
     }
 
@@ -75,7 +75,23 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public List<Reservation> findAllExpiredPending(LocalDateTime threshold) {
         return jpaRepository.findAllByStatusAndCreatedAtBefore(ReservationStatus.PENDING, threshold)
                 .stream()
-                .map(mapper::toDomain)
+                .map(reservationMapper::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Reservation> findByStatusAndPeriodStartBefore(ReservationStatus status, LocalDateTime now) {
+        return jpaRepository.findAllByStatusAndPeriodStartBefore(status, now)
+                .stream()
+                .map(reservationMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Reservation> findByStatusAndPeriodEndBefore(ReservationStatus status, LocalDateTime now) {
+        return jpaRepository.findAllByStatusAndPeriodEndBefore(status, now)
+                .stream()
+                .map(reservationMapper::toDomain)
+                .toList();
     }
 }

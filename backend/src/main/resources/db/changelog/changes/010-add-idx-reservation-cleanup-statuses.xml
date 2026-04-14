@@ -5,10 +5,20 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet author="db" id="010-add-idx-reservation-cleanup">
+    <changeSet author="db" id="010-add-idx-reservation-cleanup-statuses">
         <createIndex tableName="reservations" indexName="idx_res_status_createdat">
             <column name="status"/>
             <column name="created_at"/>
+        </createIndex>
+
+        <createIndex tableName="reservations" indexName="idx_res_status_start">
+            <column name="status"/>
+            <column name="start_date"/>
+        </createIndex>
+
+        <createIndex tableName="reservations" indexName="idx_res_status_end">
+            <column name="status"/>
+            <column name="end_date"/>
         </createIndex>
     </changeSet>
 </databaseChangeLog>

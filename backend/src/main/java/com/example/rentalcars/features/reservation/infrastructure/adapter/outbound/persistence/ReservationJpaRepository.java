@@ -26,4 +26,16 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
     List<ReservationJpaEntity> findByVehicleId(UUID vehicleId);
     List<ReservationJpaEntity> findAllByUserIdAndStatusIn(UUID userId, List<ReservationStatus> statuses);
     List<ReservationJpaEntity> findAllByStatusAndCreatedAtBefore(ReservationStatus status, LocalDateTime dateTime);
+
+    @Query("SELECT r FROM ReservationJpaEntity r WHERE r.status = :status AND r.startDate < :dateTime")
+    List<ReservationJpaEntity> findAllByStatusAndPeriodStartBefore(
+            @Param("status") ReservationStatus status,
+            @Param("dateTime") LocalDateTime dateTime
+    );
+
+    @Query("SELECT r FROM ReservationJpaEntity r WHERE r.status = :status AND r.endDate < :dateTime")
+    List<ReservationJpaEntity> findAllByStatusAndPeriodEndBefore(
+            @Param("status") ReservationStatus status,
+            @Param("dateTime") LocalDateTime dateTime
+    );
 }
