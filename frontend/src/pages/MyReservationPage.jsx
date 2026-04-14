@@ -7,31 +7,24 @@ import Swal from 'sweetalert2';
 import '../assets/styles/reservations.css'; 
 import '../assets/styles/swal-custom.css';
 
+const calculateGlobalTimeLeft = (createdAt) => {
+    if (!createdAt) return 0;
+    const createdDate = new Date(createdAt);
+    if (isNaN(createdDate.getTime())) return 0;
+
+    const expirationTime = createdDate.getTime() + (60 * 60 * 1000); // 1hour
+    const now = new Date().getTime();
+    const difference = expirationTime - now;
+
+    return difference > 0 ? difference : 0;
+};
+
 const ReservationTimer = ({ createdAt, onExpire }) => {
-    const calculateTimeLeft = () => {
-        if (!createdAt) return 0;
-
-        const createdDate = new Date(createdAt);
-        
-        if (isNaN(createdDate.getTime())) return 0;
-
-        const expirationTime = createdDate.getTime() + (60 * 60 * 1000);
-        const now = new Date().getTime();
-        const difference = expirationTime - now;
-
-        return difference > 0 ? difference : 0;
-    };
-    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+    const [timeLeft, setTimeLeft] = useState(calculateGlobalTimeLeft(createdAt));
 
     useEffect(() => {
-        setTimeLeft(calculateTimeLeft());
-    }, [createdAt]);
-
-    useEffect(() => {
-        if (timeLeft <= 0) null;
-
         const timer = setInterval(() => {
-            const nextTime = calculateTimeLeft();
+            const nextTime = calculateGlobalTimeLeft(createdAt);
             setTimeLeft(nextTime);
             
             if (nextTime <= 0) {
@@ -41,7 +34,7 @@ const ReservationTimer = ({ createdAt, onExpire }) => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [timeLeft]);
+    }, [createdAt, onExpire]);
 
     if (timeLeft <= 0) {
         return <span className="timer-expired" style={{color: '#ff4d4d', fontSize: '0.75rem', fontWeight: 'bold'}}>Time Expired</span>;
@@ -151,7 +144,7 @@ const MyReservationPage = () => {
 
     if (loading) return <div className="loader-container"><div className="loader"></div></div>;
 
-    return (
+return (
         <div className="reservations-container">
             <div className="reservations-header">
                 <h2>My Reservations</h2>
@@ -168,50 +161,54 @@ const MyReservationPage = () => {
             ) : (
                 <>
                     <div className="res-grid">
-                        {currentBookings.map((res) => (
-                            <div key={res.id} className="res-card">
-                                <div className="res-info">
-                                    <div className="res-main-details">
-                                        <h4>{res.vehicleBrand} {res.vehicleName}</h4>
-                                        <div className="status-container">
-                                            <span className={`status-badge ${res.status.toLowerCase().replace(/\s+/g, '_')}`}>
-                                                {res.status.replace('_', ' ')}
-                                            </span>
-                                            {res.status.toUpperCase() === 'PENDING' && (
-                                                <ReservationTimer 
-                                                    createdAt={res.createdAt} 
-                                                    onExpire={fetchReservations} 
-                                                />
-                                            )}
+                        {currentBookings.map((res) => {
+                            const status = res.status.toUpperCase();
+                            const isExpired = calculateGlobalTimeLeft(res.createdAt) <= 0;
+
+                            return (
+                                <div key={res.id} className="res-card">
+                                    <div className="res-info">
+                                        <div className="res-main-details">
+                                            <h4>{res.vehicleBrand} {res.vehicleName}</h4>
+                                            <div className="status-container">
+                                                <span className={`status-badge ${res.status.toLowerCase().replace(/\s+/g, '_')}`}>
+                                                    {res.status.replace('_', ' ')}
+                                                </span>
+                                                {status === 'PENDING' && (
+                                                    <ReservationTimer 
+                                                        createdAt={res.createdAt} 
+                                                        onExpire={fetchReservations} 
+                                                    />
+                                                )}
+                                            </div>
                                         </div>
+                                        
+                                        <p className="res-date">
+                                            <i className="far fa-calendar-alt"></i> 
+                                            {res.period?.start ? new Date(res.period.start).toLocaleDateString() : 'N/A'} — 
+                                            {res.period?.end ? new Date(res.period.end).toLocaleDateString() : 'N/A'}
+                                        </p>
+
+                                        <p className="res-price">
+                                            Total: <strong>{res.totalAmount?.toFixed(2)}€</strong>
+                                        </p>
                                     </div>
-                                    
-                                    <p className="res-date">
-                                        <i className="far fa-calendar-alt"></i> 
-                                        {res.period?.start ? new Date(res.period.start).toLocaleDateString() : 'N/A'} — 
-                                        {res.period?.end ? new Date(res.period.end).toLocaleDateString() : 'N/A'}
-                                    </p>
 
-                                    <p className="res-price">
-                                        Total: <strong>{res.totalAmount?.toFixed(2)}€</strong>
-                                    </p>
+                                    <div className="res-actions">
+                                        {status !== 'CANCELED' && status !== 'CONFIRMED' && !isExpired && (
+                                            <button onClick={() => handleCancel(res.id)} className="cancel-btn-premium">
+                                                Cancel
+                                            </button>
+                                        )}
+
+                                        {status === 'PENDING' && !isExpired && (
+                                            <button onClick={() => handleCheckOut(res)} className="checkOut-btn-premium">
+                                                Check Out
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
-
-                                <div className="res-actions">
-                                    {res.status.toUpperCase() !== 'CANCELED' && res.status.toUpperCase() !== 'CONFIRMED' && (
-                                        <button onClick={() => handleCancel(res.id)} className="cancel-btn-premium">
-                                            Cancel
-                                        </button>
-                                    )}
-
-                                    {res.status.toUpperCase() === 'PENDING' && (
-                                        <button onClick={() => handleCheckOut(res)} className="checkOut-btn-premium">
-                                            Check Out
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
+                            );})}
                     </div>
 
                     {totalPages > 1 && (
