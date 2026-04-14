@@ -137,11 +137,11 @@
     display: inline-block;
 }
 
-.status-confirmed { background: rgba(0, 255, 136, 0.1); color: var(--success); }
-.status-active { background: rgba(0, 153, 255, 0.1); color: var(--info); }
-.status-completed { background: rgba(136, 136, 136, 0.1); color: var(--text-muted); }
-.status-cancelled { background: rgba(255, 77, 77, 0.1); color: var(--danger); }
-.status-pending { background: rgba(255, 77, 0, 0.1); color: var(--primary); }
+.status-confirmed { background: rgba(0, 255, 127, 0.1); color: #00ff7f; }
+.status-pending { background: rgba(255, 170, 0, 0.1); color: #ffaa00; }
+.status-canceled { background: rgba(255, 0, 0, 0.1); color: #ff4444; }
+.status-active {background: rgba(0, 123, 255, 0.15); color: #3399ff; }
+.status-completed { background: rgba(40, 167, 69, 0.15); color: #2ecc71; }
 
 .role-badge.admin { background: rgba(255, 77, 0, 0.1); color: var(--primary); }
 .role-badge.user { background: rgba(255, 255, 255, 0.1); color: white; }
