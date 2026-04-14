@@ -79,9 +79,10 @@
 /* VEHICLE CARDS */
 .vehicle-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
     gap: 3rem;
     margin-top: 2rem;
+    justify-content: center;
 }
 
 .vehicle-img {
@@ -90,6 +91,27 @@
     object-fit: cover;
     filter: saturate(1.3) brightness(0.95);
     transition: 1s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.vehicle-item {
+    max-width: 450px; 
+    width: 100%;
+    margin: 0 auto;
+    
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.vehicle-img-wrapper {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
 }
 
 .vehicle-item:hover .vehicle-img {
