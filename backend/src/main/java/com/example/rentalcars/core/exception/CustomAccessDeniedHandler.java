@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.rentalcars.core.dto.ApiError;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -12,7 +13,10 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Component
+@RequiredArgsConstructor
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
@@ -28,9 +32,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                 .timestamp(LocalDateTime.now())
                 .build();
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
-
-        response.getWriter().write(mapper.writeValueAsString(apiError));
+        response.getWriter().write(objectMapper.writeValueAsString(apiError));
     }
 }
