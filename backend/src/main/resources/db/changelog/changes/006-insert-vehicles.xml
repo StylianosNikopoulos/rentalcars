@@ -132,11 +132,17 @@
         <insert tableName="vehicle_images">
             <column name="id" value="a11e8400-e29b-41d4-a716-44665544F001"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440001"/>
-            <column name="url" value="https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&amp;fit=crop&amp;q=80&amp;w=1000""/>
+            <column name="url" value="https://images.unsplash.com/photo-1621348335334-03207399589d?auto=format&amp;fit=crop&amp;q=80&amp;w=1000"/>
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:00:00"/>
         </insert>
-
+        <insert tableName="vehicle_images">
+            <column name="id" value="a22e8400-e29b-41d4-a716-44665544F002"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440002"/>
+            <column name="url" value="https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&amp;fit=crop&amp;q=80&amp;w=1000"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T10:05:00"/>
+        </insert>
         <insert tableName="vehicle_images">
             <column name="id" value="a33e8400-e29b-41d4-a716-44665544F003"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440003"/>
@@ -144,7 +150,6 @@
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:10:00"/>
         </insert>
-
         <insert tableName="vehicle_images">
             <column name="id" value="a44e8400-e29b-41d4-a716-44665544F004"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440004"/>
@@ -152,7 +157,6 @@
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:15:00"/>
         </insert>
-
         <insert tableName="vehicle_images">
             <column name="id" value="a55e8400-e29b-41d4-a716-44665544F005"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440005"/>
@@ -160,7 +164,6 @@
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:20:00"/>
         </insert>
-
         <insert tableName="vehicle_images">
             <column name="id" value="a66e8400-e29b-41d4-a716-44665544F006"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440006"/>
@@ -168,7 +171,6 @@
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:25:00"/>
         </insert>
-
         <insert tableName="vehicle_images">
             <column name="id" value="a77e8400-e29b-41d4-a716-44665544F007"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440007"/>
@@ -176,7 +178,6 @@
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:30:00"/>
         </insert>
-
         <insert tableName="vehicle_images">
             <column name="id" value="a88e8400-e29b-41d4-a716-44665544F008"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440008"/>
@@ -184,7 +185,6 @@
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:35:00"/>
         </insert>
-
         <insert tableName="vehicle_images">
             <column name="id" value="a99e8400-e29b-41d4-a716-44665544F009"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440009"/>
@@ -192,7 +192,6 @@
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:40:00"/>
         </insert>
-
         <insert tableName="vehicle_images">
             <column name="id" value="aaae8400-e29b-41d4-a716-44665544F010"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440010"/>
