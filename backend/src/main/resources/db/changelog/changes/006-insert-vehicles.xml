@@ -7,18 +7,6 @@
 
     <changeSet author="db" id="006-insert-vehicles">
         <insert tableName="vehicles">
-            <column name="id" value="550e8400-e29b-41d4-a716-446655440001"/>
-            <column name="brand" value="Toyota"/>
-            <column name="model" value="Yaris"/>
-            <column name="year" valueNumeric="2022"/>
-            <column name="fuel_type" value="HYBRID"/>
-            <column name="license_plate" value="ZXY-1001"/>
-            <column name="status" value="AVAILABLE"/>
-            <column name="daily_price" valueNumeric="45.00"/>
-            <column name="version" valueNumeric="0"/>
-            <column name="created_at" valueDate="2024-05-20T10:00:00"/>
-        </insert>
-        <insert tableName="vehicles">
             <column name="id" value="550e8400-e29b-41d4-a716-446655440002"/>
             <column name="brand" value="Tesla"/>
             <column name="model" value="Model 3"/>
@@ -129,13 +117,6 @@
     </changeSet>
 
     <changeSet author="db" id="006-insert-vehicles-images">
-        <insert tableName="vehicle_images">
-            <column name="id" value="a11e8400-e29b-41d4-a716-44665544F001"/>
-            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440001"/>
-            <column name="url" value="https://images.unsplash.com/photo-1621348335334-03207399589d?auto=format&amp;fit=crop&amp;q=80&amp;w=1000"/>
-            <column name="is_main" valueBoolean="true"/>
-            <column name="created_at" valueDate="2024-05-20T10:00:00"/>
-        </insert>
         <insert tableName="vehicle_images">
             <column name="id" value="a22e8400-e29b-41d4-a716-44665544F002"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440002"/>
