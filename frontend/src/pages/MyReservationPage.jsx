@@ -9,10 +9,25 @@ import '../assets/styles/swal-custom.css';
 
 const calculateGlobalTimeLeft = (createdAt) => {
     if (!createdAt) return 0;
-    const createdDate = new Date(createdAt);
-    if (isNaN(createdDate.getTime())) return 0;
 
-    const expirationTime = createdDate.getTime() + (60 * 60 * 1000); // 1hour
+    let dateStr = createdAt;
+    if (typeof createdAt === 'string') {
+        if (dateStr.includes('.')) {
+            const parts = dateStr.split('.');
+            dateStr = parts[0] + '.' + parts[1].substring(0, 3);
+        }
+        if (!dateStr.endsWith('Z')) {
+            dateStr += 'Z';
+        }
+    }
+
+    const createdDate = new Date(dateStr);
+    
+    if (isNaN(createdDate.getTime())) {
+        return 0;
+    }
+
+    const expirationTime = createdDate.getTime() + (60 * 60 * 1000);
     const now = new Date().getTime();
     const difference = expirationTime - now;
 
