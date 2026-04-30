@@ -64,7 +64,7 @@ To ensure scalability and data integrity, the system implements:
 
 ## Local Setup & Installation
 
-### 📋 Prerequisites
+### Prerequisites
 * **Docker & Docker Compose** (Latest version)
 * **Node.js (v18 or higher)** & **npm**
 * **Java 21 JDK** (Only if you want to run the Spring Boot app outside Docker)
