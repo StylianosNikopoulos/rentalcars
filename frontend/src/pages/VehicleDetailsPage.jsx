@@ -23,6 +23,7 @@ const VehicleDetailsPage = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [bookedDates, setBookedDates] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     
     const [acceptedTerms, setAcceptedTerms] = useState(false);
 
@@ -65,7 +66,7 @@ const VehicleDetailsPage = () => {
 
     const handleBooking = async (e) => {
         e.preventDefault(); 
-    
+
         if (!user) {
             toast.error("Please login to make a reservation");
             navigate('/login');
@@ -81,6 +82,8 @@ const VehicleDetailsPage = () => {
             toast.error("Please select both dates");
             return;
         }
+
+        setIsSubmitting(true);
 
         const formatForBackend = (date) => {
             if (!date) return null;
@@ -103,6 +106,7 @@ const VehicleDetailsPage = () => {
         } catch (error) {
             console.error("Booking Error:", error);
             toast.error(error.response?.data?.message || "Booking failed");
+            setIsSubmitting(false);
         }
     };
 
@@ -205,8 +209,13 @@ const VehicleDetailsPage = () => {
                                     </span>
                                 </label>
                             </div>
-                            <button type="submit" className="confirm-glow-btn">
-                                {user ? 'Confirm Reservation' : 'Login to Book'}
+                            <button 
+                                type="submit" 
+                                className="confirm-glow-btn" 
+                                disabled={isSubmitting}
+                                style={{ opacity: isSubmitting ? 0.7 : 1, cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
+                            >
+                                {isSubmitting ? 'Processing...' : (user ? 'Confirm Reservation' : 'Login to Book')}
                             </button>
                         </form>
                     </div>
