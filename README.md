@@ -19,7 +19,7 @@ A production-ready Car Rental application built with **Spring Boot 3** and **Rea
 Since the application is hosted on **Render's Free Tier**, the backend service normally "spins down" after 15 minutes of inactivity. 
 To ensure a smooth user experience, I have implemented a **Warm-up Strategy**:
 * **Cron-job Integration:** An external monitoring service pings the `/api/v1/vehicles` endpoint every 10 minutes.
-* **Result:** This keeps the Spring Boot application "warm," significantly reducing cold start delays (from 60s down to near-instant).
+* **Result:** This keeps the Spring Boot application alive, significantly reducing cold start delays (from 60s down to near-instant).
 
 ---
 
