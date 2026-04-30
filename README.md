@@ -64,25 +64,21 @@ To ensure scalability and data integrity, the system implements:
 
 ## Local Setup & Installation
 
-### Prerequisites
-* Docker & Docker Compose installed.
-* A valid Stripe API key (test mode).
+### 📋 Prerequisites
+* **Docker & Docker Compose** (Latest version)
+* **Node.js (v18 or higher)** & **npm**
+* **Java 21 JDK** (Only if you want to run the Spring Boot app outside Docker)
+* **Stripe Account** (To obtain Test API Keys)
 
-### 1. Environment Configuration
-Create a `.env` file in the root directory:
+Create a `.env` file in the root directory (like .env.example):
 
-```env
-# Database (Local Postgres)
-DB_USER=your_user
-DB_PASSWORD=your_password
+```
+docker-compose up --build -d
+cd frontend
+npm install
+npm run dev
 
-# Security
-JWT_SECRET=your_secure_random_base64_string_here
-
-# Payment Integration (Stripe)
-STRIPE_API_KEY=sk_test_your_key
-STRIPE_WEBHOOK_SECRET=whsec_your_secret
-
-# Networking
-ALLOWED_ORIGINS=http://localhost:5173
-APP_FRONTEND_URL=http://localhost:5173
+Frontend UI	http://localhost:5173	Main React application (Vite)
+Local API Gateway	http://localhost:80/api/v1	Nginx Reverse Proxy entry point
+Direct Backend API	http://localhost:8080	Spring Boot REST endpoints
+PostgreSQL DB	localhost:5432	Accessible via DBeaver
