@@ -1,11 +1,15 @@
 # RentalCars - Full Stack Vehicle Reservation System
 
-A production-ready Car Rental application built with **Spring Boot 3** and **React**, following **Hexagonal Architecture (Ports and Adapters)** principles for high maintainability, scalability, and clean code standards.
+A production-ready Car Rental application built with **Spring Boot 3** and **React**, following **Hexagonal Architecture ** principles for high maintainability, scalability, and clean code standards.
 
 ---
 
 ## Live Demo & Deployment Info
 **Website:** [RentalCars](https://rentalcars-v95l.onrender.com/) The application is fully deployed and accessible:
+> [!IMPORTANT]
+> 
+> **Performance Note:** Since the application is hosted on **Render's Free Tier**, you may experience high latency.
+> 
 * **Frontend:** Hosted on **Render** (Static Service)
 * **Backend:** Hosted on **Render** (Web Service)
 * **Database:** Managed via **Supabase** (PostgreSQL)
