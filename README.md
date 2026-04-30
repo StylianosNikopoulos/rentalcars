@@ -5,8 +5,7 @@ A production-ready Car Rental application built with **Spring Boot 3** and **Rea
 ---
 
 ## Live Demo & Deployment Info
-**Frontend URL:** [https://rentalcars-v95l.onrender.com/](https://rentalcars-v95l.onrender.com)
-
+🌐 **Frontend URL:** [https://rentalcars-v95l.onrender.com/](https://rentalcars-v95l.onrender.com)
 The application is fully deployed and accessible:
 * **Frontend:** Hosted on **Render** (Static Service)
 * **Backend:** Hosted on **Render** (Web Service)
