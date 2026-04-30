@@ -56,7 +56,6 @@ The project strictly follows the **Hexagonal Architecture** to ensure a clean se
 To ensure scalability and data integrity, the system implements:
 * **Database Indexing:** Strategic indexes for search efficiency.
 * **Concurrency Guard:** Frontend "Submitting" states and backend transactional integrity to prevent double-bookings during high latency.
-* **N+1 Solution:** Optimized JPQL and Native queries to reduce database roundtrips.
 
 ---
 
