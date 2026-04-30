@@ -67,6 +67,8 @@ const VehicleDetailsPage = () => {
     const handleBooking = async (e) => {
         e.preventDefault(); 
 
+        if (isSubmitting) return;
+
         if (!user) {
             toast.error("Please login to make a reservation");
             navigate('/login');
@@ -100,8 +102,9 @@ const VehicleDetailsPage = () => {
         };
 
         try {
-            await reservationService.createReservation(bookingData);
+            const response = await reservationService.createReservation(bookingData);
             toast.success("Reservation successful!");
+            
             setTimeout(() => navigate('/reservations'), 1500);
         } catch (error) {
             console.error("Booking Error:", error);
@@ -162,7 +165,12 @@ const VehicleDetailsPage = () => {
                 </div>
                 
                 <div className="booking-sidebar">
-                    <div className="booking-card">
+                    <div className={`booking-card ${isSubmitting ? 'submitting' : ''}`}>
+                        {isSubmitting && (
+                        <div className="booking-overlay">
+                            <div className="mini-loader"></div>
+                        </div>
+                        )}
                         <div className="card-header">
                             <h3>Book Reservation</h3>
                             <p>Select your dates and confirm</p>
@@ -213,9 +221,8 @@ const VehicleDetailsPage = () => {
                                 type="submit" 
                                 className="confirm-glow-btn" 
                                 disabled={isSubmitting}
-                                style={{ opacity: isSubmitting ? 0.7 : 1, cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
                             >
-                                {isSubmitting ? 'Processing...' : (user ? 'Confirm Reservation' : 'Login to Book')}
+                                {isSubmitting ? 'Sending Request...' : (user ? 'Confirm Reservation' : 'Login to Book')}
                             </button>
                         </form>
                     </div>
