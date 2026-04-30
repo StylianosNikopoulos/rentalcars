@@ -83,7 +83,7 @@ install stripe/stripe-cli/stripe
 stripe login
 stripe listen --forward-to localhost:80/api/v1/payments/webhook
 
-Frontend UI	http://localhost:5173	Main React application (Vite)
-Local API Gateway	http://localhost:80/api/v1	Nginx Reverse Proxy entry point
-Direct Backend API	http://localhost:8080	Spring Boot REST endpoints
-PostgreSQL DB	localhost:5432	Accessible via DBeaver
+Frontend UI   	      | http://localhost:5173	      | Main React application (Vite)
+Local API Gateway	   | http://localhost:80/api/v1	| Nginx Reverse Proxy entry point
+Direct Backend API	| http://localhost:8080	      | Spring Boot REST endpoints
+PostgreSQL DB	      | localhost:5432	            | Accessible via DBeaver
