@@ -48,10 +48,9 @@ The project strictly follows the **Hexagonal Architecture** to ensure a clean se
 * **State Management:** Context API & custom hooks (e.g., `useAuth`).
 * **UI/UX:** Custom CSS3, Responsive Design and React-Datepicker.
 
-### Infrastructure & DevOps
-* **Docker & Docker Compose:** For full-stack local orchestration.
-* **Nginx:** Configured as a Reverse Proxy to handle Load Balancing and secure **CORS headers**.
-* **Supabase:** Cloud-hosted PostgreSQL for reliable data persistence.
+### DevOps & Environments
+* **Cloud Deployment:** Hosted on **Render** (Static site for Frontend, Web Service for Backend, SupaBase for Postgres).
+* **Local Development:** Full stack orchestration via **Docker & Docker Compose**, utilizing **Nginx** as a Reverse Proxy to mirror production-like routing locally.
 
 ---
 
