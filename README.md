@@ -13,7 +13,7 @@ The application is fully deployed and accessible:
 * **Database:** Managed via **Supabase** (PostgreSQL)
 * **Payment Processing:** Integrated with **Stripe API** (Test Mode)
 
-### ⚡ Cold Start Mitigation (The "Keep-Alive" Hack)
+### Cold Start Mitigation (The "Keep-Alive" Hack)
 Since the application is hosted on **Render's Free Tier**, the backend service normally "spins down" after 15 minutes of inactivity. 
 To ensure a smooth user experience, I have implemented a **Warm-up Strategy**:
 * **Cron-job Integration:** An external monitoring service pings the `/api/v1/vehicles` endpoint every 10 minutes.
