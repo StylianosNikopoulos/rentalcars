@@ -73,7 +73,10 @@ To ensure scalability and data integrity, the system implements:
 Create a `.env` file in the root directory (like .env.example):
 
 ```
+Start Infrastructure (Docker)
 docker-compose up --build -d
+
+Start Frontend
 cd frontend
 npm install
 npm run dev
