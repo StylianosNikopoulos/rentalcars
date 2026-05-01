@@ -27,33 +27,40 @@ const AdminPage = () => {
         images: [] 
     });
 
-    // React Query: Fetching Data
+    // React Query: Fetching Data ---
     
     const { data: vehicles = [], isLoading: loadingVehicles } = useQuery({
         queryKey: ['admin-vehicles'],
-        queryFn: vehicleService.getAllVehicles,
+        queryFn: () => vehicleService.getAllVehicles(),
         enabled: activeTab === 'vehicles',
-        refetchInterval: 30000
+        refetchInterval: 10000,
+        staleTime: 0,
+        refetchOnMount: true
     });
 
     const { data: users = [], isLoading: loadingUsers } = useQuery({
         queryKey: ['admin-users'],
-        queryFn: userService.getAllUsers,
+        queryFn: () => userService.getAllUsers(),
         enabled: activeTab === 'users',
-        refetchInterval: 60000
+        refetchInterval: 30000,
+        staleTime: 0,
+        refetchOnMount: true
     });
 
     const { data: reservations = [], isLoading: loadingReservations } = useQuery({
         queryKey: ['admin-reservations'],
-        queryFn: reservationService.getAllReservations,
+        queryFn: () => reservationService.getAllReservations(),
         enabled: activeTab === 'reservations',
-        refetchInterval: 5000
+        refetchInterval: 5000,
+        staleTime: 0,
+        refetchOnMount: true,
+        refetchIntervalInBackground: true
     });
 
-    // React Query: Mutations
+    // React Query: Mutations ---
 
     const deleteVehicleMutation = useMutation({
-        mutationFn: vehicleService.deleteVehicle,
+        mutationFn: (id) => vehicleService.deleteVehicle(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-vehicles']);
             toast.success("Vehicle deleted successfully");
@@ -62,7 +69,7 @@ const AdminPage = () => {
     });
 
     const deleteUserMutation = useMutation({
-        mutationFn: userService.deleteUser,
+        mutationFn: (id) => userService.deleteUser(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-users']);
             toast.success("User deleted successfully");
@@ -71,7 +78,7 @@ const AdminPage = () => {
     });
 
     const cancelResMutation = useMutation({
-        mutationFn: reservationService.cancelReservation,
+        mutationFn: (id) => reservationService.cancelReservation(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-reservations']);
             toast.success("Reservation cancelled");
@@ -94,7 +101,7 @@ const AdminPage = () => {
     };
 
     const handleDeleteVehicle = (id) => {
-        confirmSwal('DELETE VEHICLE?', "This action will delete vehicle. Are you sure.", () => {
+        confirmSwal('DELETE VEHICLE?', "This action will delete vehicle. Are you sure?", () => {
             deleteVehicleMutation.mutate(id);
         });
     };
