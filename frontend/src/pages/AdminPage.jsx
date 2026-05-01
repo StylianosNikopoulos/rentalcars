@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import '../assets/styles/admin.css';
 import vehicleService from '../services/vehicleService';
 import userService from '../services/userService';
@@ -8,11 +9,8 @@ import Swal from 'sweetalert2';
 import '../assets/styles/swal-custom.css';
 
 const AdminPage = () => {
+    const queryClient = useQueryClient();
     const [activeTab, setActiveTab] = useState('vehicles');
-    const [vehicles, setVehicles] = useState([]);
-    const [users, setUsers] = useState([]);
-    const [reservations, setReservations] = useState([]);
-    const [loading, setLoading] = useState(false);
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
@@ -29,163 +27,99 @@ const AdminPage = () => {
         images: [] 
     });
 
-    useEffect(() => {
-        if (activeTab === 'vehicles') loadVehicles();
-        else if (activeTab === 'users') loadUsers();
-        else if (activeTab === 'reservations') loadReservations();
-    }, [activeTab]);
+    // React Query: Fetching Data
+    
+    const { data: vehicles = [], isLoading: loadingVehicles } = useQuery({
+        queryKey: ['admin-vehicles'],
+        queryFn: vehicleService.getAllVehicles,
+        enabled: activeTab === 'vehicles'
+    });
 
-    // --- Load Data Functions ---
-    const loadVehicles = async () => {
-        setLoading(true);
-        try {
-            const data = await vehicleService.getAllVehicles();
-            setVehicles(data);
-        } catch (error) { console.error(error); }
-        finally { setLoading(false); }
-    };
+    const { data: users = [], isLoading: loadingUsers } = useQuery({
+        queryKey: ['admin-users'],
+        queryFn: userService.getAllUsers,
+        enabled: activeTab === 'users'
+    });
 
-    const loadUsers = async () => {
-        setLoading(true);
-        try {
-            const data = await userService.getAllUsers();
-            setUsers(data);
-        } catch (error) { console.error(error); }
-        finally { setLoading(false); }
-    };
+    const { data: reservations = [], isLoading: loadingReservations } = useQuery({
+        queryKey: ['admin-reservations'],
+        queryFn: reservationService.getAllReservations,
+        enabled: activeTab === 'reservations'
+    });
 
-    const loadReservations = async () => {
-        setLoading(true);
-        try {
-            const data = await reservationService.getAllReservations();
-            setReservations(data);
-        } catch (error) { console.error(error); }
-        finally { setLoading(false); }
-    };
+    // React Query: Mutations
 
-    // --- Reservation Actions ---
-    const handleCancelReservation = async (id) => {
-        Swal.fire({
-            title: 'CANCEL RESERVATION?',
-            text: "This will cancel the pending reservation. Are you sure?",
-            icon: 'warning',
-            iconColor: '#ff4d00',
-            background: '#151515',
-            showCancelButton: true,
-            confirmButtonText: 'YES, CANCEL IT',
-            cancelButtonText: 'NO, KEEP IT',
-            buttonsStyling: false,
-            customClass: {
-                container: 'swal-fix-overlay', 
-                popup: 'swal-custom-popup',
-                title: 'swal-custom-title',
-                htmlContainer: 'swal-custom-html',
-                actions: 'swal-custom-actions',
-                confirmButton: 'swal-btn swal-btn-confirm',
-                cancelButton: 'swal-btn swal-btn-cancel'
-            }
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const loadingToast = toast.loading("Cancelling reservation...");
-                try {
-                    await reservationService.cancelReservation(id);
-                    toast.success("Reservation cancelled", { id: loadingToast });
-                    loadReservations();
-                } catch (error) {
-                    toast.error("Error cancelling reservation", { id: loadingToast });
-                }
-            }
+    const deleteVehicleMutation = useMutation({
+        mutationFn: vehicleService.deleteVehicle,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin-vehicles']);
+            toast.success("Vehicle deleted successfully");
+        },
+        onError: () => toast.error("Could not delete vehicle")
+    });
+
+    const deleteUserMutation = useMutation({
+        mutationFn: userService.deleteUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin-users']);
+            toast.success("User deleted successfully");
+        },
+        onError: () => toast.error("Error deleting user")
+    });
+
+    const cancelResMutation = useMutation({
+        mutationFn: reservationService.cancelReservation,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin-reservations']);
+            toast.success("Reservation cancelled");
+        },
+        onError: () => toast.error("Error cancelling reservation")
+    });
+
+    // Handlers
+
+    const handleCancelReservation = (id) => {
+        confirmSwal('CANCEL RESERVATION?', "This will cancel the pending reservation.", () => {
+            cancelResMutation.mutate(id);
         });
     };
 
-    // --- User Actions ---
-    const handleDeleteUser = async (id) => {
-        Swal.fire({
-            title: 'DELETE USER?',
-            text: "This action will permanently delete the user. Are you sure?",
-            icon: 'warning',
-            iconColor: '#ff4d00',
-            background: '#151515',
-            showCancelButton: true,
-            confirmButtonText: 'YES, DELETE',
-            cancelButtonText: 'CANCEL',
-            buttonsStyling: false,
-            customClass: {
-                container: 'swal-fix-overlay', 
-                popup: 'swal-custom-popup',
-                title: 'swal-custom-title',
-                htmlContainer: 'swal-custom-html',
-                actions: 'swal-custom-actions',
-                confirmButton: 'swal-btn swal-btn-confirm',
-                cancelButton: 'swal-btn swal-btn-cancel'
-            }
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const loadingToast = toast.loading("Deleting user...");
-                try {
-                    await userService.deleteUser(id);
-                    toast.success("User deleted successfully", { id: loadingToast });
-                    loadUsers();
-                } catch (error) {
-                    toast.error("Error deleting user", { id: loadingToast });
-                }
-            }
+    const handleDeleteUser = (id) => {
+        confirmSwal('DELETE USER?', "This action will permanently delete the user.", () => {
+            deleteUserMutation.mutate(id);
         });
     };
 
-    // --- Vehicle Actions ---
-    const handleDeleteVehicle = async (id) => {
-        Swal.fire({
-            title: 'DELETE VEHICLE?',
-            text: "This action will delete vehicle. Are you sure?",
-            icon: 'warning',
-            iconColor: '#ff4d00',
-            background: '#151515',
-            showCancelButton: true,
-            confirmButtonText: 'YES, DELETE IT',
-            cancelButtonText: 'NO, KEEP IT',
-            buttonsStyling: false,
-            customClass: {
-                container: 'swal-fix-overlay', 
-                popup: 'swal-custom-popup',
-                title: 'swal-custom-title',
-                htmlContainer: 'swal-custom-html',
-                actions: 'swal-custom-actions',
-                confirmButton: 'swal-btn swal-btn-confirm',
-                cancelButton: 'swal-btn swal-btn-cancel'
-            }
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const loadingToast = toast.loading("Deleting vehicle...");
-                try {
-                    await vehicleService.deleteVehicle(id);
-                    toast.success("Vehicle deleted Successfully", { id: loadingToast });
-                    loadVehicles(); 
-                } catch (error) {
-                    toast.error("Could not delete vehicle", { id: loadingToast });
-                }
-            }
+    const handleDeleteVehicle = (id) => {
+        confirmSwal('DELETE VEHICLE?', "This action will delete vehicle. Are you sure.", () => {
+            deleteVehicleMutation.mutate(id);
         });
     };
+
+    const confirmSwal = (title, text, onConfirm) => {
+        Swal.fire({
+            title, text, icon: 'warning', iconColor: '#ff4d00', background: '#151515',
+            showCancelButton: true, confirmButtonText: 'YES', cancelButtonText: 'NO',
+            buttonsStyling: false,
+            customClass: {
+                container: 'swal-fix-overlay', popup: 'swal-custom-popup',
+                actions: 'swal-custom-actions', confirmButton: 'swal-btn swal-btn-confirm', cancelButton: 'swal-btn swal-btn-cancel'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) onConfirm();
+        });
+    };
+
+    // Vehicle Management Logic
 
     const openUpdateModal = (vehicle) => {
         setIsEditMode(true);
         setCurrentVehicleId(vehicle.id);
-
         const rawImages = vehicle.imageUrls || vehicle.images || [];
-        const formattedImages = rawImages.map(item => {
-            if (typeof item === 'object') {
-                return {
-                    url: item.url,
-                    isMain: item.main || item.url === vehicle.mainImageUrl
-                };
-            }
-            return {
-                url: item,
-                isMain: item === vehicle.mainImageUrl
-            };
-        });
-
+        const formattedImages = rawImages.map(item => ({
+            url: typeof item === 'object' ? item.url : item,
+            isMain: (typeof item === 'object' ? item.url : item) === vehicle.mainImageUrl
+        }));
         setNewVehicle({
             brand: vehicle.brand || '',
             model: vehicle.model || '',
@@ -195,7 +129,6 @@ const AdminPage = () => {
             year: vehicle.year || new Date().getFullYear(),
             images: formattedImages
         });
-
         setIsModalOpen(true);
     };
 
@@ -206,55 +139,26 @@ const AdminPage = () => {
             reader.onloadend = () => {
                 setNewVehicle(prev => ({
                     ...prev,
-                    images: [...prev.images, { 
-                        url: reader.result,
-                        file: file,
-                        isMain: prev.images.length === 0 
-                    }]
+                    images: [...prev.images, { url: reader.result, file: file, isMain: prev.images.length === 0 }]
                 }));
             };
             reader.readAsDataURL(file);
         });
     };
 
-    const setMainImage = (index) => {
-        setNewVehicle(prev => ({
-            ...prev,
-            images: prev.images.map((img, i) => ({ ...img, isMain: i === index }))
-        }));
-    };
-
-    const removeImage = (index) => {
-        setNewVehicle(prev => {
-            const updated = prev.images.filter((_, i) => i !== index);
-            if (updated.length > 0 && !updated.some(img => img.isMain)) {
-                updated[0].isMain = true;
-            }
-            return { ...prev, images: updated };
-        });
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        if (newVehicle.images.length === 0) {
-            toast.error("At least one image is required");
-            return;
-        }
+        if (newVehicle.images.length === 0) return toast.error("At least one image is required");
 
         const loadingToast = toast.loading(isEditMode ? "Processing..." : "Creating vehicle...");
-
         try {
             const uploadPromises = newVehicle.images.map(async (img) => {
-                if (img.url.startsWith('http')) {
-                    return { url: img.url, isMain: img.isMain };
-                }
+                if (img.url.startsWith('http')) return { url: img.url, isMain: img.isMain };
                 const uploadedUrl = await uploadToCloudinary(img.file);
                 return { url: uploadedUrl, isMain: img.isMain };
             });
 
             const uploadedImagesMetadata = await Promise.all(uploadPromises);
-            
             const urlsArray = uploadedImagesMetadata.map(img => img.url);
             const mainImgObj = uploadedImagesMetadata.find(img => img.isMain) || uploadedImagesMetadata[0];
 
@@ -276,13 +180,25 @@ const AdminPage = () => {
             }
             
             toast.success(isEditMode ? "Vehicle updated" : "Vehicle created", { id: loadingToast });
-            loadVehicles();
+            queryClient.invalidateQueries(['admin-vehicles']);
             closeModal();
         } catch (error) {
-            toast.error("Failed to upload images or save vehicle", { id: loadingToast });
+            toast.error("Operation failed", { id: loadingToast });
         }
     };
-    
+
+    const uploadToCloudinary = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET); 
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`, {
+            method: 'POST', body: formData
+        });
+        if (!response.ok) throw new Error("Upload failed");
+        const data = await response.json();
+        return data.secure_url;
+    };
+
     const closeModal = () => {
         setIsModalOpen(false);
         setIsEditMode(false);
@@ -293,37 +209,22 @@ const AdminPage = () => {
     const handlePlateChange = (e) => {
         const value = e.target.value.toUpperCase();
         setNewVehicle({...newVehicle, licensePlate: value});
-        const plateRegex = /^[A-Z]{3}-\d{4}$/;
-        setPlateError(value && !plateRegex.test(value) ? 'Format: ABC-1234' : '');
+        setPlateError(value && !/^[A-Z]{3}-\d{4}$/.test(value) ? 'Format: ABC-1234' : '');
     };
 
-    const uploadToCloudinary = async (file) => {
-        const formData = new FormData();
-        formData.append('file', file);
-        
-        formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET); 
-        const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const setMainImage = (index) => {
+        setNewVehicle(prev => ({
+            ...prev,
+            images: prev.images.map((img, i) => ({ ...img, isMain: i === index }))
+        }));
+    };
 
-        try {
-            const response = await fetch(
-                `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-                {
-                    method: 'POST',
-                    body: formData,
-                }
-            );
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error.message);
-            }
-
-            const data = await response.json();
-            return data.secure_url; 
-        } catch (error) {
-            console.error("Cloudinary Upload Error:", error);
-            throw error;
-        }
+    const removeImage = (index) => {
+        setNewVehicle(prev => {
+            const updated = prev.images.filter((_, i) => i !== index);
+            if (updated.length > 0 && !updated.some(img => img.isMain)) updated[0].isMain = true;
+            return { ...prev, images: updated };
+        });
     };
 
     return (
@@ -345,129 +246,123 @@ const AdminPage = () => {
                 <div className="admin-content">
                     {activeTab === 'vehicles' && (
                         <div className="admin-section">
-                            <button className="add-btn" onClick={() => {
-                                setIsEditMode(false);
-                                setCurrentVehicleId(null);
-                                setNewVehicle({ brand: '', model: '', dailyPrice: '', fuelType: '', licensePlate: '', year: 2024, images: [] });
-                                setIsModalOpen(true);
-                            }}>
+                            <button className="add-btn" onClick={() => { closeModal(); setIsModalOpen(true); }}>
                                 + Add Vehicle
                             </button>
-                            <table className="admin-table">
-                                <thead>
-                                    <tr>
-                                        <th>Vehicle</th>
-                                        <th>Plate</th>
-                                        <th>Price</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {vehicles.map(car => (
-                                        <tr key={car.id}>
-                                            <td><strong>{car.brand}</strong> {car.model}</td>
-                                            <td>{car.licensePlate}</td>
-                                            <td>€{car.dailyPrice}</td>
-                                            <td className="actions-cell">
-                                                <button className="btn-update" onClick={() => openUpdateModal(car)}>
-                                                    <i className="fas fa-edit"></i> Update
-                                                </button>
-                                                <button className="btn-delete" onClick={() => handleDeleteVehicle(car.id)}>
-                                                    <i className="fas fa-trash"></i> Delete
-                                                </button>
-                                            </td>
+                            {loadingVehicles ? <div className="loader"></div> : (
+                                <table className="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Vehicle</th>
+                                            <th>Plate</th>
+                                            <th>Price</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {vehicles.map(car => (
+                                            <tr key={car.id}>
+                                                <td><strong>{car.brand}</strong> {car.model}</td>
+                                                <td>{car.licensePlate}</td>
+                                                <td>€{car.dailyPrice}</td>
+                                                <td className="actions-cell">
+                                                    <button className="btn-update" onClick={() => openUpdateModal(car)}>
+                                                        <i className="fas fa-edit"></i> Update
+                                                    </button>
+                                                    <button className="btn-delete" onClick={() => handleDeleteVehicle(car.id)}>
+                                                        <i className="fas fa-trash"></i> Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
                         </div>
                     )}
 
                     {activeTab === 'users' && (
                         <div className="admin-section">
-                            <table className="admin-table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {users.map(user => (
-                                        <tr key={user.id}>
-                                            <td>{user.firstName} {user.lastName}</td>
-                                            <td>{user.email}</td>
-                                            <td>
-                                                <span className={`role-badge ${user.role.toLowerCase()}`}>
-                                                    {user.role}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div className="actions-cell">
-                                                    {user.role !== 'ADMIN' && (
-                                                        <button className="btn-delete" onClick={() => handleDeleteUser(user.id)}>
-                                                            <i className="fas fa-trash"></i> Delete
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            </td>
+                            {loadingUsers ? <div className="loader"></div> : (
+                                <table className="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {users.map(user => (
+                                            <tr key={user.id}>
+                                                <td>{user.firstName} {user.lastName}</td>
+                                                <td>{user.email}</td>
+                                                <td><span className={`role-badge ${user.role.toLowerCase()}`}>{user.role}</span></td>
+                                                <td>
+                                                    <div className="actions-cell">
+                                                        {user.role !== 'ADMIN' && (
+                                                            <button className="btn-delete" onClick={() => handleDeleteUser(user.id)}>
+                                                                <i className="fas fa-trash"></i> Delete
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
                         </div>
                     )}
                     
                     {activeTab === 'reservations' && (
-                            <div className="admin-section">
-                                {loading ? <p>Loading reservations...</p> : (
-                                    <table className="admin-table">
-                                        <thead>
-                                            <tr>
-                                                <th>User Email</th>
-                                                <th>Vehicle</th>
-                                                <th>From</th>
-                                                <th>Until</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
+                        <div className="admin-section">
+                            {loadingReservations ? <div className="loader"></div> : (
+                                <table className="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>User Email</th>
+                                            <th>Vehicle</th>
+                                            <th>From</th>
+                                            <th>Until</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {reservations.length > 0 ? reservations.map(res => (
+                                            <tr key={res.id}>
+                                                <td>{res.email}</td>
+                                                <td>{res.vehicleBrand} {res.vehicleName}</td>
+                                                <td>{new Date(res.period.start).toLocaleDateString()}</td>
+                                                <td>{new Date(res.period.end).toLocaleDateString()}</td>
+                                                <td>
+                                                    <span className={`status-badge status-${res.status.toLowerCase()}`}>
+                                                        {res.status}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div className="actions-cell">
+                                                        {res.status === 'PENDING' && (
+                                                            <button className="status-btn pick-up" onClick={() => handleCancelReservation(res.id)}>
+                                                                <i className="fas fa-times"></i> Cancel
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            {reservations.length > 0 ? reservations.map(res => (
-                                                <tr key={res.id}>
-                                                    <td>{res.email}</td>
-                                                    <td>{res.vehicleBrand} {res.vehicleName}</td>
-                                                    <td>{new Date(res.period.start).toLocaleDateString()}</td>
-                                                    <td>{new Date(res.period.end).toLocaleDateString()}</td>
-                                                    <td>
-                                                        <span className={`status-badge status-${res.status.toLowerCase()}`}>
-                                                            {res.status}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <div className="actions-cell">
-                                                            {res.status === 'PENDING' && (
-                                                                <button className="status-btn pick-up" onClick={() => handleCancelReservation(res.id)}>
-                                                                    <i className="fas fa-times"></i> Cancel
-                                                                </button>
-                                                            )}
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            )) : (
-                                                <tr><td colSpan="6" style={{textAlign: 'center'}}>No reservations found.</td></tr>
-                                            )}
-                                        </tbody>
-                                    </table>
-                                )}
-                            </div>
-                        )}
+                                        )) : (
+                                            <tr><td colSpan="6" style={{textAlign: 'center'}}>No reservations found.</td></tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                    )}
                 </div>
             </main>
 
-            {/* MODAL CREATE & UPDATE */}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="admin-modal glass-morphism">

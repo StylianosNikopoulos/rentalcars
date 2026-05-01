@@ -1,47 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; 
 import vehicleService from '../services/vehicleService';
 import '../assets/styles/vehicles.css'; 
+import { useQuery } from '@tanstack/react-query';
 
 const VehiclesPage = () => {
-    const [vehicles, setVehicles] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [sortOrder, setSortOrder] = useState("default"); 
-    
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 8;
     const navigate = useNavigate();
     const location = useLocation(); 
-
-    useEffect(() => {
-        const fetchVehicles = async () => {
-            setLoading(true);
-            try {
-                const queryParams = new URLSearchParams(location.search);
-                const start = queryParams.get('start');
-                const end = queryParams.get('end');
-
-                let data;
-                if (start && end) {
-                    data = await vehicleService.getAvailableVehicles(start, end);
-                } else {
-                    data = await vehicleService.getAllVehicles();
-                }
-                setVehicles(data);
-            } catch (error) {
-                console.error("Error fetching vehicles", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchVehicles();
-    }, [location.search]); 
+    
+    const [searchTerm, setSearchTerm] = useState("");
+    const [sortOrder, setSortOrder] = useState("default"); 
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;
 
     const queryParams = new URLSearchParams(location.search);
     const selectedStart = queryParams.get('start');
     const selectedEnd = queryParams.get('end');
+
+    const { data: vehicles = [], isLoading, isError } = useQuery({
+        queryKey: ['vehicles', selectedStart, selectedEnd], 
+        queryFn: async () => {
+            if (selectedStart && selectedEnd) {
+                return await vehicleService.getAvailableVehicles(selectedStart, selectedEnd);
+            }
+            return await vehicleService.getAllVehicles();
+        },
+        staleTime: 1000 * 60 * 5, 
+    });
 
     const getProcessedVehicles = () => {
         let filtered = vehicles.filter(car => 
@@ -58,6 +43,7 @@ const VehiclesPage = () => {
     };
 
     const filteredVehicles = getProcessedVehicles();
+    
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = filteredVehicles.slice(indexOfFirstItem, indexOfLastItem);
@@ -77,6 +63,8 @@ const VehiclesPage = () => {
             year: 'numeric'
         }); 
     };
+
+    if (isError) return <div className="error-message">Error loading fleet. Please try again later.</div>;
 
     return (
         <div className="vehicles-page">
@@ -118,30 +106,31 @@ const VehiclesPage = () => {
                             type="text" 
                             placeholder="Search brand or model..." 
                             className="search-input"
+                            value={searchTerm}
                             onChange={handleSearch}
                         />
                     </div>
                 </div>
             </div>
 
-            {loading ? (
+            {isLoading ? (
                 <div className="loader">FETCHING FLEET...</div>
             ) : (
                 <>
                     <div className="vehicle-grid">
                         {currentItems.map(car => (
                             <div key={car.id} className="vehicle-item" onClick={() => navigate(`/vehicle/${car.id}`)}>
-                            <div className="vehicle-img-wrapper">
-                                <img 
-                                    src={
-                                        car.images && car.images.length > 0 
-                                            ? (car.images.find(img => img.isMain)?.url || car.images[0].url) 
-                                            : 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070'
-                                    } 
-                                    alt={`${car.brand} ${car.model}`} 
-                                    className="vehicle-img" 
-                                />
-                            </div>
+                                <div className="vehicle-img-wrapper">
+                                    <img 
+                                        src={
+                                            car.images && car.images.length > 0 
+                                                ? (car.images.find(img => img.isMain)?.url || car.images[0].url) 
+                                                : 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070'
+                                        } 
+                                        alt={`${car.brand} ${car.model}`} 
+                                        className="vehicle-img" 
+                                    />
+                                </div>
                                 <div className="vehicle-details">
                                     <div>
                                         <h3 className="car-name">{car.brand} {car.model}</h3>
@@ -156,17 +145,30 @@ const VehiclesPage = () => {
                             </div>
                         ))}
                     </div>
+
                     {totalPages > 1 && (
                         <div className="pagination">
-                            <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="page-btn">PREVIOUS</button>
+                            <button 
+                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
+                                disabled={currentPage === 1} 
+                                className="page-btn"
+                            >
+                                PREVIOUS
+                            </button>
                             <span className="page-info">Page {currentPage} of {totalPages}</span>
-                            <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} className="page-btn">NEXT</button>
+                            <button 
+                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
+                                disabled={currentPage === totalPages} 
+                                className="page-btn"
+                            >
+                                NEXT
+                            </button>
                         </div>
                     )}
                 </>
             )}
             
-            {filteredVehicles.length === 0 && !loading && (
+            {filteredVehicles.length === 0 && !isLoading && (
                 <div className="no-results">No vehicles matching your criteria were found.</div>
             )}
         </div>

@@ -4,33 +4,26 @@ import reservationService from '../services/reservationService';
 import paymentService from '../services/paymentService';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2'; 
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import '../assets/styles/reservations.css'; 
 import '../assets/styles/swal-custom.css';
 
 const calculateGlobalTimeLeft = (createdAt) => {
     if (!createdAt) return 0;
-
     let dateStr = createdAt;
     if (typeof createdAt === 'string') {
         if (dateStr.includes('.')) {
             const parts = dateStr.split('.');
             dateStr = parts[0] + '.' + parts[1].substring(0, 3);
         }
-        if (!dateStr.endsWith('Z')) {
-            dateStr += 'Z';
-        }
+        if (!dateStr.endsWith('Z')) dateStr += 'Z';
     }
-
     const createdDate = new Date(dateStr);
-    
-    if (isNaN(createdDate.getTime())) {
-        return 0;
-    }
+    if (isNaN(createdDate.getTime())) return 0;
 
     const expirationTime = createdDate.getTime() + (60 * 60 * 1000);
     const now = new Date().getTime();
     const difference = expirationTime - now;
-
     return difference > 0 ? difference : 0;
 };
 
@@ -41,13 +34,11 @@ const ReservationTimer = ({ createdAt, onExpire }) => {
         const timer = setInterval(() => {
             const nextTime = calculateGlobalTimeLeft(createdAt);
             setTimeLeft(nextTime);
-            
             if (nextTime <= 0) {
                 clearInterval(timer);
                 onExpire();
             }
         }, 1000);
-
         return () => clearInterval(timer);
     }, [createdAt, onExpire]);
 
@@ -67,39 +58,41 @@ const ReservationTimer = ({ createdAt, onExpire }) => {
 
 const MyReservationPage = () => {
     const navigate = useNavigate();
-    const [reservations, setReservations] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const queryClient = useQueryClient();
     const [currentPage, setCurrentPage] = useState(1);
     const bookingsPerPage = 3;
 
-    useEffect(() => {
-        fetchReservations();
-    }, []);
+    const { data: reservations = [], isLoading } = useQuery({
+        queryKey: ['myReservations'],
+        queryFn: reservationService.getMyReservations,
+        refetchInterval: 10000,
+    });
+
+    const cancelMutation = useMutation({
+        mutationFn: (id) => reservationService.cancelReservation(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['myReservations'] });
+            toast.success("Reservation Canceled Successfully");
+        },
+        onError: () => {
+            toast.error("Could not cancel reservation");
+        }
+    });
 
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
         if (query.get("success")) {
             toast.success("Payment completed! Your reservation has been confirmed.");
-            fetchReservations(); 
+            queryClient.invalidateQueries({ queryKey: ['myReservations'] });
             window.history.replaceState({}, document.title, window.location.pathname);
         }
         if (query.get("canceled")) {
             toast.error("Payment cancelled.");
             window.history.replaceState({}, document.title, window.location.pathname);
         }
-    }, []);
+    }, [queryClient]);
 
-    const fetchReservations = async () => {
-        try {
-            const data = await reservationService.getMyReservations();
-            setReservations(data);
-        } catch (error) {
-            toast.error("Failed to load reservations");
-        } finally {
-            setLoading(false);
-        }
-    };
-
+    // Pagination Logic
     const totalPages = Math.ceil(reservations.length / bookingsPerPage);
     const indexOfLastBooking = currentPage * bookingsPerPage;
     const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
@@ -115,28 +108,18 @@ const MyReservationPage = () => {
             showCancelButton: true,
             confirmButtonText: 'YES, CANCEL IT',
             cancelButtonText: 'NO, KEEP IT',
-            target: '.reservations-container', 
-            heightAuto: false, 
             buttonsStyling: false,
             customClass: {
                 container: 'swal-fix-overlay', 
                 popup: 'swal-custom-popup',
                 title: 'swal-custom-title',
-                htmlContainer: 'swal-custom-html',
                 actions: 'swal-custom-actions',
                 confirmButton: 'swal-btn swal-btn-confirm',
                 cancelButton: 'swal-btn swal-btn-cancel'
             }
-        }).then(async (result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
-                const loadingToast = toast.loading("Canceling reservation...");
-                try {
-                    await reservationService.cancelReservation(reservationId);
-                    toast.success("Reservation Canceled Successfully", { id: loadingToast });
-                    fetchReservations(); 
-                } catch (error) {
-                    toast.error("Could not cancel reservation", { id: loadingToast });
-                }
+                cancelMutation.mutate(reservationId);
             }
         });
     };
@@ -146,7 +129,7 @@ const MyReservationPage = () => {
         try {
             const data = await paymentService.initiatePayment(res.id);
             toast.dismiss(loadingToast);
-            if (data && data.url) {
+            if (data?.url) {
                 window.location.href = data.url; 
             } else {
                 toast.error("Payment URL not found");
@@ -157,9 +140,9 @@ const MyReservationPage = () => {
         }
     };
 
-    if (loading) return <div className="loader-container"><div className="loader"></div></div>;
+    if (isLoading) return <div className="loader-container"><div className="loader"></div></div>;
 
-return (
+    return (
         <div className="reservations-container">
             <div className="reservations-header">
                 <h2>My Reservations</h2>
@@ -192,7 +175,7 @@ return (
                                                 {status === 'PENDING' && (
                                                     <ReservationTimer 
                                                         createdAt={res.createdAt} 
-                                                        onExpire={fetchReservations} 
+                                                        onExpire={() => queryClient.invalidateQueries({ queryKey: ['myReservations'] })} 
                                                     />
                                                 )}
                                             </div>
@@ -211,8 +194,12 @@ return (
 
                                     <div className="res-actions">
                                         {status !== 'CANCELED' && status !== 'CONFIRMED' && !isExpired && (
-                                            <button onClick={() => handleCancel(res.id)} className="cancel-btn-premium">
-                                                Cancel
+                                            <button 
+                                                onClick={() => handleCancel(res.id)} 
+                                                className="cancel-btn-premium"
+                                                disabled={cancelMutation.isPending}
+                                            >
+                                                {cancelMutation.isPending ? 'Wait...' : 'Cancel'}
                                             </button>
                                         )}
 
@@ -235,11 +222,7 @@ return (
                             >
                                 <i className="fas fa-chevron-left"></i> Previous
                             </button>
-
-                            <span className="page-info">
-                                {currentPage} / {totalPages}
-                            </span>
-
+                            <span className="page-info">{currentPage} / {totalPages}</span>
                             <button 
                                 className="page-btn"
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}

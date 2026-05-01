@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom'; 
 import { useAuth } from '../hooks/useAuth';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import vehicleService from '../services/vehicleService';
@@ -16,58 +17,56 @@ import 'swiper/css/pagination';
 const VehicleDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const { user } = useAuth();
-    const [vehicle, setVehicle] = useState(null);
-    const [loading, setLoading] = useState(true);
     
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [bookedDates, setBookedDates] = useState([]);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    
     const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-    useEffect(() => {
-        const fetchAllData = async () => {
-            try {
-                const [vehicleData, reservationsData] = await Promise.all([
-                    vehicleService.getVehicleById(id),
-                    reservationService.getVehicleReservations(id).catch(err => {
-                        console.error("Reservations fetch failed:", err);
-                        return []; 
-                    })
-                ]);
-      
-                setVehicle(vehicleData);
+    // React Query: Fetch Vehicle & Reservations
+    
+    const { data: vehicle, isLoading: vehicleLoading } = useQuery({
+        queryKey: ['vehicle', id],
+        queryFn: () => vehicleService.getVehicleById(id),
+    });
 
-                const safeReservations = Array.isArray(reservationsData) ? reservationsData : [];
-                const intervals = safeReservations.map(res => {
-                    if (res.period && res.period.start && res.period.end) {
-                        const dStart = new Date(res.period.start);
-                        const dEnd = new Date(res.period.end);
-                        dStart.setHours(0, 0, 0, 0);
-                        dEnd.setHours(23, 59, 59, 999); 
-                        return { start: dStart, end: dEnd };
-                    }
-                    return null;
-                }).filter(i => i !== null);
+    const { data: bookedDates = [], isLoading: datesLoading } = useQuery({
+        queryKey: ['vehicle-reservations', id],
+        queryFn: async () => {
+            const data = await reservationService.getVehicleReservations(id);
+            const safeReservations = Array.isArray(data) ? data : [];
+            return safeReservations.map(res => {
+                if (res.period?.start && res.period?.end) {
+                    const dStart = new Date(res.period.start);
+                    const dEnd = new Date(res.period.end);
+                    dStart.setHours(0, 0, 0, 0);
+                    dEnd.setHours(23, 59, 59, 999); 
+                    return { start: dStart, end: dEnd };
+                }
+                return null;
+            }).filter(Boolean);
+        },
+        refetchInterval: 10000
+    });
 
-                setBookedDates(intervals);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setBookedDates([]); 
-                toast.error("Could not load availability");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchAllData();
-    }, [id]);
+    // Mutation: Create Reservation
+    const bookingMutation = useMutation({
+        mutationFn: (bookingData) => reservationService.createReservation(bookingData),
+        onSuccess: () => {
+            toast.success("Reservation successful!");
+            queryClient.invalidateQueries(['vehicle-reservations', id]);
+            setTimeout(() => navigate('/reservations'), 1500);
+        },
+        onError: (error) => {
+            toast.error(error.response?.data?.message || "Booking failed");
+        }
+    });
 
     const handleBooking = async (e) => {
         e.preventDefault(); 
 
-        if (isSubmitting) return;
+        if (bookingMutation.isPending) return;
 
         if (!user) {
             toast.error("Please login to make a reservation");
@@ -85,8 +84,6 @@ const VehicleDetailsPage = () => {
             return;
         }
 
-        setIsSubmitting(true);
-
         const formatForBackend = (date) => {
             if (!date) return null;
             const year = date.getFullYear();
@@ -96,24 +93,15 @@ const VehicleDetailsPage = () => {
         };
 
         const bookingData = {
-            vehicleId: vehicle.id,
+            vehicleId: id,
             startDate: formatForBackend(startDate),
             endDate: formatForBackend(endDate)
         };
 
-        try {
-            const response = await reservationService.createReservation(bookingData);
-            toast.success("Reservation successful!");
-            
-            setTimeout(() => navigate('/reservations'), 1500);
-        } catch (error) {
-            console.error("Booking Error:", error);
-            toast.error(error.response?.data?.message || "Booking failed");
-            setIsSubmitting(false);
-        }
+        bookingMutation.mutate(bookingData);
     };
 
-    if (loading) return <div className="loader">Loading details...</div>;
+    if (vehicleLoading || datesLoading) return <div className="loader">Loading details...</div>;
     if (!vehicle) return <div className="error">Vehicle not found</div>;
 
     const allImages = vehicle.images && vehicle.images.length > 0 
@@ -165,8 +153,8 @@ const VehicleDetailsPage = () => {
                 </div>
                 
                 <div className="booking-sidebar">
-                    <div className={`booking-card ${isSubmitting ? 'submitting' : ''}`}>
-                        {isSubmitting && (
+                    <div className={`booking-card ${bookingMutation.isPending ? 'submitting' : ''}`}>
+                        {bookingMutation.isPending && (
                         <div className="booking-overlay">
                             <div className="mini-loader"></div>
                         </div>
@@ -220,9 +208,9 @@ const VehicleDetailsPage = () => {
                             <button 
                                 type="submit" 
                                 className="confirm-glow-btn" 
-                                disabled={isSubmitting}
+                                disabled={bookingMutation.isPending}
                             >
-                                {isSubmitting ? 'Sending Request...' : (user ? 'Confirm Reservation' : 'Login to Book')}
+                                {bookingMutation.isPending ? 'Sending Request...' : (user ? 'Confirm Reservation' : 'Login to Book')}
                             </button>
                         </form>
                     </div>

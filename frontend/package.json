@@ -12,6 +12,7 @@
   "dependencies": {
     "@stripe/react-stripe-js": "^6.0.0",
     "@stripe/stripe-js": "^9.0.0",
+    "@tanstack/react-query": "^5.100.7",
     "axios": "^1.13.6",
     "react": "^18.2.0",
     "react-datepicker": "^9.1.0",
