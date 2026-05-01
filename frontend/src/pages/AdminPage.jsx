@@ -207,7 +207,8 @@ const AdminPage = () => {
                 setNewVehicle(prev => ({
                     ...prev,
                     images: [...prev.images, { 
-                        url: reader.result, 
+                        url: reader.result,
+                        file: file,
                         isMain: prev.images.length === 0 
                     }]
                 }));
@@ -235,30 +236,39 @@ const AdminPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        const urlsArray = newVehicle.images.map(img => img.url);
-        const mainImgObj = newVehicle.images.find(img => img.isMain);
-        const mainUrlString = mainImgObj ? mainImgObj.url : (urlsArray[0] || "");
-
-        const payload = {
-            brand: newVehicle.brand,
-            model: newVehicle.model,
-            year: parseInt(newVehicle.year),
-            fuelType: newVehicle.fuelType,
-            licensePlate: newVehicle.licensePlate,
-            dailyPrice: parseFloat(newVehicle.dailyPrice),
-            imageUrls: urlsArray,
-            mainImageUrl: mainUrlString
-        };
-
-        if (urlsArray.length === 0) {
+        
+        if (newVehicle.images.length === 0) {
             toast.error("At least one image is required");
             return;
         }
 
-        const loadingToast = toast.loading(isEditMode ? "Updating vehicle..." : "Creating vehicle...");
+        const loadingToast = toast.loading(isEditMode ? "Processing..." : "Creating vehicle...");
 
         try {
+            const uploadPromises = newVehicle.images.map(async (img) => {
+                if (img.url.startsWith('http')) {
+                    return { url: img.url, isMain: img.isMain };
+                }
+                const uploadedUrl = await uploadToCloudinary(img.file);
+                return { url: uploadedUrl, isMain: img.isMain };
+            });
+
+            const uploadedImagesMetadata = await Promise.all(uploadPromises);
+            
+            const urlsArray = uploadedImagesMetadata.map(img => img.url);
+            const mainImgObj = uploadedImagesMetadata.find(img => img.isMain) || uploadedImagesMetadata[0];
+
+            const payload = {
+                brand: newVehicle.brand,
+                model: newVehicle.model,
+                year: parseInt(newVehicle.year),
+                fuelType: newVehicle.fuelType,
+                licensePlate: newVehicle.licensePlate,
+                dailyPrice: parseFloat(newVehicle.dailyPrice),
+                imageUrls: urlsArray,
+                mainImageUrl: mainImgObj.url
+            };
+
             if (isEditMode) {
                 await vehicleService.updateVehicle(currentVehicleId, payload);
             } else {
@@ -269,9 +279,7 @@ const AdminPage = () => {
             loadVehicles();
             closeModal();
         } catch (error) {
-            console.error("FULL ERROR:", error.response?.data);
-            const serverMsg = error.response?.data?.message || "Error saving vehicle";
-            toast.error(serverMsg, { id: loadingToast });
+            toast.error("Failed to upload images or save vehicle", { id: loadingToast });
         }
     };
     
@@ -287,6 +295,35 @@ const AdminPage = () => {
         setNewVehicle({...newVehicle, licensePlate: value});
         const plateRegex = /^[A-Z]{3}-\d{4}$/;
         setPlateError(value && !plateRegex.test(value) ? 'Format: ABC-1234' : '');
+    };
+
+    const uploadToCloudinary = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET); 
+        const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+
+        try {
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+                {
+                    method: 'POST',
+                    body: formData,
+                }
+            );
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error.message);
+            }
+
+            const data = await response.json();
+            return data.secure_url; 
+        } catch (error) {
+            console.error("Cloudinary Upload Error:", error);
+            throw error;
+        }
     };
 
     return (
