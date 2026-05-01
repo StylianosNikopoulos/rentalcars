@@ -32,19 +32,22 @@ const AdminPage = () => {
     const { data: vehicles = [], isLoading: loadingVehicles } = useQuery({
         queryKey: ['admin-vehicles'],
         queryFn: vehicleService.getAllVehicles,
-        enabled: activeTab === 'vehicles'
+        enabled: activeTab === 'vehicles',
+        refetchInterval: 30000
     });
 
     const { data: users = [], isLoading: loadingUsers } = useQuery({
         queryKey: ['admin-users'],
         queryFn: userService.getAllUsers,
-        enabled: activeTab === 'users'
+        enabled: activeTab === 'users',
+        refetchInterval: 60000
     });
 
     const { data: reservations = [], isLoading: loadingReservations } = useQuery({
         queryKey: ['admin-reservations'],
         queryFn: reservationService.getAllReservations,
-        enabled: activeTab === 'reservations'
+        enabled: activeTab === 'reservations',
+        refetchInterval: 5000
     });
 
     // React Query: Mutations
