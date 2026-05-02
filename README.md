@@ -1,4 +1,3 @@
-<img width="1470" height="708" alt="Screenshot 2026-05-02 at 8 35 57 PM" src="https://github.com/user-attachments/assets/41be1041-18ca-4a81-924b-d3193d7032dd" />
 # RentalCars - Full Stack Vehicle Reservation System
 
 A production-ready Car Rental application built with **Spring Boot 3** and **React**, following Hexagonal Architecture principles for high maintainability, scalability, and clean code standards.
