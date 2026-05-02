@@ -89,11 +89,15 @@ stripe listen --forward-to localhost:80/api/v1/payments/webhook
 
 ```
 
-<img width="1457" height="657" alt="Screenshot 2026-05-02 at 8 36 55 PM" src="https://github.com/user-attachments/assets/22c9702c-a342-448d-a613-85185bbdfd0f" />
+<img width="1470" height="708" alt="Screenshot 2026-05-02 at 8 35 57 PM" src="https://github.com/user-attachments/assets/5cae5eee-20d4-42f3-9387-d549172b12b1" />
 
 ------------------------
 
-<img width="1470" height="708" alt="Screenshot 2026-05-02 at 8 35 57 PM" src="https://github.com/user-attachments/assets/5cae5eee-20d4-42f3-9387-d549172b12b1" />
+<img width="1466" height="705" alt="Screenshot 2026-05-02 at 8 42 58 PM" src="https://github.com/user-attachments/assets/6ac13dc6-a67c-4328-bd17-46b6dc3ae8df" />
+
+------------------------
+
+<img width="1457" height="657" alt="Screenshot 2026-05-02 at 8 36 55 PM" src="https://github.com/user-attachments/assets/22c9702c-a342-448d-a613-85185bbdfd0f" />
 
 ------------------------
 
