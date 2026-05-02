@@ -87,6 +87,8 @@ install stripe/stripe-cli/stripe
 stripe login
 stripe listen --forward-to localhost:80/api/v1/payments/webhook
 
+```
+
 <img width="1457" height="657" alt="Screenshot 2026-05-02 at 8 36 55 PM" src="https://github.com/user-attachments/assets/22c9702c-a342-448d-a613-85185bbdfd0f" />
 
 ![Uploading Screenshot 2026-05-02 at 8.35.57 PM.png…]()
