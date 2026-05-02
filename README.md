@@ -1,3 +1,4 @@
+<img width="1470" height="708" alt="Screenshot 2026-05-02 at 8 35 57 PM" src="https://github.com/user-attachments/assets/41be1041-18ca-4a81-924b-d3193d7032dd" />
 # RentalCars - Full Stack Vehicle Reservation System
 
 A production-ready Car Rental application built with **Spring Boot 3** and **React**, following Hexagonal Architecture principles for high maintainability, scalability, and clean code standards.
@@ -86,3 +87,12 @@ Login to Stripe:
 install stripe/stripe-cli/stripe
 stripe login
 stripe listen --forward-to localhost:80/api/v1/payments/webhook
+
+<img width="1457" height="657" alt="Screenshot 2026-05-02 at 8 36 55 PM" src="https://github.com/user-attachments/assets/22c9702c-a342-448d-a613-85185bbdfd0f" />
+
+![Uploading Screenshot 2026-05-02 at 8.35.57 PM.png…]()
+
+<img width="1450" height="489" alt="Screenshot 2026-05-02 at 8 37 30 PM" src="https://github.com/user-attachments/assets/b4ca7dc5-62ca-4993-8a01-690cf477871a" />
+
+
+
