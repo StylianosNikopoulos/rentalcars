@@ -13,7 +13,13 @@ const ProfilePage = () => {
     const [fullUser, setFullUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
-    const [editData, setEditData] = useState({ firstName: '', lastName: '' });
+    const [editData, setEditData] = useState({ 
+        firstName: '', 
+        lastName: '',
+        phoneNumber: '', 
+        address: '', 
+        driverLicenseNumber: '' 
+    });
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -22,7 +28,13 @@ const ProfilePage = () => {
                 try {
                     const data = await userService.getUserById(userId);
                     setFullUser(data);
-                    setEditData({ firstName: data.firstName, lastName: data.lastName });
+                    setEditData({ 
+                        firstName: data.firstName, 
+                        lastName: data.lastName,
+                        phoneNumber: data.customerProfile?.phoneNumber || '',
+                        address: data.customerProfile?.address || '',
+                        driverLicenseNumber: data.customerProfile?.driverLicenseNumber || ''
+                    });
                 } catch (error) {
                     toast.error("Failed to load profile details");
                 } finally {
@@ -36,10 +48,7 @@ const ProfilePage = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            const updated = await userService.updateUser(fullUser.id, {
-                firstName: editData.firstName,
-                lastName: editData.lastName
-            });
+            const updated = await userService.updateUser(fullUser.id, editData);
             setFullUser(updated);
             setIsEditing(false);
             toast.success("Profile updated!");
@@ -121,36 +130,73 @@ const ProfilePage = () => {
                                 <span className="info-value">{fullUser?.email}</span>
                             </div>
                             <div className="info-group">
-                                <label className="info-label">Given Name</label>
+                                <label className="info-label">First Name</label>
                                 <span className="info-value">{fullUser?.firstName}</span>
                             </div>
                             <div className="info-group">
-                                <label className="info-label">Family Name</label>
+                                <label className="info-label">Last Name</label>
                                 <span className="info-value">{fullUser?.lastName}</span>
+                            </div>
+                            <div className="info-group">
+                                <label className="info-label">Phone Number</label>
+                                <span className="info-value">{fullUser?.profile?.phoneNumber || 'Not provided'}</span>
+                            </div>
+                            <div className="info-group">
+                                <label className="info-label">Address</label>
+                                <span className="info-value">{fullUser?.profile?.address || 'Not provided'}</span>
+                            </div>
+                            <div className="info-group">
+                                <label className="info-label">Driver's License</label>
+                                <span className="info-value">{fullUser?.profile?.driverLicenseNumber || 'Not provided'}</span>
                             </div>
                         </div>
                     ) : (
-                        <form onSubmit={handleUpdate} className="edit-form">
-                            <div className="form-group">
-                                <label>First Name</label>
-                                <input 
-                                    type="text" 
-                                    value={editData.firstName}
-                                    onChange={(e) => setEditData({...editData, firstName: e.target.value})}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Last Name</label>
-                                <input 
-                                    type="text" 
-                                    value={editData.lastName}
-                                    onChange={(e) => setEditData({...editData, lastName: e.target.value})}
-                                    required
-                                />
-                            </div>
-                            <button type="submit" className="confirm-glow-btn">Save Updates</button>
-                        </form>
+                    <form onSubmit={handleUpdate} className="edit-form">
+                        <div className="form-group">
+                            <label>First Name</label>
+                            <input 
+                                type="text" 
+                                value={editData.firstName}
+                                onChange={(e) => setEditData({...editData, firstName: e.target.value})}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Last Name</label>
+                            <input 
+                                type="text" 
+                                value={editData.lastName}
+                                onChange={(e) => setEditData({...editData, lastName: e.target.value})}
+                                required
+                            />
+                        </div>
+                        {/* ΝΕΑ ΠΕΔΙΑ ΠΡΟΦΙΛ */}
+                        <div className="form-group">
+                            <label>Phone Number</label>
+                            <input 
+                                type="text" 
+                                value={editData.phoneNumber}
+                                onChange={(e) => setEditData({...editData, phoneNumber: e.target.value})}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Address</label>
+                            <input 
+                                type="text" 
+                                value={editData.address}
+                                onChange={(e) => setEditData({...editData, address: e.target.value})}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Driver's License</label>
+                            <input 
+                                type="text" 
+                                value={editData.driverLicenseNumber}
+                                onChange={(e) => setEditData({...editData, driverLicenseNumber: e.target.value})}
+                            />
+                        </div>
+                        <button type="submit" className="confirm-glow-btn">Save Updates</button>
+                    </form>
                     )}
 
                     <section className="danger-zone">
