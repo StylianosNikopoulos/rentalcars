@@ -14,4 +14,8 @@ public class UpdateUserRequest {
 
     @NotBlank(message = "Last name is required")
     private String lastName;
+
+    private String phoneNumber;
+    private String address;
+    private String driverLicenseNumber;
 }

@@ -99,6 +99,23 @@ public class UserServiceImpl implements UserService {
 
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
+
+        CustomerProfile profile = user.getProfile();
+
+        if (profile == null) {
+            profile = CustomerProfile.builder()
+                    .id(UUID.randomUUID())
+                    .phoneNumber(request.getPhoneNumber())
+                    .address(request.getAddress())
+                    .driverLicenseNumber(request.getDriverLicenseNumber())
+                    .build();
+            user.setProfile(profile);
+        } else {
+            profile.setAddress(request.getAddress());
+            profile.setPhoneNumber(request.getPhoneNumber());
+            profile.setDriverLicenseNumber(request.getDriverLicenseNumber());
+        }
+
         return userRepository.save(user);
     }
 
