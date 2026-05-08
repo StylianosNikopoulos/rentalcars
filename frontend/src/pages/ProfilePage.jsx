@@ -170,7 +170,6 @@ const ProfilePage = () => {
                                 required
                             />
                         </div>
-                        {/* ΝΕΑ ΠΕΔΙΑ ΠΡΟΦΙΛ */}
                         <div className="form-group">
                             <label>Phone Number</label>
                             <input 
