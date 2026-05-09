@@ -53,7 +53,16 @@ const ProfilePage = () => {
             setIsEditing(false);
             toast.success("Profile updated!");
         } catch (error) {
-            toast.error("Update failed.");
+            const errorMessage = error.response?.data?.message || "Update failed. Please check your data.";
+            const validationErrors = error.response?.data?.errors; 
+            
+            if (validationErrors) {
+                Object.values(validationErrors).forEach(err => toast.error(err));
+            } else {
+                toast.error(errorMessage);
+            }
+            
+            console.error("Update error details:", error.response?.data);
         }
     };
 
