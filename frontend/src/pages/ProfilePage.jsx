@@ -31,9 +31,9 @@ const ProfilePage = () => {
                     setEditData({ 
                         firstName: data.firstName, 
                         lastName: data.lastName,
-                        phoneNumber: data.customerProfile?.phoneNumber || '',
-                        address: data.customerProfile?.address || '',
-                        driverLicenseNumber: data.customerProfile?.driverLicenseNumber || ''
+                        phoneNumber: data.phoneNumber || '',
+                        address: data.address || '',
+                        driverLicenseNumber: data.driverLicenseNumber || ''
                     });
                 } catch (error) {
                     toast.error("Failed to load profile details");
@@ -95,6 +95,20 @@ const ProfilePage = () => {
             });
         };
 
+    const LICENSE_CATEGORIES = [
+        { value: '', label: 'Select Category' },
+        { value: 'AM', label: 'AM (Moped)' },
+        { value: 'A1', label: 'A1 (Light Motorcycle)' },
+        { value: 'A2', label: 'A2 (Medium Motorcycle)' },
+        { value: 'A', label: 'A (Full Motorcycle)' },
+        { value: 'B', label: 'B (Car)' },
+        { value: 'B1', label: 'B1 (Quadricycles)' },
+        { value: 'BE', label: 'BE (Car + Trailer)' },
+        { value: 'C1', label: 'C1 (Medium Truck)' },
+        { value: 'C', label: 'C (Large Truck)' },
+        { value: 'D', label: 'D (Bus)' }
+    ];
+
     if (loading) return <div className="loader-container"><div className="loader"></div></div>;
 
     return (
@@ -139,15 +153,15 @@ const ProfilePage = () => {
                             </div>
                             <div className="info-group">
                                 <label className="info-label">Phone Number</label>
-                                <span className="info-value">{fullUser?.profile?.phoneNumber || 'Not provided'}</span>
+                                <span className="info-value">{fullUser?.phoneNumber || 'Not provided'}</span>
                             </div>
                             <div className="info-group">
                                 <label className="info-label">Address</label>
-                                <span className="info-value">{fullUser?.profile?.address || 'Not provided'}</span>
+                                <span className="info-value">{fullUser?.address || 'Not provided'}</span>
                             </div>
                             <div className="info-group">
                                 <label className="info-label">Driver's License</label>
-                                <span className="info-value">{fullUser?.profile?.driverLicenseNumber || 'Not provided'}</span>
+                                <span className="info-value">{fullUser?.driverLicenseNumber || 'Not provided'}</span>
                             </div>
                         </div>
                     ) : (
@@ -187,12 +201,18 @@ const ProfilePage = () => {
                             />
                         </div>
                         <div className="form-group">
-                            <label>Driver's License</label>
-                            <input 
-                                type="text" 
+                            <label>Driver's License Category</label>
+                            <select 
+                                className="profile-select"
                                 value={editData.driverLicenseNumber}
                                 onChange={(e) => setEditData({...editData, driverLicenseNumber: e.target.value})}
-                            />
+                            >
+                                {LICENSE_CATEGORIES.map(cat => (
+                                    <option key={cat.value} value={cat.value}>
+                                        {cat.label}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <button type="submit" className="confirm-glow-btn">Save Updates</button>
                     </form>
