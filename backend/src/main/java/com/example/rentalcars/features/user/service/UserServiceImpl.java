@@ -95,10 +95,31 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
+        if (request.getPhoneNumber() != null && !request.getPhoneNumber().matches("^[26]\\d{9}$")) {
+            throw new BusinessException("Invalid phone number", "INVALID_PHONE");
+        }
+
         validateOwnership(user);
 
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
+
+        CustomerProfile profile = user.getProfile();
+
+        if (profile == null) {
+            profile = CustomerProfile.builder()
+                    .id(UUID.randomUUID())
+                    .phoneNumber(request.getPhoneNumber())
+                    .address(request.getAddress())
+                    .driverLicenseNumber(request.getDriverLicenseNumber() != null ? request.getDriverLicenseNumber().name() : null)
+                    .build();
+            user.setProfile(profile);
+        } else {
+            profile.setAddress(request.getAddress());
+            profile.setPhoneNumber(request.getPhoneNumber());
+            profile.setDriverLicenseNumber(request.getDriverLicenseNumber() != null ? request.getDriverLicenseNumber().name() : null);
+        }
+
         return userRepository.save(user);
     }
 

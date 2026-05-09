@@ -1,5 +1,6 @@
 package com.example.rentalcars.features.user.infrastructure.adapter.outbound.persistence;
 
+import com.example.rentalcars.features.user.domain.model.LicenseCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +24,9 @@ public class CustomerProfileEntity {
 
     private String phoneNumber;
     private String address;
-    private String driverLicenseNumber;
+
+    @Enumerated(EnumType.STRING)
+    private LicenseCategory driverLicenseNumber;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

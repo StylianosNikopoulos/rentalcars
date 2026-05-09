@@ -217,3 +217,24 @@
     .profile-header { text-align: center; border-left: none; padding-left: 0; }
 }
 
+.profile-select {
+    width: 100%;
+    padding: 0.8rem;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.profile-select:focus {
+    border-color: #ff4d00;
+}
+
+.profile-select option {
+    background: #151515;
+    color: #fff;
+}
