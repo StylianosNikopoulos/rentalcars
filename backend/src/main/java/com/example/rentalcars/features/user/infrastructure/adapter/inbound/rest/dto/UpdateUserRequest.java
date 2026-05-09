@@ -1,6 +1,9 @@
 package com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto;
 
+import com.example.rentalcars.features.user.domain.model.LicenseCategory;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +18,10 @@ public class UpdateUserRequest {
     @NotBlank(message = "Last name is required")
     private String lastName;
 
+    @Pattern(regexp = "^[26]\\d{9}$", message = "Invalid Greek phone number format")
     private String phoneNumber;
     private String address;
-    private String driverLicenseNumber;
+
+    @NotNull(message = "Please select a valid license category")
+    private LicenseCategory driverLicenseNumber;
 }
