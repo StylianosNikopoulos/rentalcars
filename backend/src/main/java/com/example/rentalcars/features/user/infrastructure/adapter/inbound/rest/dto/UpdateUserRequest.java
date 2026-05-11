@@ -1,6 +1,7 @@
 package com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,14 @@ public class UpdateUserRequest {
     @NotBlank(message = "Last name is required")
     private String lastName;
 
+    @Pattern(regexp = "^[26]\\d{9}$", message = "Invalid Greek phone number format")
     private String phoneNumber;
+
     private String address;
+
+    @Pattern(
+            regexp = "^(AM|A1|A2|A|B|B1|BE|C1|C|D)$",
+            message = "Please select a valid license category (AM, A1, A2, A, B, B1, BE, C1, C, D)"
+    )
     private String driverLicenseNumber;
 }

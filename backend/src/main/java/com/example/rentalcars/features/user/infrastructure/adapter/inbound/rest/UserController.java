@@ -4,6 +4,7 @@ import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.
 import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UserResponse;
 import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.mapper.UserMapper;
 import com.example.rentalcars.features.user.domain.port.inbound.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id, @RequestBody UpdateUserRequest request) {
+    public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id, @Valid @RequestBody UpdateUserRequest request) {
         var updatedUser = userService.update(id, request);
         return ResponseEntity.ok(userMapper.toResponse(updatedUser));
     }

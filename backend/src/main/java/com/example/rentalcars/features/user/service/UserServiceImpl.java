@@ -111,9 +111,10 @@ public class UserServiceImpl implements UserService {
                     .build();
             user.setProfile(profile);
         } else {
-            profile.setAddress(request.getAddress());
-            profile.setPhoneNumber(request.getPhoneNumber());
-            profile.setDriverLicenseNumber(request.getDriverLicenseNumber());
+            CustomerProfile existingProfile = user.getProfile();
+            existingProfile.setAddress(request.getAddress());
+            existingProfile.setPhoneNumber(request.getPhoneNumber());
+            existingProfile.setDriverLicenseNumber(request.getDriverLicenseNumber());
         }
 
         return userRepository.save(user);
