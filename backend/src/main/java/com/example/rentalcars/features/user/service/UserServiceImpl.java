@@ -28,6 +28,12 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final ReservationService reservationService;
 
+    private static final String DELETED_USER_FIRST_NAME = "Deleted";
+    private static final String DELETED_USER_LAST_NAME = "User";
+    private static final String DELETED_USER_EMAIL_SUFFIX = "@system.local";
+    private static final String DELETED_USER_EMAIL_PREFIX = "deleted_";
+    private static final String DELETED_USER_PASSWORD_PREFIX = "DELETED_";
+
     public UserServiceImpl(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
@@ -134,10 +140,10 @@ public class UserServiceImpl implements UserService {
         validateOwnership(user);
         reservationService.cancelAllActiveReservationsByUserId(id);
 
-        user.setFirstName("Deleted");
-        user.setLastName("User");
-        user.setEmail("deleted_" + id + "@system.local");
-        user.setPasswordHash("DELETED_" + UUID.randomUUID());
+        user.setFirstName(DELETED_USER_FIRST_NAME);
+        user.setLastName(DELETED_USER_LAST_NAME);
+        user.setEmail(DELETED_USER_EMAIL_PREFIX + id + DELETED_USER_EMAIL_SUFFIX);
+        user.setPasswordHash(DELETED_USER_PASSWORD_PREFIX + UUID.randomUUID());
 
         if (user.getProfile() != null) {
             CustomerProfile profile = user.getProfile();
