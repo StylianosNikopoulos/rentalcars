@@ -8,6 +8,6 @@ public class InvalidCredentialsException extends BusinessException {
     }
 
     public InvalidCredentialsException() {
-        super("Invalid email or password.", "INVALID_DATES");
+        super("Invalid email or password.", "INVALID_CREDENTIALS");
     }
 }
