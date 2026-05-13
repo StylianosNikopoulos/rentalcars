@@ -8,6 +8,6 @@ public class EmailAlreadyExistsException extends BusinessException {
     }
 
   public EmailAlreadyExistsException() {
-    super("This email is already registered.", "INVALID_DATES");
+    super("This email is already registered.", "EMAIL_ALREADY_EXISTS");
   }
 }
