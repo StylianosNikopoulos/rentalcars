@@ -1,8 +1,9 @@
 package com.example.rentalcars.features.auth.domain.port.outbound;
 
 import com.example.rentalcars.features.auth.domain.model.AuthenticationToken;
+import com.example.rentalcars.features.user.domain.model.User;
 
 public interface IdentityPort {
     void authenticate(String email, String password);
-    AuthenticationToken generateToken(String email);
+    AuthenticationToken generateTokens(User user);
 }
