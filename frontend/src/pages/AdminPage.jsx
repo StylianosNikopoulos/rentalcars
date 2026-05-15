@@ -81,7 +81,7 @@ const AdminPage = () => {
         mutationFn: (id) => reservationService.cancelReservation(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-reservations']);
-            toast.success("Reservation cancelled");
+            toast.success("Reservation canceled");
         },
         onError: () => toast.error("Error cancelling reservation")
     });

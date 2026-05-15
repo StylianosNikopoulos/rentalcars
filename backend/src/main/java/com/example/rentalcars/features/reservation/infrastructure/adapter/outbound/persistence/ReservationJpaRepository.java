@@ -15,7 +15,7 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
 
     @Query("SELECT COUNT(r) > 0 FROM ReservationJpaEntity r " +
             "WHERE r.vehicleId = :vehicleId " +
-            "AND r.status != 'CANCELLED' " +
+            "AND r.status != 'CANCELED' " +
             "AND (:startDate < r.endDate AND :endDate > r.startDate)")
     boolean existsOverlappingReservations(
             @Param("vehicleId") UUID vehicleId,

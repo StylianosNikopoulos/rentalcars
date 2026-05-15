@@ -87,7 +87,7 @@ const MyReservationPage = () => {
             window.history.replaceState({}, document.title, window.location.pathname);
         }
         if (query.get("canceled")) {
-            toast.error("Payment cancelled.");
+            toast.error("Payment canceled.");
             window.history.replaceState({}, document.title, window.location.pathname);
         }
     }, [queryClient]);

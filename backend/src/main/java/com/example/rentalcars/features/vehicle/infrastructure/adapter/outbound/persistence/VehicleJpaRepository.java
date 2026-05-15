@@ -20,7 +20,7 @@ public interface VehicleJpaRepository extends JpaRepository<VehicleJpaEntity, UU
 
     @Query("SELECT v FROM VehicleJpaEntity v WHERE v.status = 'AVAILABLE' and v.id NOT IN (" +
             "SELECT r.vehicleId FROM ReservationJpaEntity r " +
-            "WHERE r.status <> 'CANCELLED' " +
+            "WHERE r.status <> 'CANCELED' " +
             "AND r.startDate < :end AND r.endDate > :start)")
     List<VehicleJpaEntity> findAvailableVehicles(
             @Param("start") LocalDateTime start,
