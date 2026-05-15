@@ -4,6 +4,7 @@ import com.example.rentalcars.features.auth.domain.exception.EmailAlreadyExistsE
 import com.example.rentalcars.features.auth.domain.exception.InvalidCredentialsException;
 import com.example.rentalcars.features.auth.domain.port.inbound.AuthUseCase;
 import com.example.rentalcars.features.auth.domain.port.outbound.IdentityPort;
+import com.example.rentalcars.features.auth.domain.port.outbound.RefreshTokenRepository;
 import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.AuthResponse;
 import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.LoginRequest;
 import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.RegisterRequest;
@@ -21,6 +22,8 @@ public class AuthService implements AuthUseCase {
     private final IdentityPort identityPort;
     private final UserService userService;
     private final UserRestMapper userRestMapper;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public AuthResponse login(LoginRequest request) {
@@ -31,10 +34,11 @@ public class AuthService implements AuthUseCase {
         }
 
         var user = userService.getInternalUserByEmail(request.getEmail());
-        var token = identityPort.generateToken(request.getEmail());
+        var token = identityPort.generateTokens(user);
 
         return AuthResponse.builder()
-                .token(token.getAccessToken())
+                .accessToken(token.getAccessToken())
+                .refreshToken(token.getRefreshToken())
                 .user(userRestMapper.toResponse(user))
                 .build();
     }
@@ -54,11 +58,33 @@ public class AuthService implements AuthUseCase {
                 .build();
 
         var user = userService.register(userRequest);
-        var token = identityPort.generateToken(user.getEmail());
+        var token = identityPort.generateTokens(user);
 
         return AuthResponse.builder()
-                .token(token.getAccessToken())
+                .accessToken(token.getAccessToken())
+                .refreshToken(token.getRefreshToken())
                 .user(userRestMapper.toResponse(user))
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public AuthResponse refreshToken(String tokenValue) {
+        return refreshTokenRepository.findByToken(tokenValue)
+                .map(refreshTokenService::verifyExpiration)
+                .map(token -> {
+                    var user = token.getUser();
+
+                    // Only one device for now (Single Session Policy)
+                    refreshTokenRepository.deleteByUserId(user.getId());
+                    var newTokens = identityPort.generateTokens(user);
+
+                    return AuthResponse.builder()
+                            .accessToken(newTokens.getAccessToken())
+                            .refreshToken(newTokens.getRefreshToken())
+                            .user(userRestMapper.toResponse(user))
+                            .build();
+                })
+                .orElseThrow(() -> new RuntimeException("Refresh token is not in database!"));
     }
 }

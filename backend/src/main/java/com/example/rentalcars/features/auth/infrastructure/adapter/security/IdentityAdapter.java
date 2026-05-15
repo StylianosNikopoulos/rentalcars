@@ -2,7 +2,8 @@ package com.example.rentalcars.features.auth.infrastructure.adapter.security;
 
 import com.example.rentalcars.features.auth.domain.model.AuthenticationToken;
 import com.example.rentalcars.features.auth.domain.port.outbound.IdentityPort;
-import com.example.rentalcars.features.user.domain.port.inbound.UserService;
+import com.example.rentalcars.features.auth.service.RefreshTokenService;
+import com.example.rentalcars.features.user.domain.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class IdentityAdapter implements IdentityPort {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final UserService userService;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public void authenticate(String email, String password) {
@@ -21,9 +22,15 @@ public class IdentityAdapter implements IdentityPort {
     }
 
     @Override
-    public AuthenticationToken generateToken(String email) {
-        var user = userService.getInternalUserByEmail(email);
-        String token = jwtService.generateToken(user);
-        return new AuthenticationToken(token, user.getEmail(), user.getRole().name());
+    public AuthenticationToken generateTokens(User user) {
+        String accessToken = jwtService.generateToken(user);
+        var refreshToken = refreshTokenService.createRefreshToken(user);
+
+        return AuthenticationToken.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.getToken())
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .build();
     }
 }

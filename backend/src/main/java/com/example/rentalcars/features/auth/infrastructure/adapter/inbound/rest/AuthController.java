@@ -4,6 +4,7 @@ import com.example.rentalcars.features.auth.domain.port.inbound.AuthUseCase;
 import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.AuthResponse;
 import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.LoginRequest;
 import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.RegisterRequest;
+import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.TokenRefreshRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,5 +25,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody TokenRefreshRequest request) {
+        return ResponseEntity.ok(authService.refreshToken(request.getRefreshToken()));
     }
 }
