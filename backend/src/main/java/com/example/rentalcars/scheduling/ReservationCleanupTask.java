@@ -1,4 +1,4 @@
-package com.example.rentalcars.features.vehicle.service;
+package com.example.rentalcars.scheduling;
 
 import com.example.rentalcars.features.reservation.domain.model.Reservation;
 import com.example.rentalcars.features.reservation.domain.model.ReservationStatus;
