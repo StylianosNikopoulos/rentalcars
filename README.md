@@ -15,6 +15,12 @@ A production-ready Car Rental application built with **Spring Boot 3** and **Rea
 * **Database:** Managed via **Supabase** (PostgreSQL)
 * **Payment Processing:** Integrated with **Stripe API** (Test Mode)
 
+### Default Credentials (Local Environment)
+For testing and exploring the application locally, you can use the following pre-seeded accounts:
+
+| **Admin** | `admin@example.com` | `123456` |
+| **Customer** | `customer@example.com` | `123456` |
+
 ### Cold Start Mitigation (The "Keep-Alive" Hack)
 Since the application is hosted on **Render's Free Tier**, the backend service normally "spins down" after 15 minutes of inactivity. 
 To ensure a smooth user experience, I have implemented a **Warm-up Strategy**:
