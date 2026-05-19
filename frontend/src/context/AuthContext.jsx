@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
 
             const parsed = JSON.parse(savedUser);
 
-            if (parsed && parsed.token) {
+            if (parsed && parsed.accessToken) {
                 return parsed;
             }
             
