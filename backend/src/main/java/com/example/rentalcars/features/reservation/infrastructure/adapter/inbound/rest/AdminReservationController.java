@@ -13,19 +13,13 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/admin/reservations")
+@RequestMapping("/api/v1/")
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class AdminReservationController {
 
     private final ReservationService reservationService;
     private final ReservationRestMapper restMapper;
-
-    @PatchMapping("/{id}/pick-up")
-    public ResponseEntity<List<ReservationResponse>> pickUp(@PathVariable UUID id) {
-        List<Reservation> allReservations = reservationService.markAsActive(id);
-        return ResponseEntity.ok(restMapper.toResponseList(allReservations));
-    }
 
     @PatchMapping("/{id}/return")
     public ResponseEntity<List<ReservationResponse>> returnVehicle(@PathVariable UUID id) {

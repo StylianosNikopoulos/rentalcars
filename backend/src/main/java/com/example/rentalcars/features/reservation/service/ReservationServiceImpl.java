@@ -150,23 +150,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public List<Reservation> markAsActive(UUID reservationId) {
-        var reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new ReservationNotFoundException(reservationId));
-
-        if (reservation.getStatus() != ReservationStatus.CONFIRMED){
-            throw new IllegalStateException("The reservation must be CONFIRMED for pick-up to take place. Current status: " + reservation.getStatus());
-        }
-
-        reservation.setStatus(ReservationStatus.ACTIVE);
-        reservationRepository.save(reservation);
-
-        vehicleService.updateVehicleStatus(reservation.getVehicleId(), VehicleStatus.RENTED);
-        return reservationRepository.findAll();
-    }
-
-    @Override
-    @Transactional
     public List<Reservation> markAsCompleted(UUID reservationId) {
         var reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException(reservationId));

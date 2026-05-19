@@ -9,7 +9,6 @@ public interface ReservationService {
     List<Reservation> getAllReservations();
     Reservation getReservationById(UUID id);
     Reservation createReservation(Reservation reservation);
-    List<Reservation> markAsActive(UUID reservationId);
     List<Reservation> markAsCompleted(UUID reservationId);
     List<Reservation> getReservationsByVehicleId(UUID vehicleId);
     void cancelReservation(UUID reservationId, String userEmail);
