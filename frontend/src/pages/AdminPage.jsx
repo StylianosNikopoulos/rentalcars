@@ -86,6 +86,15 @@ const AdminPage = () => {
         onError: () => toast.error("Error cancelling reservation")
     });
 
+    const returnResMutation = useMutation({
+        mutationFn: (id) => reservationService.returnVehicle(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin-reservations']);
+            toast.success("Vehicle returned successfully!");
+        },
+        onError: () => toast.error("Error processing return")
+    });
+
     // Handlers
 
     const handleCancelReservation = (id) => {
@@ -103,6 +112,12 @@ const AdminPage = () => {
     const handleDeleteVehicle = (id) => {
         confirmSwal('DELETE VEHICLE?', "This action will delete vehicle. Are you sure?", () => {
             deleteVehicleMutation.mutate(id);
+        });
+    };
+
+    const handleReturnVehicle = (id) => {
+        confirmSwal('RETURN VEHICLE?', "Confirm that the vehicle has been returned and inspected.", () => {
+            returnResMutation.mutate(id);
         });
     };
 
@@ -357,6 +372,12 @@ const AdminPage = () => {
                                                         {res.status === 'PENDING' && (
                                                             <button className="status-btn pick-up" onClick={() => handleCancelReservation(res.id)}>
                                                                 <i className="fas fa-times"></i> Cancel
+                                                            </button>
+                                                        )}
+
+                                                        {res.status === 'ACTIVE' && (
+                                                            <button className="status-btn return-btn-table" onClick={() => handleReturnVehicle(res.id)}>
+                                                                <i className="fas fa-undo"></i> Return
                                                             </button>
                                                         )}
                                                     </div>

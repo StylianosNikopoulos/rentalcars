@@ -469,3 +469,28 @@
 .admin-main {
     overflow-x: hidden;
 }
+
+.status-btn.return-btn-table {
+    background: #0088ff;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.status-btn.return-btn-table:hover {
+    background: #0066cc;
+    transform: translateY(-2px);
+}
+
+.cancel-btn-table {
+    background: #ff4d00;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}

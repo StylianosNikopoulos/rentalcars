@@ -6,6 +6,12 @@ const reservationService = {
         const response = await api.get('/admin/reservations');
         return response.data;
     },
+
+    returnVehicle: async (id) => {
+        const response = await api.patch(`/admin/reservations/${id}/return`);
+        return response.data;
+    },
+
     getMyReservations: async () => {
         const response = await api.get('/reservations/me');
         return response.data;
