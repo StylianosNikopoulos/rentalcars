@@ -1,10 +1,7 @@
 package com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest;
 
 import com.example.rentalcars.features.auth.domain.port.inbound.AuthUseCase;
-import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.AuthResponse;
-import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.LoginRequest;
-import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.RegisterRequest;
-import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.TokenRefreshRequest;
+import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +27,17 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody TokenRefreshRequest request) {
         return ResponseEntity.ok(authService.refreshToken(request.getRefreshToken()));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        authService.forgotPassword(request.getEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request.getToken(), request.getNewPassword());
+        return ResponseEntity.ok().build();
     }
 }

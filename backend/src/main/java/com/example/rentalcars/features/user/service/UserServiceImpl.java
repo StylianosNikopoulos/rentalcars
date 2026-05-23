@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -93,6 +94,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    @Override
+    public Optional<User> findByResetToken(String token) {
+        return userRepository.findByResetToken(token);
+    }
+
+    @Override
+    public void save(User user) {
+        userRepository.save(user);
     }
 
     @Override

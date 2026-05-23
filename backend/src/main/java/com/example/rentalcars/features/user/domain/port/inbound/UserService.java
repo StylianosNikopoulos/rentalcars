@@ -5,6 +5,7 @@ import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.
 import com.example.rentalcars.features.user.domain.model.User;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService {
@@ -16,4 +17,6 @@ public interface UserService {
     List<User> getAllUsers();
     void delete(UUID id);
     boolean existsByEmail(String email);
+    Optional<User> findByResetToken(String token);
+    void save(User user);
 }

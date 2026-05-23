@@ -1,5 +1,6 @@
 package com.example.rentalcars.features.auth.service;
 
+import com.example.rentalcars.core.exception.BusinessException;
 import com.example.rentalcars.features.auth.domain.exception.EmailAlreadyExistsException;
 import com.example.rentalcars.features.auth.domain.exception.InvalidCredentialsException;
 import com.example.rentalcars.features.auth.domain.port.inbound.AuthUseCase;
@@ -9,12 +10,20 @@ import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.
 import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.LoginRequest;
 import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.dto.RegisterRequest;
 import com.example.rentalcars.features.auth.infrastructure.adapter.inbound.rest.mapper.UserRestMapper;
+import com.example.rentalcars.features.user.domain.exception.UserNotFoundException;
+import com.example.rentalcars.features.user.domain.model.User;
 import com.example.rentalcars.features.user.domain.port.inbound.UserService;
 import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService implements AuthUseCase {
@@ -24,6 +33,7 @@ public class AuthService implements AuthUseCase {
     private final UserRestMapper userRestMapper;
     private final RefreshTokenRepository refreshTokenRepository;
     private final RefreshTokenService refreshTokenService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public AuthResponse login(LoginRequest request) {
@@ -85,6 +95,39 @@ public class AuthService implements AuthUseCase {
                             .user(userRestMapper.toResponse(user))
                             .build();
                 })
-                .orElseThrow(() -> new RuntimeException("Refresh token is not in database!"));
+                .orElseThrow(() -> new BusinessException("Token is not saved in database", "INVALID_TOKEN"));
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        User user = userService.findByResetToken(token)
+                .orElseThrow(() -> new BusinessException("Invalid reset token", "INVALID_TOKEN"));
+
+        if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new BusinessException("Reset token has expired", "TOKEN_EXPIRED");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+        userService.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void forgotPassword(String email) {
+        try {
+            User user = userService.getInternalUserByEmail(email);
+            String token = UUID.randomUUID().toString();
+            user.setResetToken(token);
+            user.setResetTokenExpiry(LocalDateTime.now().plusHours(1));
+            userService.save(user);
+
+            //TODO need to add actual email Service
+            log.info("Password reset token for {}: {}", email, token);
+        } catch (UserNotFoundException e) {
+            log.warn("Password reset requested for non-existing email: {}", email);
+        }
     }
 }
