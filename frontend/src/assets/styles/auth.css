@@ -112,3 +112,24 @@ input:-webkit-autofill {
         font-size: 1.8rem;
     }
 }
+
+.back-to-login {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #888;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    margin-top: 1.5rem;
+}
+
+.back-to-login:hover {
+    color: #ff4d00;
+    transform: translateX(-5px);
+}
+
+.back-to-login .arrow {
+    font-size: 1.2rem;
+    font-weight: bold;
+}

@@ -17,6 +17,8 @@ import MyReservationPage from './pages/MyReservationPage';
 import TermsPage from './pages/TermsPage';
 import AboutPage from './pages/AboutPage';
 import AdminPage from './pages/AdminPage';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 const AdminRoute = ({ children }) => {
   const { user } = useAuth();
@@ -51,6 +53,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/vehicles" element={<VehiclesPage />}/>
