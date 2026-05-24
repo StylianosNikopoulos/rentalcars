@@ -25,7 +25,9 @@ const ForgotPassword = () => {
                 <div className="auth-card">
                     <h2>Check your Email</h2>
                     <p>If an account is associated with {email}, you will receive a reset link shortly.</p>
-                    <Link to="/login" className="back-link">Back to Login</Link>
+                    <Link to="/login" className="back-to-login">
+                     <span className="arrow">←</span> Back to Login
+                    </Link>
                 </div>
             </div>
         );
