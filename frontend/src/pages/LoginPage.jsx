@@ -44,6 +44,11 @@ const LoginPage = () => {
                         <label>Password</label>
                         <input type="password" value={credentials.password} onChange={handleChange} required />
                     </div>
+                    <div style={{ textAlign: 'right', marginTop: '5px' }}>
+                        <Link to="/forgot-password" style={{ fontSize: '0.8rem', color: '#ff4d00', textDecoration: 'none' }}>
+                            Forgot Password?
+                        </Link>
+                    </div>
                     <button type="submit" className="auth-button">Sign In</button>
                 </form>
                 <Link to="/register" className="auth-link">Don't have an account? Register</Link>

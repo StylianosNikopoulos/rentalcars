@@ -19,10 +19,12 @@ public class User extends AggregateRoot {
     private  String firstName;
     private  String lastName;
     private  CustomerProfile profile;
+    private String resetToken;
+    private LocalDateTime resetTokenExpiry;
 
     @Builder
     public User(UUID id, LocalDateTime createdAt, LocalDateTime updatedAt, String email, String passwordHash, Role role,
-                String firstName, String lastName, CustomerProfile profile) {
+                String firstName, String lastName, CustomerProfile profile, String resetToken, LocalDateTime resetTokenExpiry) {
         super(id, createdAt, updatedAt);
         this.email = email;
         this.passwordHash = passwordHash;
@@ -30,6 +32,8 @@ public class User extends AggregateRoot {
         this.firstName = firstName;
         this.lastName = lastName;
         this.profile = profile;
+        this.resetToken = resetToken;
+        this.resetTokenExpiry = resetTokenExpiry;
     }
 
 }

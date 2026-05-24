@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import '../assets/styles/profile.css';
 import '../assets/styles/swal-custom.css';
 import Swal from 'sweetalert2';
+import authService from '../services/authService';
 
 const ProfilePage = () => {
     const { user: authData, logout } = useAuth();
@@ -77,6 +78,15 @@ const ProfilePage = () => {
                 toast.error(errorMessage);
             }
             console.error("Update error:", error.response?.data);
+        }
+    };
+
+    const handleRequestReset = async () => {
+        try {
+            await authService.forgotPassword(fullUser.email);
+            toast.success("A reset token has been generated. Please check your email to proceed.");
+        } catch (error) {
+            toast.error("Failed to request reset.");
         }
     };
 
@@ -235,6 +245,13 @@ const ProfilePage = () => {
 
                     <section className="danger-zone">
                         <h4>Security & Privacy</h4>
+                        <button 
+                            className="confirm-glow-btn" 
+                            style={{ marginBottom: '1rem', width: 'auto', padding: '0.5rem 1rem' }}
+                            onClick={handleRequestReset}
+                        >
+                            Request Password Reset
+                        </button>
                         {fullUser?.role !== 'ADMIN' ? (
                             <>
                                 <p style={{ color: '#555', fontSize: '0.85rem', marginBottom: '1.5rem' }}>

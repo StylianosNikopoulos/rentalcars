@@ -39,6 +39,9 @@ public class UserJpaEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    private String resetToken;
+    private LocalDateTime resetTokenExpiry;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private CustomerProfileEntity profile;
 

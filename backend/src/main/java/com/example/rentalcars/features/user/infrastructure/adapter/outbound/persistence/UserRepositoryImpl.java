@@ -44,4 +44,10 @@ public class UserRepositoryImpl implements UserRepository {
                 .map(userPersistenceMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public Optional<User> findByResetToken(String token) {
+        return jpaRepository.findByResetToken(token)
+                .map(userPersistenceMapper::toDomain);
+    }
 }
