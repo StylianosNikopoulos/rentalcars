@@ -127,7 +127,7 @@ public class AuthService implements AuthUseCase {
             //TODO need to add actual email Service
             log.info("Password reset token for {}: {}", email, token);
         } catch (UserNotFoundException e) {
-            log.warn("Password reset requested for non-existing email: {}", email);
+            log.warn("Password reset requested for non existing email: {}", email);
         }
     }
 }

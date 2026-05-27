@@ -37,7 +37,7 @@ public class RefreshTokenService {
 
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.isExpired()) {
-            throw new RuntimeException("Refresh token was expired. Please make a new sign in request");
+            throw new RuntimeException("Session expired. Please sign in");
         }
         return token;
     }
