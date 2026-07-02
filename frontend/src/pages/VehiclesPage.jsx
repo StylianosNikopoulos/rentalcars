@@ -17,6 +17,10 @@ const VehiclesPage = () => {
     const selectedStart = queryParams.get('start');
     const selectedEnd = queryParams.get('end');
 
+    const rentalDays = selectedStart && selectedEnd 
+        ? Math.max(1, Math.ceil((new Date(selectedEnd) - new Date(selectedStart)) / (1000 * 60 * 60 * 24)))
+        : 0;
+
     const { data: vehicles = [], isLoading, isError } = useQuery({
         queryKey: ['vehicles', selectedStart, selectedEnd], 
         queryFn: async () => {
@@ -64,6 +68,11 @@ const VehiclesPage = () => {
         }); 
     };
 
+    const handleCardClick = (carId) => {
+        const searchPath = location.search ? location.search : "";
+        navigate(`/vehicle/${carId}${searchPath}`);
+    };
+
     if (isError) return <div className="error-message">Error loading fleet. Please try again later.</div>;
 
     return (
@@ -79,6 +88,7 @@ const VehiclesPage = () => {
                             <strong>{formatDate(selectedStart)}</strong>
                             <span className="date-separator">→</span>
                             <strong>{formatDate(selectedEnd)}</strong>
+                            <span className="days-badge">({rentalDays} {rentalDays === 1 ? 'day' : 'days'})</span>
                         </div>
                         <button className="clear-dates-btn" onClick={() => navigate('/vehicles')}>
                             RESET DATES
@@ -86,29 +96,29 @@ const VehiclesPage = () => {
                     </div>
                 )}
                 
-                <div className="sort-container">
-                    <select 
-                        className="sort-select" 
-                        onChange={(e) => {
-                            setSortOrder(e.target.value);
-                            setCurrentPage(1);
-                        }}
-                    >
-                        <option value="default">Sort By: Featured</option>
-                        <option value="low">Price: Low to High</option>
-                        <option value="high">Price: High to Low</option>
-                    </select>
-                </div>
-
                 <div className="filters-bar">
                     <div className="search-container">
+                        <i className="fas fa-search search-icon"></i>
                         <input 
                             type="text" 
-                            placeholder="Search brand or model..." 
+                            placeholder="Search by brand or model (e.g., Audi, Tesla)..." 
                             className="search-input"
                             value={searchTerm}
                             onChange={handleSearch}
                         />
+                    </div>
+                    <div className="sort-container">
+                        <select 
+                            className="sort-select" 
+                            onChange={(e) => {
+                                setSortOrder(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                        >
+                            <option value="default">Sort By: Featured</option>
+                            <option value="low">Price: Low to High</option>
+                            <option value="high">Price: High to Low</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -119,7 +129,7 @@ const VehiclesPage = () => {
                 <>
                     <div className="vehicle-grid">
                         {currentItems.map(car => (
-                            <div key={car.id} className="vehicle-item" onClick={() => navigate(`/vehicle/${car.id}`)}>
+                            <div key={car.id} className="vehicle-item" onClick={() => handleCardClick(car.id)}>
                                 <div className="vehicle-img-wrapper">
                                     <img 
                                         src={
@@ -131,17 +141,35 @@ const VehiclesPage = () => {
                                         className="vehicle-img" 
                                     />
                                 </div>
-                                <div className="vehicle-details">
-                                    <div>
-                                        <h3 className="car-name">{car.brand} {car.model}</h3>
-                                        <div className="car-specs">{car.type} • {car.fuelType}</div>
+                                
+                                <div className="vehicle-card-body">
+                                    <div className="vehicle-title-section">
+                                        <h3 className="car-name">{car.brand} <span>{car.model}</span></h3>
+                                        <span className="car-year">{car.year}</span>
                                     </div>
-                                    <div className="car-price-tag">
-                                        <div className="price-value">€{car.dailyPrice}</div>
-                                        <div className="price-label">PER DAY</div>
+
+                                    <div className="card-mini-specs">
+                                        <span><i className="fas fa-pump-soap"></i> {car.fuelType}</span>
+                                        <span><i className="fas fa-cog"></i> {car.licensePlate}</span>
+                                    </div>
+
+                                    <div className="card-pricing-footer">
+                                        <div className="car-price-tag">
+                                            <span className="price-value">€{car.dailyPrice}</span>
+                                            <span className="price-label">/ day</span>
+                                        </div>
+                                        
+                                        {rentalDays > 0 && (
+                                            <div className="total-price-badge">
+                                                <span>Total for {rentalDays} {rentalDays === 1 ? 'day' : 'days'}</span>
+                                                <strong>€{(car.dailyPrice * rentalDays).toFixed(0)}</strong>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                                <button className="rent-btn-minimal">View Details</button>
+                                <button className="rent-btn-minimal">
+                                    View Deal <i className="fas fa-arrow-right"></i>
+                                </button>
                             </div>
                         ))}
                     </div>
@@ -153,7 +181,7 @@ const VehiclesPage = () => {
                                 disabled={currentPage === 1} 
                                 className="page-btn"
                             >
-                                PREVIOUS
+                                <i className="fas fa-chevron-left"></i> PREVIOUS
                             </button>
                             <span className="page-info">Page {currentPage} of {totalPages}</span>
                             <button 
@@ -161,7 +189,7 @@ const VehiclesPage = () => {
                                 disabled={currentPage === totalPages} 
                                 className="page-btn"
                             >
-                                NEXT
+                                NEXT <i className="fas fa-chevron-right"></i>
                             </button>
                         </div>
                     )}
