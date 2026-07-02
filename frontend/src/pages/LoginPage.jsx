@@ -10,7 +10,8 @@ const LoginPage = () => {
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        setCredentials({ ...credentials, [e.target.type]: e.target.value });
+        const { name, value } = e.target;
+        setCredentials(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async (e) => {
@@ -37,19 +38,35 @@ const LoginPage = () => {
                 <h2>Login</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label>Email</label>
-                        <input type="email" value={credentials.email} onChange={handleChange} required />
+                        <label>Email Address</label>
+                        <input 
+                            name="email"
+                            type="email" 
+                            value={credentials.email} 
+                            onChange={handleChange} 
+                            placeholder="name@example.com"
+                            required 
+                        />
                     </div>
                     <div className="form-group">
                         <label>Password</label>
-                        <input type="password" value={credentials.password} onChange={handleChange} required />
+                        <input 
+                            name="password"
+                            type="password" 
+                            value={credentials.password} 
+                            onChange={handleChange} 
+                            placeholder="••••••••"
+                            required 
+                        />
                     </div>
-                    <div style={{ textAlign: 'right', marginTop: '5px' }}>
-                        <Link to="/forgot-password" style={{ fontSize: '0.8rem', color: '#ff4d00', textDecoration: 'none' }}>
+                    <div className="forgot-password-wrapper">
+                        <Link to="/forgot-password">
                             Forgot Password?
                         </Link>
                     </div>
-                    <button type="submit" className="auth-button">Sign In</button>
+                    <button type="submit" className="auth-button">
+                        Sign In <i className="fas fa-sign-in-alt"></i>
+                    </button>
                 </form>
                 <Link to="/register" className="auth-link">Don't have an account? Register</Link>
             </div>

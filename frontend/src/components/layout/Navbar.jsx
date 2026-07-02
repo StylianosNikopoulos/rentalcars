@@ -18,13 +18,19 @@ const Navbar = () => {
         navigate('/');
     };
 
+    const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
     return (
         <nav className="navbar">
-            <Link to="/" className="nav-logo" onClick={() => setIsMobileMenuOpen(false)}>
+            <Link to="/" className="nav-logo" onClick={closeMobileMenu}>
                 Rental<span>Car</span>
             </Link>
 
-            <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            <button 
+                className="mobile-menu-btn" 
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label="Toggle Navigation"
+            >
                 <span className={isMobileMenuOpen ? "bar open" : "bar"}></span>
                 <span className={isMobileMenuOpen ? "bar open" : "bar"}></span>
                 <span className={isMobileMenuOpen ? "bar open" : "bar"}></span>
@@ -33,27 +39,45 @@ const Navbar = () => {
             <div className={`nav-links ${isMobileMenuOpen ? "active" : ""}`}>
                 {user ? (
                     <>
-                    <span className="welcome-msg">
-                        Hello, {user.user?.email?.split('@')[0] || 'User'}
-                    </span>
+                        <span className="welcome-msg">
+                            <i className="far fa-user-circle"></i> {user.user?.firstName || user.user?.email?.split('@')[0] || 'User'}
+                        </span>
 
-                    <Link to="/vehicles" onClick={() => setIsMobileMenuOpen(false)}>Vehicles</Link>
-                    <Link to="/reservations" onClick={() => setIsMobileMenuOpen(false)}>Reservations</Link>
-                    
-                    {isAdmin && (
-                        <Link to="/admin" className="admin-link-highlight" onClick={() => setIsMobileMenuOpen(false)}>
-                            Admin Panel
+                        <Link to="/vehicles" onClick={closeMobileMenu}>
+                            <i className="fas fa-car-side nav-icon"></i> Vehicles
                         </Link>
-                    )}
+                        
+                        <Link to="/reservations" onClick={closeMobileMenu}>
+                            <i className="far fa-calendar-alt nav-icon"></i> Reservations
+                        </Link>
+                        
+                        {isAdmin && (
+                            <Link to="/admin" className="admin-link-highlight" onClick={closeMobileMenu}>
+                                <i className="fas fa-user-shield nav-icon"></i> Admin Panel
+                            </Link>
+                        )}
 
-                    <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)}>Profile</Link>
-                    <button onClick={handleLogout} className="logout-btn">Logout</button>
+                        <Link to="/profile" onClick={closeMobileMenu}>
+                            <i className="far fa-id-badge nav-icon"></i> Profile
+                        </Link>
+                        
+                        <button onClick={handleLogout} className="logout-btn">
+                            Logout<i className="fas fa-sign-out-alt"></i>
+                        </button>
                     </>
                 ) : (
                     <>
-                        <Link to="/vehicles" onClick={() => setIsMobileMenuOpen(false)}>Vehicles</Link>
-                        <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>Login</Link>
-                        <Link to="/register" className="register-nav-btn" onClick={() => setIsMobileMenuOpen(false)}>Register</Link>
+                        <Link to="/vehicles" onClick={closeMobileMenu}>
+                            <i className="fas fa-car-side nav-icon"></i> Vehicles
+                        </Link>
+                        
+                        <Link to="/login" onClick={closeMobileMenu}>
+                            Sign In
+                        </Link>
+                        
+                        <Link to="/register" className="register-nav-btn" onClick={closeMobileMenu}>
+                            Register <i className="fas fa-user-plus"></i>
+                        </Link>
                     </>
                 )}
             </div>

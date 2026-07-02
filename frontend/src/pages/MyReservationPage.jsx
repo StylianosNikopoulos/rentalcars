@@ -43,14 +43,14 @@ const ReservationTimer = ({ createdAt, onExpire }) => {
     }, [createdAt, onExpire]);
 
     if (timeLeft <= 0) {
-        return <span className="timer-expired" style={{color: '#ff4d4d', fontSize: '0.75rem', fontWeight: 'bold'}}>Time Expired</span>;
+        return <span className="timer-expired"><i className="fas fa-exclamation-circle"></i> Expired</span>;
     }
 
     const minutes = Math.floor((timeLeft / 1000 / 60) % 60);
     const seconds = Math.floor((timeLeft / 1000) % 60);
 
     return (
-        <span className="res-timer" style={{color: '#ff4d00', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px'}}>
+        <span className="res-timer">
             <i className="fas fa-history"></i> {minutes}m {seconds < 10 ? `0${seconds}` : seconds}s
         </span>
     );
@@ -92,7 +92,7 @@ const MyReservationPage = () => {
         }
     }, [queryClient]);
 
-    // Pagination Logic
+    // Pagination
     const totalPages = Math.ceil(reservations.length / bookingsPerPage);
     const indexOfLastBooking = currentPage * bookingsPerPage;
     const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
@@ -146,29 +146,52 @@ const MyReservationPage = () => {
         <div className="reservations-container">
             <div className="reservations-header">
                 <h2>My Reservations</h2>
-                <p>Manage your reservations and payments</p>
+                <p>Manage your rental bookings and active payments</p>
             </div>
 
             {reservations.length === 0 ? (
                 <div className="empty-state">
-                    <p>You have no active reservations.</p>
-                    <button onClick={() => navigate('/vehicles')} className="checkOut-btn-premium" style={{width: 'auto', marginTop: '1rem'}}>
-                        Browse Vehicles
+                    <div className="empty-icon"><i className="fas fa-car-crash"></i></div>
+                    <h3>No Bookings Found</h3>
+                    <p>You don't have any active or past reservations at the moment.</p>
+                    <button onClick={() => navigate('/vehicles')} className="checkOut-btn-premium" style={{width: 'auto', marginTop: '1.5rem'}}>
+                        Explore Our Fleet
                     </button>
                 </div>
             ) : (
                 <>
-                    <div className="res-grid">
+                    <div className="res-list-container">
                         {currentBookings.map((res) => {
                             const status = res.status.toUpperCase();
                             const isExpired = calculateGlobalTimeLeft(res.createdAt) <= 0;
 
                             return (
                                 <div key={res.id} className="res-card">
-                                    <div className="res-info">
-                                        <div className="res-main-details">
-                                            <h4>{res.vehicleBrand} {res.vehicleName}</h4>
-                                            <div className="status-container">
+                                    <div className="res-meta-section">
+                                        <div className="res-vehicle-block">
+                                            <i className="fas fa-car car-placeholder-icon"></i>
+                                            <div>
+                                                <h4>{res.vehicleBrand} <span>{res.vehicleName}</span></h4>
+                                                <span className="res-id-tag">ID: #{res.id.substring(0, 8)}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="res-timeline-block">
+                                            <div className="timeline-item">
+                                                <small>Rental Period</small>
+                                                <p>
+                                                    <i className="far fa-calendar-alt"></i> 
+                                                    {res.period?.start ? new Date(res.period.start).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}) : 'N/A'} 
+                                                    <span className="arrow-sep">→</span>
+                                                    {res.period?.end ? new Date(res.period.end).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}) : 'N/A'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="res-status-actions-section">
+                                        <div className="res-pricing-status">
+                                            <div className="status-badge-wrapper">
                                                 <span className={`status-badge ${res.status.toLowerCase().replace(/\s+/g, '_')}`}>
                                                     {res.status.replace('_', ' ')}
                                                 </span>
@@ -179,35 +202,29 @@ const MyReservationPage = () => {
                                                     />
                                                 )}
                                             </div>
+                                            <div className="res-total-price">
+                                                <span>Total Amount</span>
+                                                <strong>€{res.totalAmount?.toFixed(2)}</strong>
+                                            </div>
                                         </div>
-                                        
-                                        <p className="res-date">
-                                            <i className="far fa-calendar-alt"></i> 
-                                            {res.period?.start ? new Date(res.period.start).toLocaleDateString() : 'N/A'} — 
-                                            {res.period?.end ? new Date(res.period.end).toLocaleDateString() : 'N/A'}
-                                        </p>
 
-                                        <p className="res-price">
-                                            Total: <strong>{res.totalAmount?.toFixed(2)}€</strong>
-                                        </p>
-                                    </div>
+                                        <div className="res-actions">
+                                            {status !== 'CANCELED' && status !== 'CONFIRMED' && !isExpired && (
+                                                <button 
+                                                    onClick={() => handleCancel(res.id)} 
+                                                    className="cancel-btn-premium"
+                                                    disabled={cancelMutation.isPending}
+                                                >
+                                                    {cancelMutation.isPending ? 'Processing...' : 'Cancel Booking'}
+                                                </button>
+                                            )}
 
-                                    <div className="res-actions">
-                                        {status !== 'CANCELED' && status !== 'CONFIRMED' && !isExpired && (
-                                            <button 
-                                                onClick={() => handleCancel(res.id)} 
-                                                className="cancel-btn-premium"
-                                                disabled={cancelMutation.isPending}
-                                            >
-                                                {cancelMutation.isPending ? 'Wait...' : 'Cancel'}
-                                            </button>
-                                        )}
-
-                                        {status === 'PENDING' && !isExpired && (
-                                            <button onClick={() => handleCheckOut(res)} className="checkOut-btn-premium">
-                                                Check Out
-                                            </button>
-                                        )}
+                                            {status === 'PENDING' && !isExpired && (
+                                                <button onClick={() => handleCheckOut(res)} className="checkOut-btn-premium">
+                                                    Proceed to Checkout <i className="fas fa-credit-card"></i>
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             );})}

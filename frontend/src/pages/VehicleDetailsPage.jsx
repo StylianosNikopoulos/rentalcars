@@ -9,10 +9,11 @@ import reservationService from '../services/reservationService';
 import toast from 'react-hot-toast';
 import '../assets/styles/details.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Mousewheel, Keyboard } from 'swiper/modules';
+import { Navigation, Pagination, Mousewheel, Keyboard, Thumbs } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import 'swiper/css/thumbs';
 
 const VehicleDetailsPage = () => {
     const { id } = useParams();
@@ -23,9 +24,8 @@ const VehicleDetailsPage = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [acceptedTerms, setAcceptedTerms] = useState(false);
+    const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
-    // React Query: Fetch Vehicle & Reservations
-    
     const { data: vehicle, isLoading: vehicleLoading } = useQuery({
         queryKey: ['vehicle', id],
         queryFn: () => vehicleService.getVehicleById(id),
@@ -50,7 +50,6 @@ const VehicleDetailsPage = () => {
         refetchInterval: 10000
     });
 
-    // Mutation: Create Reservation
     const bookingMutation = useMutation({
         mutationFn: (bookingData) => reservationService.createReservation(bookingData),
         onSuccess: () => {
@@ -65,20 +64,16 @@ const VehicleDetailsPage = () => {
 
     const handleBooking = async (e) => {
         e.preventDefault(); 
-
         if (bookingMutation.isPending) return;
-
         if (!user) {
             toast.error("Please login to make a reservation");
             navigate('/login');
             return;
         }
-
         if (!acceptedTerms) {
             toast.error("You must accept the Terms and GDPR policy to continue");
             return;
         }
-
         if (!startDate || !endDate) {
             toast.error("Please select both dates");
             return;
@@ -108,6 +103,8 @@ const VehicleDetailsPage = () => {
         ? vehicle.images 
         : [{ url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070' }];
 
+    const rentalDays = startDate && endDate ? Math.max(1, Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24))) : 0;
+
     return (
         <div className="details-container">
             <div className="details-header">
@@ -118,54 +115,98 @@ const VehicleDetailsPage = () => {
                         <span className="per-day">/ day</span>
                     </div>
                 </div>
-                
-                <div className="specs-badge-container">
-                    <span className="spec-badge"><i className="fas fa-car"></i> {vehicle.brand}</span>
-                    <span className="spec-badge"><i className="fas fa-gas-pump"></i> {vehicle.fuelType}</span>
-                    <span className="spec-badge"><i className="fas fa-calendar-alt"></i> {vehicle.year}</span>
-                    <span className="spec-badge"><i className="fas fa-id-card"></i> {vehicle.licensePlate}</span>
-                </div>
             </div>
 
             <div className="details-grid-v2">
-                <div className="vehicle-image-section">
-                    <div className="vehicle-main-image-swiper">
+                <div className="vehicle-info-main">
+                    <div className="vehicle-gallery-wrapper">
                         <Swiper
                             navigation={true}
                             pagination={{ clickable: true }}
                             mousewheel={true}
                             keyboard={true}
-                            modules={[Navigation, Pagination, Mousewheel, Keyboard]}
-                            className="mySwiper"
+                            thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
+                            modules={[Navigation, Pagination, Mousewheel, Keyboard, Thumbs]}
+                            className="main-vehicle-swiper"
                             grabCursor={true}
                         >
                             {allImages.map((img, index) => (
                                 <SwiperSlide key={index}>
-                                    <img 
-                                        src={img.url} 
-                                        alt={`${vehicle.brand} ${index}`} 
-                                        className="swiper-vehicle-img"
-                                    />
+                                    <img src={img.url} alt={`${vehicle.brand} ${index}`} className="swiper-vehicle-img" />
                                 </SwiperSlide>
                             ))}
                         </Swiper>
+
+                        {allImages.length > 1 && (
+                            <Swiper
+                                onSwiper={setThumbsSwiper}
+                                spaceBetween={10}
+                                slidesPerView={4}
+                                freeMode={true}
+                                watchSlidesProgress={true}
+                                modules={[Navigation, Thumbs]}
+                                className="thumbs-vehicle-swiper"
+                            >
+                                {allImages.map((img, index) => (
+                                    <SwiperSlide key={index}>
+                                        <div className="thumb-img-box">
+                                            <img src={img.url} alt={`Thumb ${index}`} />
+                                        </div>
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        )}
+                    </div>
+
+                    <div className="real-car-features">
+                        <h2>Vehicle Specifications</h2>
+                        <div className="features-grid">
+                            <div className="feature-item">
+                                <i className="fas fa-gas-pump"></i>
+                                <div>
+                                    <span>Fuel Type</span>
+                                    <strong>{vehicle.fuelType}</strong>
+                                </div>
+                            </div>
+                            <div className="feature-item">
+                                <i className="fas fa-calendar-alt"></i>
+                                <div>
+                                    <span>Year Model</span>
+                                    <strong>{vehicle.year}</strong>
+                                </div>
+                            </div>
+                            <div className="feature-item">
+                                <i className="fas fa-calendar-alt"></i>
+                                <div>
+                                    <span>Model</span>
+                                    <strong>{vehicle.model}</strong>
+                                </div>
+                            </div>
+                            <div className="feature-item">
+                                <i className="fas fa-calendar-alt"></i>
+                                <div>
+                                    <span>License Plate</span>
+                                    <strong>{vehicle.licensePlate}</strong>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <div className="booking-sidebar">
                     <div className={`booking-card ${bookingMutation.isPending ? 'submitting' : ''}`}>
                         {bookingMutation.isPending && (
-                        <div className="booking-overlay">
-                            <div className="mini-loader"></div>
-                        </div>
+                            <div className="booking-overlay">
+                                <div className="mini-loader"></div>
+                            </div>
                         )}
                         <div className="card-header">
-                            <h3>Book Reservation</h3>
-                            <p>Select your dates and confirm</p>
+                            <h3>Book This Vehicle</h3>
+                            <p>Select your preferred rental timeline</p>
                         </div>
                         <form onSubmit={handleBooking}>
                             <div className="form-group date-picker-group">
-                                <label>Rental Period</label>
+                                <label><i className="far fa-calendar"></i> Pick-up & Return Dates</label>
                                 <DatePicker
                                     selectsRange={true}
                                     startDate={startDate}
@@ -178,19 +219,30 @@ const VehicleDetailsPage = () => {
                                     minDate={new Date(new Date().setDate(new Date().getDate() + 1))}
                                     excludeDateIntervals={bookedDates}
                                     isClearable={true}
-                                    placeholderText="Click to select dates"
+                                    placeholderText="Select date range"
                                     className="custom-datepicker-input" 
                                     required
                                 />
                             </div>
+
                             {startDate && endDate && (
-                                <div className="price-summary">
-                                    <span>Total Price:</span>
-                                    <strong>
-                                        ${(Math.max(1, Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24))) * vehicle.dailyPrice).toFixed(2)}
-                                    </strong>
+                                <div className="invoice-breakdown">
+                                    <h4>Price Breakdown</h4>
+                                    <div className="invoice-row">
+                                        <span>Daily Rate</span>
+                                        <span>${vehicle.dailyPrice} x {rentalDays} days</span>
+                                    </div>
+                                    <div className="invoice-row">
+                                        <span>Local Taxes & Fees</span>
+                                        <span className="free-badge">Included</span>
+                                    </div>
+                                    <div className="invoice-total">
+                                        <span>Total Amount</span>
+                                        <strong>${(rentalDays * vehicle.dailyPrice).toFixed(2)}</strong>
+                                    </div>
                                 </div>
                             )}
+
                             <div className="terms-checkbox-group">
                                 <label className="checkbox-container">
                                     <input 
@@ -200,8 +252,7 @@ const VehicleDetailsPage = () => {
                                     />
                                     <span className="checkmark"></span>
                                     <span className="checkbox-text">
-                                        I have read and agree to the 
-                                        <Link to="/terms" target="_blank">Terms & GDPR Policy</Link>
+                                        I accept the rental <Link to="/terms" target="_blank">Terms & GDPR Policy</Link>
                                     </span>
                                 </label>
                             </div>
@@ -210,7 +261,7 @@ const VehicleDetailsPage = () => {
                                 className="confirm-glow-btn" 
                                 disabled={bookingMutation.isPending}
                             >
-                                {bookingMutation.isPending ? 'Sending Request...' : (user ? 'Confirm Reservation' : 'Login to Book')}
+                                {bookingMutation.isPending ? 'Processing...' : (user ? 'Reserve Now' : 'Login to Book')}
                             </button>
                         </form>
                     </div>
