@@ -143,12 +143,16 @@ const ProfilePage = () => {
                     <h3>{fullUser?.firstName} {fullUser?.lastName}</h3>
                     <span className="role-badge">{fullUser?.role || 'CUSTOMER'}</span>
                     
-                    <div style={{ marginTop: '2.5rem' }}>
+                    <div className="profile-card-actions">
                         <button 
                             className={isEditing ? "discard-btn" : "confirm-glow-btn"} 
                             onClick={() => setIsEditing(!isEditing)}
                         >
-                            {isEditing ? "Discard Changes" : "Modify Profile"}
+                            {isEditing ? (
+                                <><i className="fas fa-times"></i> Discard Changes</>
+                            ) : (
+                                <><i className="far fa-edit"></i> Modify Profile</>
+                            )}
                         </button>
                     </div>
                 </aside>
@@ -157,33 +161,37 @@ const ProfilePage = () => {
                     {!isEditing ? (
                         <div className="info-display">
                             <div className="info-group">
-                                <label className="info-label">Email Address</label>
+                                <label className="info-label"><i className="far fa-envelope"></i> Email Address</label>
                                 <span className="info-value">{fullUser?.email}</span>
                             </div>
-                            <div className="info-group">
-                                <label className="info-label">First Name</label>
-                                <span className="info-value">{fullUser?.firstName}</span>
+                            <div className="info-row-grid">
+                                <div className="info-group">
+                                    <label className="info-label"><i className="far fa-user"></i> First Name</label>
+                                    <span className="info-value">{fullUser?.firstName}</span>
+                                </div>
+                                <div className="info-group">
+                                    <label className="info-label"><i className="far fa-user"></i> Last Name</label>
+                                    <span className="info-value">{fullUser?.lastName}</span>
+                                </div>
                             </div>
                             <div className="info-group">
-                                <label className="info-label">Last Name</label>
-                                <span className="info-value">{fullUser?.lastName}</span>
-                            </div>
-                            <div className="info-group">
-                                <label className="info-label">Phone Number</label>
+                                <label className="info-label"><i className="fas fa-mobile-alt"></i> Phone Number</label>
                                 <span className="info-value">{fullUser?.phoneNumber || 'Not provided'}</span>
                             </div>
                             <div className="info-group">
-                                <label className="info-label">Address</label>
+                                <label className="info-label"><i className="far fa-map"></i> Address</label>
                                 <span className="info-value">{fullUser?.address || 'Not provided'}</span>
                             </div>
                             <div className="info-group">
-                                <label className="info-label">Driver's License</label>
-                                <span className="info-value">{fullUser?.driverLicenseNumber || 'Not provided'}</span>
+                                <label className="info-label"><i className="fas fa-id-card"></i> Driver's License</label>
+                                <span className="info-value">
+                                    {fullUser?.driverLicenseNumber ? `Category ${fullUser.driverLicenseNumber}` : 'Not provided'}
+                                </span>
                             </div>
                         </div>
                     ) : (
                         <form onSubmit={handleUpdate} className="edit-form">
-                            <div className="form-row">
+                            <div className="form-row-grid">
                                 <div className="form-group">
                                     <label>First Name</label>
                                     <input 
@@ -208,7 +216,7 @@ const ProfilePage = () => {
                                 <label>Phone Number</label>
                                 <input 
                                     type="text" 
-                                    placeholder="69..."
+                                    placeholder="6912345678"
                                     value={editData.phoneNumber}
                                     onChange={(e) => setEditData({...editData, phoneNumber: e.target.value})}
                                 />
@@ -218,7 +226,7 @@ const ProfilePage = () => {
                                 <label>Address</label>
                                 <input 
                                     type="text" 
-                                    placeholder="Street, City, Postal Code"
+                                    placeholder="Leof. Vas. Georgiou 42, Thessaloniki, 54640"
                                     value={editData.address}
                                     onChange={(e) => setEditData({...editData, address: e.target.value})}
                                 />
@@ -226,46 +234,58 @@ const ProfilePage = () => {
 
                             <div className="form-group">
                                 <label>Driver's License Category</label>
-                                <select 
-                                    className="profile-select"
-                                    value={editData.driverLicenseNumber}
-                                    onChange={(e) => setEditData({...editData, driverLicenseNumber: e.target.value})}
-                                >
-                                    {LICENSE_CATEGORIES.map(cat => (
-                                        <option key={cat.value} value={cat.value}>
-                                            {cat.label}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div className="select-wrapper">
+                                    <select 
+                                        className="profile-select"
+                                        value={editData.driverLicenseNumber}
+                                        onChange={(e) => setEditData({...editData, driverLicenseNumber: e.target.value})}
+                                    >
+                                        {LICENSE_CATEGORIES.map(cat => (
+                                            <option key={cat.value} value={cat.value}>
+                                                {cat.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
 
-                            <button type="submit" className="confirm-glow-btn">Save Updates</button>
+                            <button type="submit" className="confirm-glow-btn submit-profile-btn">
+                                Save Updates <i className="fas fa-check"></i>
+                            </button>
                         </form>
                     )}
 
                     <section className="danger-zone">
-                        <h4>Security & Privacy</h4>
-                        <button 
-                            className="confirm-glow-btn" 
-                            style={{ marginBottom: '1rem', width: 'auto', padding: '0.5rem 1rem' }}
-                            onClick={handleRequestReset}
-                        >
-                            Request Password Reset
-                        </button>
-                        {fullUser?.role !== 'ADMIN' ? (
-                            <>
-                                <p style={{ color: '#555', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-                                    Once you delete your account, there is no going back. Please be certain.
+                        <div className="danger-zone-header">
+                            <i className="fas fa-shield-alt danger-icon"></i>
+                            <h4>Security & Privacy</h4>
+                        </div>
+                        
+                        <div className="danger-actions-block">
+                            <button 
+                                className="security-action-btn" 
+                                onClick={handleRequestReset}
+                            >
+                                <i className="fas fa-key"></i> Request Password Reset
+                            </button>
+                            
+                            <div className="termination-separator"></div>
+
+                            {fullUser?.role !== 'ADMIN' ? (
+                                <div className="account-delete-block">
+                                    <p>
+                                        Once you delete your account, there is no going back. All reservation logs, invoices, and active profile access rights will be permanently scrubbed.
+                                    </p>
+                                    <button className="delete-btn" onClick={handleDeleteAccount}>
+                                        Terminate Account
+                                    </button>
+                                </div>
+                            ) : (
+                                <p className="admin-notice">
+                                    <i className="fas fa-info-circle"></i> Administrator accounts cannot be self-terminated due to safety constraints.
                                 </p>
-                                <button className="delete-btn" onClick={handleDeleteAccount}>
-                                    Terminate Account
-                                </button>
-                            </>
-                        ) : (
-                            <p style={{ color: '#ff4d00', fontSize: '0.85rem', fontWeight: '600' }}>
-                                Administrator accounts cannot be self-terminated.
-                            </p>
-                        )}
+                            )}
+                        </div>
                     </section>
                 </main>
             </div>
