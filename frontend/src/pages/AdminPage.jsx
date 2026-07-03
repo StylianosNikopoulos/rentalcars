@@ -17,6 +17,11 @@ const AdminPage = () => {
     const [currentVehicleId, setCurrentVehicleId] = useState(null);
     const [plateError, setPlateError] = useState('');
     
+    const [vehiclePage, setVehiclePage] = useState(1);
+    const [userPage, setUserPage] = useState(1);
+    const [reservationPage, setReservationPage] = useState(1);
+    const itemsPerPage = 10;
+
     const [newVehicle, setNewVehicle] = useState({
         brand: '',
         model: '',
@@ -57,6 +62,27 @@ const AdminPage = () => {
         refetchIntervalInBackground: true
     });
 
+    // Vehicles Pagination
+    const totalVehiclePages = Math.ceil(vehicles.length / itemsPerPage);
+    const currentVehicles = vehicles.slice(
+        (vehiclePage - 1) * itemsPerPage,
+        vehiclePage * itemsPerPage
+    );
+
+    // Users Pagination
+    const totalUserPages = Math.ceil(users.length / itemsPerPage);
+    const currentUsers = users.slice(
+        (userPage - 1) * itemsPerPage,
+        userPage * itemsPerPage
+    );
+
+    // Reservations Pagination
+    const totalReservationPages = Math.ceil(reservations.length / itemsPerPage);
+    const currentReservations = reservations.slice(
+        (reservationPage - 1) * itemsPerPage,
+        reservationPage * itemsPerPage
+    );
+
     // React Query: Mutations ---
 
     const deleteVehicleMutation = useMutation({
@@ -64,6 +90,7 @@ const AdminPage = () => {
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-vehicles']);
             toast.success("Vehicle deleted successfully");
+            if (currentVehicles.length === 1 && vehiclePage > 1) setVehiclePage(prev => prev - 1);
         },
         onError: () => toast.error("Could not delete vehicle")
     });
@@ -73,6 +100,7 @@ const AdminPage = () => {
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-users']);
             toast.success("User deleted successfully");
+            if (currentUsers.length === 1 && userPage > 1) setUserPage(prev => prev - 1);
         },
         onError: () => toast.error("Error deleting user")
     });
@@ -252,6 +280,30 @@ const AdminPage = () => {
         });
     };
 
+    // --- PAGINATION ---
+    const PaginationControls = ({ currentPage, totalPages, onPageChange }) => {
+        if (totalPages <= 1) return null;
+        return (
+            <div className="pagination" style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px' }}>
+                <button 
+                    onClick={() => onPageChange(prev => Math.max(prev - 1, 1))} 
+                    disabled={currentPage === 1} 
+                    className="page-btn"
+                >
+                    <i className="fas fa-chevron-left"></i> PREVIOUS
+                </button>
+                <span className="page-info" style={{ color: '#aaa', fontSize: '0.9rem' }}>Page {currentPage} of {totalPages}</span>
+                <button 
+                    onClick={() => onPageChange(prev => Math.min(prev + 1, totalPages))} 
+                    disabled={currentPage === totalPages} 
+                    className="page-btn"
+                >
+                    NEXT <i className="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        );
+    };
+
     return (
         <div className="admin-container">
             <aside className="admin-sidebar">
@@ -283,33 +335,41 @@ const AdminPage = () => {
                                     </span>
                                 </div>
                             ) : (
-                                <table className="admin-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Vehicle</th>
-                                            <th>Plate</th>
-                                            <th>Price</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {vehicles.map(car => (
-                                            <tr key={car.id}>
-                                                <td><strong>{car.brand}</strong> {car.model}</td>
-                                                <td>{car.licensePlate}</td>
-                                                <td>€{car.dailyPrice}</td>
-                                                <td className="actions-cell">
-                                                    <button className="btn-update" onClick={() => openUpdateModal(car)}>
-                                                        <i className="fas fa-edit"></i> Update
-                                                    </button>
-                                                    <button className="btn-delete" onClick={() => handleDeleteVehicle(car.id)}>
-                                                        <i className="fas fa-trash"></i> Delete
-                                                    </button>
-                                                </td>
+                                <>
+                                    <table className="admin-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Vehicle</th>
+                                                <th>Plate</th>
+                                                <th>Price</th>
+                                                <th>Actions</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {currentVehicles.map(car => (
+                                                <tr key={car.id}>
+                                                    <td><strong>{car.brand}</strong> {car.model}</td>
+                                                    <td>{car.licensePlate}</td>
+                                                    <td>€{car.dailyPrice}</td>
+                                                    <td className="actions-cell">
+                                                        <button className="btn-update" onClick={() => openUpdateModal(car)}>
+                                                            <i className="fas fa-edit"></i> Update
+                                                        </button>
+                                                        <button className="btn-delete" onClick={() => handleDeleteVehicle(car.id)}>
+                                                            <i className="fas fa-trash"></i> Delete
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                    
+                                    <PaginationControls 
+                                        currentPage={vehiclePage} 
+                                        totalPages={totalVehiclePages} 
+                                        onPageChange={setVehiclePage} 
+                                    />
+                                </>
                             )}
                         </div>
                     )}
@@ -324,34 +384,42 @@ const AdminPage = () => {
                                     </span>
                                 </div>
                             ) : (
-                                <table className="admin-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Role</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {users.map(user => (
-                                            <tr key={user.id}>
-                                                <td>{user.firstName} {user.lastName}</td>
-                                                <td>{user.email}</td>
-                                                <td><span className={`role-badge ${user.role.toLowerCase()}`}>{user.role}</span></td>
-                                                <td>
-                                                    <div className="actions-cell">
-                                                        {user.role !== 'ADMIN' && (
-                                                            <button className="btn-delete" onClick={() => handleDeleteUser(user.id)}>
-                                                                <i className="fas fa-trash"></i> Delete
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                </td>
+                                <>
+                                    <table className="admin-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Role</th>
+                                                <th>Actions</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {currentUsers.map(user => (
+                                                <tr key={user.id}>
+                                                    <td>{user.firstName} {user.lastName}</td>
+                                                    <td>{user.email}</td>
+                                                    <td><span className={`role-badge ${user.role.toLowerCase()}`}>{user.role}</span></td>
+                                                    <td>
+                                                        <div className="actions-cell">
+                                                            {user.role !== 'ADMIN' && (
+                                                                <button className="btn-delete" onClick={() => handleDeleteUser(user.id)}>
+                                                                    <i className="fas fa-trash"></i> Delete
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                    
+                                    <PaginationControls 
+                                        currentPage={userPage} 
+                                        totalPages={totalUserPages} 
+                                        onPageChange={setUserPage} 
+                                    />
+                                </>
                             )}
                         </div>
                     )}
@@ -366,50 +434,58 @@ const AdminPage = () => {
                                     </span>
                                 </div>
                             ) : (
-                                <table className="admin-table">
-                                    <thead>
-                                        <tr>
-                                            <th>User Email</th>
-                                            <th>Vehicle</th>
-                                            <th>From</th>
-                                            <th>Until</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {reservations.length > 0 ? reservations.map(res => (
-                                            <tr key={res.id}>
-                                                <td>{res.email}</td>
-                                                <td>{res.vehicleBrand} {res.vehicleName}</td>
-                                                <td>{new Date(res.period.start).toLocaleDateString()}</td>
-                                                <td>{new Date(res.period.end).toLocaleDateString()}</td>
-                                                <td>
-                                                    <span className={`status-badge status-${res.status.toLowerCase()}`}>
-                                                        {res.status}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <div className="actions-cell">
-                                                        {res.status === 'PENDING' && (
-                                                            <button className="status-btn pick-up" onClick={() => handleCancelReservation(res.id)}>
-                                                                <i className="fas fa-times"></i> Cancel
-                                                            </button>
-                                                        )}
-
-                                                        {res.status === 'ACTIVE' && (
-                                                            <button className="status-btn return-btn-table" onClick={() => handleReturnVehicle(res.id)}>
-                                                                <i className="fas fa-undo"></i> Return
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                </td>
+                                <>
+                                    <table className="admin-table">
+                                        <thead>
+                                            <tr>
+                                                <th>User Email</th>
+                                                <th>Vehicle</th>
+                                                <th>From</th>
+                                                <th>Until</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
                                             </tr>
-                                        )) : (
-                                            <tr><td colSpan="6" style={{textAlign: 'center', color: '#666', padding: '30px'}}>No reservations found.</td></tr>
-                                        )}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {currentReservations.length > 0 ? currentReservations.map(res => (
+                                                <tr key={res.id}>
+                                                    <td>{res.email}</td>
+                                                    <td>{res.vehicleBrand} {res.vehicleName}</td>
+                                                    <td>{new Date(res.period.start).toLocaleDateString()}</td>
+                                                    <td>{new Date(res.period.end).toLocaleDateString()}</td>
+                                                    <td>
+                                                        <span className={`status-badge status-${res.status.toLowerCase()}`}>
+                                                            {res.status}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div className="actions-cell">
+                                                            {res.status === 'PENDING' && (
+                                                                <button className="status-btn pick-up" onClick={() => handleCancelReservation(res.id)}>
+                                                                    <i className="fas fa-times"></i> Cancel
+                                                                </button>
+                                                            )}
+
+                                                            {res.status === 'ACTIVE' && (
+                                                                <button className="status-btn return-btn-table" onClick={() => handleReturnVehicle(res.id)}>
+                                                                    <i className="fas fa-undo"></i> Return
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )) : (
+                                                <tr><td colSpan="6" style={{textAlign: 'center', color: '#666', padding: '30px'}}>No reservations found.</td></tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                    
+                                    <PaginationControls 
+                                        currentPage={reservationPage} 
+                                        totalPages={totalReservationPages} 
+                                        onPageChange={setReservationPage} 
+                                    />
+                                </>
                             )}
                         </div>
                     )}

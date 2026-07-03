@@ -11,7 +11,7 @@ const VehiclesPage = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOrder, setSortOrder] = useState("default"); 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 8;
+    const itemsPerPage = 9;
 
     const queryParams = new URLSearchParams(location.search);
     const selectedStart = queryParams.get('start');
