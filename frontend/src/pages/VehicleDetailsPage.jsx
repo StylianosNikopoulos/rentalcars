@@ -96,8 +96,25 @@ const VehicleDetailsPage = () => {
         bookingMutation.mutate(bookingData);
     };
 
-    if (vehicleLoading || datesLoading) return <div className="loader">Loading details...</div>;
-    if (!vehicle) return <div className="error">Vehicle not found</div>;
+    if (vehicleLoading || datesLoading) {
+        return (
+            <div className="loader-container" style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#0a0a0a' }}>
+                <div className="loader"></div>
+                <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px' }}>
+                    FETCHING DETAILS...
+                </span>
+            </div>
+        );
+    }
+
+    if (!vehicle) {
+        return (
+            <div className="error-message" style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', color: '#ff4d4d', padding: '2rem', textAlign: 'center' }}>
+                <i className="fas fa-exclamation-triangle" style={{ fontSize: '2rem', marginBottom: '1rem' }}></i>
+                Vehicle not found or has been removed.
+            </div>
+        );
+    }
 
     const allImages = vehicle.images && vehicle.images.length > 0 
         ? vehicle.images 
