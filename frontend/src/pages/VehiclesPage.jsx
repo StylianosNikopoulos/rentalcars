@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; 
 import vehicleService from '../services/vehicleService';
 import '../assets/styles/vehicles.css'; 
@@ -12,6 +12,13 @@ const VehiclesPage = () => {
     const [sortOrder, setSortOrder] = useState("default"); 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 9;
+
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, [currentPage]);
 
     const queryParams = new URLSearchParams(location.search);
     const selectedStart = queryParams.get('start');
