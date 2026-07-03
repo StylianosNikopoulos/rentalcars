@@ -51,15 +51,15 @@ const Navbar = () => {
                             <i className="far fa-calendar-alt nav-icon"></i> Reservations
                         </Link>
                         
+                        <Link to="/profile" onClick={closeMobileMenu}>
+                            <i className="far fa-id-badge nav-icon"></i> Profile
+                        </Link>
+
                         {isAdmin && (
                             <Link to="/admin" className="admin-link-highlight" onClick={closeMobileMenu}>
                                 <i className="fas fa-user-shield nav-icon"></i> Admin Panel
                             </Link>
                         )}
-
-                        <Link to="/profile" onClick={closeMobileMenu}>
-                            <i className="far fa-id-badge nav-icon"></i> Profile
-                        </Link>
                         
                         <button onClick={handleLogout} className="logout-btn">
                             Logout<i className="fas fa-sign-out-alt"></i>

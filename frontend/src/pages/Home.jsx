@@ -54,7 +54,7 @@ const Home = () => {
                             <i className="fas fa-map-marker-alt field-icon"></i>
                             <div className="field-inputs">
                                 <label>Pick-up Location</label>
-                                <input type="text" value="Thessaloniki Airport" />
+                                <input type="text" value="Thessaloniki Airport" readOnly />
                             </div>
                         </div>
 
@@ -87,7 +87,7 @@ const Home = () => {
                 </div>
             </header>
 
-            {/* FEATURED FLEET SECTION */}
+            {/* FEATURED VEHICLES SECTION */}
             <section className="featured-fleet-section">
                 <div className="section-header-v2">
                     <h2>Featured Fleet</h2>
@@ -95,7 +95,12 @@ const Home = () => {
                 </div>
 
                 {loading ? (
-                    <div className="mini-fleet-loader">Loading premium fleet...</div>
+                    <div className="loader-container" style={{ minHeight: '350px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                        <div className="loader"></div>
+                        <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px' }}>
+                            FETCHING VEHICLES...
+                        </span>
+                    </div>
                 ) : (
                     <div className="home-vehicle-grid">
                         {vehicles.map(car => (
@@ -105,13 +110,12 @@ const Home = () => {
                                         src={car.images && car.images.length > 0 ? car.images[0].url : 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070'} 
                                         alt={`${car.brand} ${car.model}`} 
                                     />
-                                    <span className="home-car-tag">{car.type || 'Premium'}</span>
                                 </div>
                                 <div className="home-car-info">
                                     <h3>{car.brand} <span>{car.model}</span></h3>
                                     <div className="home-car-specs-row">
-                                        <span><i className="fas fa-cog"></i> {car.transmission || 'Auto'}</span>
                                         <span><i className="fas fa-gas-pump"></i> {car.fuelType}</span>
+                                        <span><i className="fas fa-cog"></i> {car.licensePlate}</span>
                                     </div>
                                     <div className="home-car-price-row">
                                         <div className="home-price">

@@ -54,7 +54,7 @@ const RegisterPage = () => {
                                 value={formData.firstName} 
                                 type="text" 
                                 onChange={handleChange} 
-                                placeholder="John"
+                                placeholder="FirstName"
                                 required 
                             />
                         </div>
@@ -65,7 +65,7 @@ const RegisterPage = () => {
                                 value={formData.lastName} 
                                 type="text" 
                                 onChange={handleChange} 
-                                placeholder="Doe"
+                                placeholder="LastName"
                                 required 
                             />
                         </div>
@@ -78,7 +78,7 @@ const RegisterPage = () => {
                             value={formData.email} 
                             type="email" 
                             onChange={handleChange} 
-                            placeholder="john.doe@example.com"
+                            placeholder="name@example.com"
                             required 
                         />
                     </div>

@@ -274,7 +274,15 @@ const AdminPage = () => {
                             <button className="add-btn" onClick={() => { closeModal(); setIsModalOpen(true); }}>
                                 + Add Vehicle
                             </button>
-                            {loadingVehicles ? <div className="loader"></div> : (
+                            
+                            {loadingVehicles ? (
+                                <div className="loader-container" style={{ minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                    <div className="loader"></div>
+                                    <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px' }}>
+                                        FETCHING VEHICLES...
+                                    </span>
+                                </div>
+                            ) : (
                                 <table className="admin-table">
                                     <thead>
                                         <tr>
@@ -308,7 +316,14 @@ const AdminPage = () => {
 
                     {activeTab === 'users' && (
                         <div className="admin-section">
-                            {loadingUsers ? <div className="loader"></div> : (
+                            {loadingUsers ? (
+                                <div className="loader-container" style={{ minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                    <div className="loader"></div>
+                                    <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px' }}>
+                                        FETCHING USERS...
+                                    </span>
+                                </div>
+                            ) : (
                                 <table className="admin-table">
                                     <thead>
                                         <tr>
@@ -343,7 +358,14 @@ const AdminPage = () => {
                     
                     {activeTab === 'reservations' && (
                         <div className="admin-section">
-                            {loadingReservations ? <div className="loader"></div> : (
+                            {loadingReservations ? (
+                                <div className="loader-container" style={{ minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                    <div className="loader"></div>
+                                    <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px' }}>
+                                        FETCHING RESERVATIONS...
+                                    </span>
+                                </div>
+                            ) : (
                                 <table className="admin-table">
                                     <thead>
                                         <tr>
@@ -384,7 +406,7 @@ const AdminPage = () => {
                                                 </td>
                                             </tr>
                                         )) : (
-                                            <tr><td colSpan="6" style={{textAlign: 'center'}}>No reservations found.</td></tr>
+                                            <tr><td colSpan="6" style={{textAlign: 'center', color: '#666', padding: '30px'}}>No reservations found.</td></tr>
                                         )}
                                     </tbody>
                                 </table>

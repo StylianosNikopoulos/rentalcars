@@ -91,7 +91,7 @@ const VehiclesPage = () => {
                             <span className="days-badge">({rentalDays} {rentalDays === 1 ? 'day' : 'days'})</span>
                         </div>
                         <button className="clear-dates-btn" onClick={() => navigate('/vehicles')}>
-                            RESET DATES
+                            <i className="fas fa-undo-alt" style={{ fontSize: '0.85rem' }}></i> RESET DATES
                         </button>
                     </div>
                 )}
@@ -124,7 +124,17 @@ const VehiclesPage = () => {
             </div>
 
             {isLoading ? (
-                <div className="loader">FETCHING FLEET...</div>
+                <div className="loader-container" style={{ minHeight: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                    <div className="loader"></div>
+                    <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px' }}>
+                        FETCHING VEHICLES...
+                    </span>
+                </div>
+            ) : filteredVehicles.length === 0 ? (
+                <div className="no-results" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
+                    <i className="fas fa-search" style={{ fontSize: '2rem', color: '#ff4d00', marginBottom: '1rem', display: 'block' }}></i>
+                    No vehicles matching your criteria were found.
+                </div>
             ) : (
                 <>
                     <div className="vehicle-grid">
@@ -194,10 +204,6 @@ const VehiclesPage = () => {
                         </div>
                     )}
                 </>
-            )}
-            
-            {filteredVehicles.length === 0 && !isLoading && (
-                <div className="no-results">No vehicles matching your criteria were found.</div>
             )}
         </div>
     );
