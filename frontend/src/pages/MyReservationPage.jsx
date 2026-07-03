@@ -140,7 +140,6 @@ const MyReservationPage = () => {
         }
     };
 
-    if (isLoading) return <div className="loader-container"><div className="loader"></div></div>;
 
     return (
         <div className="reservations-container">
@@ -149,7 +148,12 @@ const MyReservationPage = () => {
                 <p>Manage your rental bookings and active payments</p>
             </div>
 
-            {reservations.length === 0 ? (
+            {isLoading ? (
+                <div className="loader-container">
+                    <div className="loader"></div>
+                    <span style={{color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px'}}>FETCHING RESERVATIONS...</span>
+                </div>
+            ) : reservations.length === 0 ? (
                 <div className="empty-state">
                     <div className="empty-icon"><i className="fas fa-car-crash"></i></div>
                     <h3>No Bookings Found</h3>

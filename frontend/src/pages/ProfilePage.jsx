@@ -126,7 +126,6 @@ const ProfilePage = () => {
         });
     };
 
-    if (loading) return <div className="loader-container"><div className="loader"></div></div>;
 
     return (
         <div className="profile-container">
@@ -135,160 +134,167 @@ const ProfilePage = () => {
                 <p>Exclusive Access & Identity Settings</p>
             </header>
 
-            <div className="profile-grid">
-                <aside className="profile-card">
-                    <div className="avatar-circle">
-                        {fullUser?.firstName?.charAt(0).toUpperCase()}
-                    </div>
-                    <h3>{fullUser?.firstName} {fullUser?.lastName}</h3>
-                    <span className="role-badge">{fullUser?.role || 'CUSTOMER'}</span>
-                    
-                    <div className="profile-card-actions">
-                        <button 
-                            className={isEditing ? "discard-btn" : "confirm-glow-btn"} 
-                            onClick={() => setIsEditing(!isEditing)}
-                        >
-                            {isEditing ? (
-                                <><i className="fas fa-times"></i> Discard Changes</>
-                            ) : (
-                                <><i className="far fa-edit"></i> Modify Profile</>
-                            )}
-                        </button>
-                    </div>
-                </aside>
-
-                <main className="info-section">
-                    {!isEditing ? (
-                        <div className="info-display">
-                            <div className="info-group">
-                                <label className="info-label"><i className="far fa-envelope"></i> Email Address</label>
-                                <span className="info-value">{fullUser?.email}</span>
-                            </div>
-                            <div className="info-row-grid">
-                                <div className="info-group">
-                                    <label className="info-label"><i className="far fa-user"></i> First Name</label>
-                                    <span className="info-value">{fullUser?.firstName}</span>
-                                </div>
-                                <div className="info-group">
-                                    <label className="info-label"><i className="far fa-user"></i> Last Name</label>
-                                    <span className="info-value">{fullUser?.lastName}</span>
-                                </div>
-                            </div>
-                            <div className="info-group">
-                                <label className="info-label"><i className="fas fa-mobile-alt"></i> Phone Number</label>
-                                <span className="info-value">{fullUser?.phoneNumber || 'Not provided'}</span>
-                            </div>
-                            <div className="info-group">
-                                <label className="info-label"><i className="far fa-map"></i> Address</label>
-                                <span className="info-value">{fullUser?.address || 'Not provided'}</span>
-                            </div>
-                            <div className="info-group">
-                                <label className="info-label"><i className="fas fa-id-card"></i> Driver's License</label>
-                                <span className="info-value">
-                                    {fullUser?.driverLicenseNumber ? `Category ${fullUser.driverLicenseNumber}` : 'Not provided'}
-                                </span>
-                            </div>
+            {loading ? (
+                <div className="loader-container" style={{ minHeight: '300px' }}>
+                    <div className="loader"></div>
+                    <span style={{color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px'}}>FETCHING PROFILE...</span>
+                </div>
+            ) : (
+                <div className="profile-grid">
+                    <aside className="profile-card">
+                        <div className="avatar-circle">
+                            {fullUser?.firstName?.charAt(0).toUpperCase()}
                         </div>
-                    ) : (
-                        <form onSubmit={handleUpdate} className="edit-form">
-                            <div className="form-row-grid">
-                                <div className="form-group">
-                                    <label>First Name</label>
-                                    <input 
-                                        type="text" 
-                                        value={editData.firstName}
-                                        onChange={(e) => setEditData({...editData, firstName: e.target.value})}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Last Name</label>
-                                    <input 
-                                        type="text" 
-                                        value={editData.lastName}
-                                        onChange={(e) => setEditData({...editData, lastName: e.target.value})}
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Phone Number</label>
-                                <input 
-                                    type="text" 
-                                    placeholder="6912345678"
-                                    value={editData.phoneNumber}
-                                    onChange={(e) => setEditData({...editData, phoneNumber: e.target.value})}
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>Address</label>
-                                <input 
-                                    type="text" 
-                                    placeholder="Leof. Vas. Georgiou 42, Thessaloniki, 54640"
-                                    value={editData.address}
-                                    onChange={(e) => setEditData({...editData, address: e.target.value})}
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>Driver's License Category</label>
-                                <div className="select-wrapper">
-                                    <select 
-                                        className="profile-select"
-                                        value={editData.driverLicenseNumber}
-                                        onChange={(e) => setEditData({...editData, driverLicenseNumber: e.target.value})}
-                                    >
-                                        {LICENSE_CATEGORIES.map(cat => (
-                                            <option key={cat.value} value={cat.value}>
-                                                {cat.label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-
-                            <button type="submit" className="confirm-glow-btn submit-profile-btn">
-                                Save Updates <i className="fas fa-check"></i>
-                            </button>
-                        </form>
-                    )}
-
-                    <section className="danger-zone">
-                        <div className="danger-zone-header">
-                            <i className="fas fa-shield-alt danger-icon"></i>
-                            <h4>Security & Privacy</h4>
-                        </div>
+                        <h3>{fullUser?.firstName} {fullUser?.lastName}</h3>
+                        <span className="role-badge">{fullUser?.role || 'CUSTOMER'}</span>
                         
-                        <div className="danger-actions-block">
+                        <div className="profile-card-actions">
                             <button 
-                                className="security-action-btn" 
-                                onClick={handleRequestReset}
+                                className={isEditing ? "discard-btn" : "confirm-glow-btn"} 
+                                onClick={() => setIsEditing(!isEditing)}
                             >
-                                <i className="fas fa-key"></i> Request Password Reset
+                                {isEditing ? (
+                                    <><i className="fas fa-times"></i> Discard Changes</>
+                                ) : (
+                                    <><i className="far fa-edit"></i> Modify Profile</>
+                                )}
                             </button>
-                            
-                            <div className="termination-separator"></div>
-
-                            {fullUser?.role !== 'ADMIN' ? (
-                                <div className="account-delete-block">
-                                    <p>
-                                        Once you delete your account, there is no going back. All reservation logs, invoices, and active profile access rights will be permanently scrubbed.
-                                    </p>
-                                    <button className="delete-btn" onClick={handleDeleteAccount}>
-                                        Terminate Account
-                                    </button>
-                                </div>
-                            ) : (
-                                <p className="admin-notice">
-                                    <i className="fas fa-info-circle"></i> Administrator accounts cannot be self-terminated due to safety constraints.
-                                </p>
-                            )}
                         </div>
-                    </section>
-                </main>
-            </div>
+                    </aside>
+
+                    <main className="info-section">
+                        {!isEditing ? (
+                            <div className="info-display">
+                                <div className="info-group">
+                                    <label className="info-label"><i className="far fa-envelope"></i> Email Address</label>
+                                    <span className="info-value">{fullUser?.email}</span>
+                                </div>
+                                <div className="info-row-grid">
+                                    <div className="info-group">
+                                        <label className="info-label"><i className="far fa-user"></i> First Name</label>
+                                        <span className="info-value">{fullUser?.firstName}</span>
+                                    </div>
+                                    <div className="info-group">
+                                        <label className="info-label"><i className="far fa-user"></i> Last Name</label>
+                                        <span className="info-value">{fullUser?.lastName}</span>
+                                    </div>
+                                </div>
+                                <div className="info-group">
+                                    <label className="info-label"><i className="fas fa-mobile-alt"></i> Phone Number</label>
+                                    <span className="info-value">{fullUser?.phoneNumber || 'Not provided'}</span>
+                                </div>
+                                <div className="info-group">
+                                    <label className="info-label"><i className="far fa-map"></i> Address</label>
+                                    <span className="info-value">{fullUser?.address || 'Not provided'}</span>
+                                </div>
+                                <div className="info-group">
+                                    <label className="info-label"><i className="fas fa-id-card"></i> Driver's License</label>
+                                    <span className="info-value">
+                                        {fullUser?.driverLicenseNumber ? `Category ${fullUser.driverLicenseNumber}` : 'Not provided'}
+                                    </span>
+                                </div>
+                            </div>
+                        ) : (
+                            <form onSubmit={handleUpdate} className="edit-form">
+                                <div className="form-row-grid">
+                                    <div className="form-group">
+                                        <label>First Name</label>
+                                        <input 
+                                            type="text" 
+                                            value={editData.firstName}
+                                            onChange={(e) => setEditData({...editData, firstName: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Last Name</label>
+                                        <input 
+                                            type="text" 
+                                            value={editData.lastName}
+                                            onChange={(e) => setEditData({...editData, lastName: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Phone Number</label>
+                                    <input 
+                                        type="text" 
+                                        placeholder="6912345678"
+                                        value={editData.phoneNumber}
+                                        onChange={(e) => setEditData({...editData, phoneNumber: e.target.value})}
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Address</label>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Leof. Vas. Georgiou 42, Thessaloniki, 54640"
+                                        value={editData.address}
+                                        onChange={(e) => setEditData({...editData, address: e.target.value})}
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Driver's License Category</label>
+                                    <div className="select-wrapper">
+                                        <select 
+                                            className="profile-select"
+                                            value={editData.driverLicenseNumber}
+                                            onChange={(e) => setEditData({...editData, driverLicenseNumber: e.target.value})}
+                                        >
+                                            {LICENSE_CATEGORIES.map(cat => (
+                                                <option key={cat.value} value={cat.value}>
+                                                    {cat.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button type="submit" className="confirm-glow-btn submit-profile-btn">
+                                    Save Updates <i className="fas fa-check"></i>
+                                </button>
+                            </form>
+                        )}
+
+                        <section className="danger-zone">
+                            <div className="danger-zone-header">
+                                <i className="fas fa-shield-alt danger-icon"></i>
+                                <h4>Security & Privacy</h4>
+                            </div>
+                            
+                            <div className="danger-actions-block">
+                                <button 
+                                    className="security-action-btn" 
+                                    onClick={handleRequestReset}
+                                >
+                                    <i className="fas fa-key"></i> Request Password Reset
+                                </button>
+                                
+                                <div className="termination-separator"></div>
+
+                                {fullUser?.role !== 'ADMIN' ? (
+                                    <div className="account-delete-block">
+                                        <p>
+                                            Once you delete your account, there is no going back. All reservation logs, invoices, and active profile access rights will be permanently scrubbed.
+                                        </p>
+                                        <button className="delete-btn" onClick={handleDeleteAccount}>
+                                            Terminate Account
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <p className="admin-notice">
+                                        <i className="fas fa-info-circle"></i> Administrator accounts cannot be self-terminated due to safety constraints.
+                                    </p>
+                                )}
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            )}
         </div>
     );
 };
