@@ -114,71 +114,839 @@
             <column name="version" valueNumeric="0"/>
             <column name="created_at" valueDate="2024-05-20T10:45:00"/>
         </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440011"/>
+            <column name="brand" value="Toyota"/>
+            <column name="model" value="Yaris Cross"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="NKM-4291"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="48.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T10:50:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440012"/>
+            <column name="brand" value="Porsche"/>
+            <column name="model" value="Taycan 4S"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="TXT-8821"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="220.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T10:55:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440013"/>
+            <column name="brand" value="BMW"/>
+            <column name="model" value="X5 xDrive40e"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="IMT-5512"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="140.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:00:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440014"/>
+            <column name="brand" value="Audi"/>
+            <column name="model" value="Q5 TDI"/>
+            <column name="year" valueNumeric="2021"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="ROT-2094"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="110.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:05:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440015"/>
+            <column name="brand" value="Nissan"/>
+            <column name="model" value="Qashqai DIG-T"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="YPT-7731"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="58.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:10:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440016"/>
+            <column name="brand" value="Kia"/>
+            <column name="model" value="Sportage GT-Line"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="HNZ-8264"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="75.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:15:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440017"/>
+            <column name="brand" value="Renault"/>
+            <column name="model" value="Clio dCi"/>
+            <column name="year" valueNumeric="2020"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="KMM-6125"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="42.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:20:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440018"/>
+            <column name="brand" value="Mercedes"/>
+            <column name="model" value="C200 d"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="EPK-3984"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="105.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:25:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440019"/>
+            <column name="brand" value="Volvo"/>
+            <column name="model" value="XC40 Recharge"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="BPA-2248"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="98.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:30:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440020"/>
+            <column name="brand" value="Skoda"/>
+            <column name="model" value="Octavia Grand Coupe"/>
+            <column name="year" valueNumeric="2021"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="ZMT-9013"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="60.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:35:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440021"/>
+            <column name="brand" value="Mini"/>
+            <column name="model" value="Cooper S"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="OXA-1478"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="75.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:40:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440022"/>
+            <column name="brand" value="Tesla"/>
+            <column name="model" value="Model Y Long Range"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="EET-3691"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="115.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:45:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440023"/>
+            <column name="brand" value="Volkswagen"/>
+            <column name="model" value="ID.4 Pro"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="YPA-6547"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="82.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:50:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440024"/>
+            <column name="brand" value="Jeep"/>
+            <column name="model" value="Compass 4xe"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="XAT-8841"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="89.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T11:55:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440025"/>
+            <column name="brand" value="Ford"/>
+            <column name="model" value="Mustang Mach-E"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="NZM-3021"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="135.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:00:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440026"/>
+            <column name="brand" value="Peugeot"/>
+            <column name="model" value="308 Hybrid"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="KBT-7412"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="68.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:05:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440027"/>
+            <column name="brand" value="Dacia"/>
+            <column name="model" value="Duster dCi"/>
+            <column name="year" valueNumeric="2021"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="MIT-2259"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="45.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:10:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440028"/>
+            <column name="brand" value="Toyota"/>
+            <column name="model" value="RAV4 Hybrid"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="HKM-1094"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="85.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:15:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440029"/>
+            <column name="brand" value="Audi"/>
+            <column name="model" value="A5 Coupe TFSI"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="NNE-4512"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="115.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:20:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440030"/>
+            <column name="brand" value="BMW"/>
+            <column name="model" value="i4 eDrive40"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="ZZA-3087"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="130.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:25:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440031"/>
+            <column name="brand" value="Mercedes"/>
+            <column name="model" value="GLA 200"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="IBB-4491"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="95.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:30:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440032"/>
+            <column name="brand" value="Hyundai"/>
+            <column name="model" value="Tucson CRDi"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="KAA-9632"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="72.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:35:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440033"/>
+            <column name="brand" value="Fiat"/>
+            <column name="model" value="Tipo MultiJet"/>
+            <column name="year" valueNumeric="2021"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="YEE-4125"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="44.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:40:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440034"/>
+            <column name="brand" value="Suzuki"/>
+            <column name="model" value="Vitara BoosterJet"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="MNN-7410"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="54.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:45:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440035"/>
+            <column name="brand" value="Land Rover"/>
+            <column name="model" value="Range Rover Evoque"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="TXX-8521"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="145.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:50:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440036"/>
+            <column name="brand" value="Cupra"/>
+            <column name="model" value="Formentor TSI"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="BPA-6321"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="80.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T12:55:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440037"/>
+            <column name="brand" value="Mazda"/>
+            <column name="model" value="CX-30 e-Skyactiv"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="ZXT-4412"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="65.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T13:00:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440038"/>
+            <column name="brand" value="Kia"/>
+            <column name="model" value="EV6 GT-Line"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="NKA-9915"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="105.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T13:05:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440039"/>
+            <column name="brand" value="Volvo"/>
+            <column name="model" value="XC90 T8 B5"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="PTT-3652"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="165.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T13:10:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440040"/>
+            <column name="brand" value="Volkswagen"/>
+            <column name="model" value="Polo TSI"/>
+            <column name="year" valueNumeric="2021"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="KME-1594"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="46.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T13:15:00"/>
+        </insert>
+
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440041"/>
+            <column name="brand" value="Alfa Romeo"/>
+            <column name="model" value="Tonale Edizione"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="XBB-2074"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="88.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T13:20:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440042"/>
+            <column name="brand" value="Jaguar"/>
+            <column name="model" value="F-Pace d200"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="EET-6320"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="138.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T13:25:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440043"/>
+            <column name="brand" value="Opel"/>
+            <column name="model" value="Corsa Turbo"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="HKZ-3211"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="45.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T13:30:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440044"/>
+            <column name="brand" value="Tesla"/>
+            <column name="model" value="Model S Plaid"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="ZXX-9904"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="195.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T13:35:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440045"/>
+            <column name="brand" value="Toyota"/>
+            <column name="model" value="Corolla Sedan"/>
+            <column name="year" valueNumeric="2021"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="NNE-1496"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="50.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T13:40:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440046"/>
+            <column name="brand" value="BMW"/>
+            <column name="model" value="420d Gran Coupe"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="license_plate" value="YAA-7852"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="110.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T13:45:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440047"/>
+            <column name="brand" value="Audi"/>
+            <column name="model" value="e-tron GT"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="XTT-4521"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="210.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T13:50:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440048"/>
+            <column name="brand" value="Peugeot"/>
+            <column name="model" value="e-208 GT"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="ELECTRIC"/>
+            <column name="license_plate" value="KMM-8841"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="62.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T13:55:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440049"/>
+            <column name="brand" value="Nissan"/>
+            <column name="model" value="Juke DIG-T"/>
+            <column name="year" valueNumeric="2022"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="license_plate" value="HNN-2104"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="52.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T14:00:00"/>
+        </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440051"/>
+            <column name="brand" value="Mercedes"/>
+            <column name="model" value="E300 e Plug-in"/>
+            <column name="year" valueNumeric="2023"/>
+            <column name="fuel_type" value="HYBRID"/>
+            <column name="license_plate" value="IMB-7521"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="daily_price" valueNumeric="145.00"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" valueDate="2024-05-20T14:05:00"/>
+        </insert>
     </changeSet>
 
     <changeSet author="db" id="006-insert-vehicles-images">
         <insert tableName="vehicle_images">
             <column name="id" value="a22e8400-e29b-41d4-a716-44665544F002"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440002"/>
-            <column name="url" value="https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&amp;fit=crop&amp;q=80&amp;w=1000"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:05:00"/>
         </insert>
         <insert tableName="vehicle_images">
             <column name="id" value="a33e8400-e29b-41d4-a716-44665544F003"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440003"/>
-            <column name="url" value="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&amp;fit=crop&amp;q=80&amp;w=1000"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:10:00"/>
         </insert>
         <insert tableName="vehicle_images">
             <column name="id" value="a44e8400-e29b-41d4-a716-44665544F004"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440004"/>
-            <column name="url" value="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&amp;fit=crop&amp;q=80&amp;w=1000"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:15:00"/>
         </insert>
         <insert tableName="vehicle_images">
             <column name="id" value="a55e8400-e29b-41d4-a716-44665544F005"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440005"/>
-            <column name="url" value="https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&amp;fit=crop&amp;q=80&amp;w=1000"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:20:00"/>
         </insert>
         <insert tableName="vehicle_images">
             <column name="id" value="a66e8400-e29b-41d4-a716-44665544F006"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440006"/>
-            <column name="url" value="https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&amp;fit=crop&amp;q=80&amp;w=1000"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:25:00"/>
         </insert>
         <insert tableName="vehicle_images">
             <column name="id" value="a77e8400-e29b-41d4-a716-44665544F007"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440007"/>
-            <column name="url" value="https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&amp;fit=crop&amp;q=80&amp;w=1000"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:30:00"/>
         </insert>
         <insert tableName="vehicle_images">
             <column name="id" value="a88e8400-e29b-41d4-a716-44665544F008"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440008"/>
-            <column name="url" value="https://images.unsplash.com/photo-1606611013016-969c19ba27bb?auto=format&amp;fit=crop&amp;q=80&amp;w=1000"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:35:00"/>
         </insert>
         <insert tableName="vehicle_images">
             <column name="id" value="a99e8400-e29b-41d4-a716-44665544F009"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440009"/>
-            <column name="url" value="https://images.unsplash.com/photo-1597404294360-feeeda04612e?auto=format&amp;fit=crop&amp;q=80&amp;w=1000"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:40:00"/>
         </insert>
         <insert tableName="vehicle_images">
             <column name="id" value="aaae8400-e29b-41d4-a716-44665544F010"/>
             <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440010"/>
-            <column name="url" value="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&amp;fit=crop&amp;q=80&amp;w=1000"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
             <column name="is_main" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-05-20T10:45:00"/>
+        </insert>
+
+        <insert tableName="vehicle_images">
+            <column name="id" value="b11e8400-e29b-41d4-a716-44665544F011"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440011"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T10:50:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="b12e8400-e29b-41d4-a716-44665544F012"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440012"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T10:55:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="b13e8400-e29b-41d4-a716-44665544F013"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440013"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T11:00:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="b14e8400-e29b-41d4-a716-44665544F014"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440014"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T11:05:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="b15e8400-e29b-41d4-a716-44665544F015"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440015"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T11:10:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="b16e8400-e29b-41d4-a716-44665544F016"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440016"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T11:15:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="b17e8400-e29b-41d4-a716-44665544F017"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440017"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T11:20:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="b18e8400-e29b-41d4-a716-44665544F018"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440018"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T11:25:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="b19e8400-e29b-41d4-a716-44665544F019"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440019"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T11:30:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="b20e8400-e29b-41d4-a716-44665544F020"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440020"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T11:35:00"/>
+        </insert>
+
+        <insert tableName="vehicle_images">
+            <column name="id" value="c21e8400-e29b-41d4-a716-44665544F021"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440021"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T11:40:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="c22e8400-e29b-41d4-a716-44665544F022"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440022"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T11:45:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="c23e8400-e29b-41d4-a716-44665544F023"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440023"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T11:50:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="c24e8400-e29b-41d4-a716-44665544F024"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440024"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T11:55:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="c25e8400-e29b-41d4-a716-44665544F025"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440025"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T12:00:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="c26e8400-e29b-41d4-a716-44665544F026"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440026"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T12:05:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="c27e8400-e29b-41d4-a716-44665544F027"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440027"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T12:10:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="c28e8400-e29b-41d4-a716-44665544F028"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440028"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T12:15:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="c29e8400-e29b-41d4-a716-44665544F029"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440029"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T12:20:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="c30e8400-e29b-41d4-a716-44665544F030"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440030"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T12:25:00"/>
+        </insert>
+
+        <insert tableName="vehicle_images">
+            <column name="id" value="d31e8400-e29b-41d4-a716-44665544F031"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440031"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T12:30:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="d32e8400-e29b-41d4-a716-44665544F032"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440032"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T12:35:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="d33e8400-e29b-41d4-a716-44665544F033"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440033"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T12:40:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="d34e8400-e29b-41d4-a716-44665544F034"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440034"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T12:45:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="d35e8400-e29b-41d4-a716-44665544F035"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440035"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T12:50:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="d36e8400-e29b-41d4-a716-44665544F036"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440036"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T12:55:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="d37e8400-e29b-41d4-a716-44665544F037"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440037"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T13:00:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="d38e8400-e29b-41d4-a716-44665544F038"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440038"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T13:05:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="d39e8400-e29b-41d4-a716-44665544F039"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440039"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T13:10:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="d40e8400-e29b-41d4-a716-44665544F040"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440040"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T13:15:00"/>
+        </insert>
+
+        <insert tableName="vehicle_images">
+            <column name="id" value="e41e8400-e29b-41d4-a716-44665544F041"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440041"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T13:20:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="e42e8400-e29b-41d4-a716-44665544F042"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440042"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T13:25:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="e43e8400-e29b-41d4-a716-44665544F043"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440043"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T13:30:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="e44e8400-e29b-41d4-a716-44665544F044"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440044"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T13:35:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="e45e8400-e29b-41d4-a716-44665544F045"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440045"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T13:40:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="e46e8400-e29b-41d4-a716-44665544F046"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440046"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T13:45:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="e47e8400-e29b-41d4-a716-44665544F047"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440047"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T13:50:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="e48e8400-e29b-41d4-a716-44665544F048"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440048"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T13:55:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="e49e8400-e29b-41d4-a716-44665544F049"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440049"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T14:00:00"/>
+        </insert>
+        <insert tableName="vehicle_images">
+            <column name="id" value="e51e8400-e29b-41d4-a716-44665544F051"/>
+            <column name="vehicle_id" value="550e8400-e29b-41d4-a716-446655440051"/>
+            <column name="url" value="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&amp;w=2070"/>
+            <column name="is_main" valueBoolean="true"/>
+            <column name="created_at" valueDate="2024-05-20T14:05:00"/>
         </insert>
     </changeSet>
 </databaseChangeLog>
