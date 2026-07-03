@@ -22,6 +22,38 @@
     margin-bottom: 2rem;
 }
 
+.clear-dates-btn {
+    background: rgba(255, 255, 255, 0.03);
+    color: #a0a0a0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    backdrop-filter: blur(5px);
+}
+
+.clear-dates-btn:hover {
+    color: #fff;
+    background: rgba(255, 77, 0, 0.08);
+    border-color: rgba(255, 77, 0, 0.4);
+    box-shadow: 0 0 20px rgba(255, 77, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+.clear-dates-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 0 10px rgba(255, 77, 0, 0.05);
+}
+
 /* FILTERS & SEARCH BAR (VIBRANT) */
 .filters-bar {
     display: flex;

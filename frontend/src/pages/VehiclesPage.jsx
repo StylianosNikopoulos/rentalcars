@@ -91,7 +91,7 @@ const VehiclesPage = () => {
                             <span className="days-badge">({rentalDays} {rentalDays === 1 ? 'day' : 'days'})</span>
                         </div>
                         <button className="clear-dates-btn" onClick={() => navigate('/vehicles')}>
-                            RESET DATES
+                            <i className="fas fa-undo-alt" style={{ fontSize: '0.85rem' }}></i> RESET DATES
                         </button>
                     </div>
                 )}
