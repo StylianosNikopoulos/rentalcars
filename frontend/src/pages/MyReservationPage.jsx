@@ -172,7 +172,6 @@ const MyReservationPage = () => {
                                             <i className="fas fa-car car-placeholder-icon"></i>
                                             <div>
                                                 <h4>{res.vehicleBrand} <span>{res.vehicleName}</span></h4>
-                                                <span className="res-id-tag">ID: #{res.id.substring(0, 8)}</span>
                                             </div>
                                         </div>
                                         
