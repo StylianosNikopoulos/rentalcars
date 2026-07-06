@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public interface VehicleService {
     Vehicle createVehicle(VehicleRequest request);
-    Page<Vehicle> getAllVehicles(Pageable pageable);
+    Page<Vehicle> getAllVehicles(String search, Pageable pageable);
     Vehicle getVehicleById(UUID id);
     Vehicle updateVehicle(UUID id, VehicleRequest request);
     void deleteVehicle(UUID id);

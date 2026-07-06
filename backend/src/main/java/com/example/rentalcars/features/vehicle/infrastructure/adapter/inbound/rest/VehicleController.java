@@ -28,8 +28,8 @@ public class VehicleController {
     private final VehicleRestMapper vehicleRestMapper;
 
     @GetMapping
-    public ResponseEntity<Page<VehicleResponse>> getAllVehicles(@PageableDefault(size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        var vehicles = vehicleService.getAllVehicles(pageable).map(vehicleRestMapper::toResponse);
+    public ResponseEntity<Page<VehicleResponse>> getAllVehicles(@RequestParam(required = false) String search, @PageableDefault(size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        var vehicles = vehicleService.getAllVehicles(search, pageable).map(vehicleRestMapper::toResponse);
         return ResponseEntity.ok(vehicles);
     }
 

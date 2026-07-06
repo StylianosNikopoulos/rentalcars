@@ -30,4 +30,10 @@ public interface VehicleJpaRepository extends JpaRepository<VehicleJpaEntity, UU
             );
 
     Page<VehicleJpaEntity> findAll(Pageable pageable);
+
+    @Query("SELECT v FROM VehicleJpaEntity v WHERE " +
+            "(:search IS NULL OR TRIM(:search) = '' " +
+            "OR LOWER(v.brand) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "OR LOWER(v.model) LIKE LOWER(CONCAT('%', :search, '%')))")
+    Page<VehicleJpaEntity> findAllWithSearch(@Param("search") String search, Pageable pageable);
 }
