@@ -7,6 +7,10 @@ import com.example.rentalcars.features.vehicle.domain.port.inbound.VehicleServic
 import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.mapper.VehicleRestMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +28,8 @@ public class VehicleController {
     private final VehicleRestMapper vehicleRestMapper;
 
     @GetMapping
-    public ResponseEntity<List<VehicleResponse>> getAllVehicles(){
-        var vehicles = vehicleService.getAllVehicles().stream().map(vehicleRestMapper::toResponse).toList();
+    public ResponseEntity<Page<VehicleResponse>> getAllVehicles(@PageableDefault(size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        var vehicles = vehicleService.getAllVehicles(pageable).map(vehicleRestMapper::toResponse);
         return ResponseEntity.ok(vehicles);
     }
 

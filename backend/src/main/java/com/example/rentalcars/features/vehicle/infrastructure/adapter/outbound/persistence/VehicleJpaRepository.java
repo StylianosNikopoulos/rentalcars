@@ -1,6 +1,8 @@
 package com.example.rentalcars.features.vehicle.infrastructure.adapter.outbound.persistence;
 
 import jakarta.persistence.LockModeType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +28,6 @@ public interface VehicleJpaRepository extends JpaRepository<VehicleJpaEntity, UU
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
             );
+
+    Page<VehicleJpaEntity> findAll(Pageable pageable);
 }

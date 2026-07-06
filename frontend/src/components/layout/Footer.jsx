@@ -8,16 +8,16 @@ const Footer = () => {
             <div className="footer-main-container">
                 <div className="footer-top-grid">
                     <div className="footer-brand-column">
-                        <Link to="/" className="footer-main-logo">RENTAL<span>CAR</span></Link>
-                        <p className="footer-brand-tagline">
-                        </p>
+                        <Link to="/" className="footer-main-logo">
+                            RENTAL<span>CAR</span>
+                        </Link>
                     </div>
 
                     <div className="footer-nav-column">
                         <h4>Company</h4>
                         <div className="footer-links-list">
                             <Link to="/about">About Us</Link>
-                            <Link to="/vehicles">Our Fleet</Link>
+                            <Link to="/vehicles">Fleet</Link>
                         </div>
                     </div>
 
@@ -40,7 +40,10 @@ const Footer = () => {
                 <div className="footer-main-divider"></div>
 
                 <div className="footer-bottom-bar">
-                    <p className="footer-copyright">&copy; {new Date().getFullYear()} RENTALCAR</p>
+                    <p className="footer-copyright">
+                        &copy; {new Date().getFullYear()} RentalCar. All rights reserved.
+                    </p>
+
                     <div className="footer-social-links">
                         <a href="https://instagram.com" target="_blank" rel="noreferrer">INSTAGRAM</a>
                         <a href="https://facebook.com" target="_blank" rel="noreferrer">FACEBOOK</a>

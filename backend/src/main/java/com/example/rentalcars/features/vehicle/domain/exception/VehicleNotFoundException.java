@@ -8,8 +8,4 @@ public class VehicleNotFoundException extends NotFoundException {
     public VehicleNotFoundException(UUID id) {
         super("Vehicle with ID " + id + " not found", "VEHICLE_NOT_FOUND");
     }
-
-    public VehicleNotFoundException(String licensePlate) {
-        super("Vehicle with license plate " + licensePlate + " not found", "VEHICLE_NOT_FOUND");
-    }
 }

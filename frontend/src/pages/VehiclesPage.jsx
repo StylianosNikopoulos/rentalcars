@@ -28,16 +28,19 @@ const VehiclesPage = () => {
         ? Math.max(1, Math.ceil((new Date(selectedEnd) - new Date(selectedStart)) / (1000 * 60 * 60 * 24)))
         : 0;
 
-    const { data: vehicles = [], isLoading, isError } = useQuery({
-        queryKey: ['vehicles', selectedStart, selectedEnd], 
+    const { data: responseData = {}, isLoading, isError } = useQuery({
+        queryKey: ['vehicles', selectedStart, selectedEnd, currentPage, sortOrder, searchTerm], 
         queryFn: async () => {
             if (selectedStart && selectedEnd) {
                 return await vehicleService.getAvailableVehicles(selectedStart, selectedEnd);
             }
-            return await vehicleService.getAllVehicles();
+            return await vehicleService.getAllVehicles(currentPage - 1, itemsPerPage, sortOrder, searchTerm);
         },
-        staleTime: 1000 * 60 * 5, 
+        staleTime: 1000 * 60 * 5,
+        keepPreviousData: true
     });
+
+    const vehicles = Array.isArray(responseData) ? responseData : (responseData.content || []);
 
     const getProcessedVehicles = () => {
         let filtered = vehicles.filter(car => 
@@ -57,8 +60,12 @@ const VehiclesPage = () => {
     
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredVehicles.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(filteredVehicles.length / itemsPerPage);
+
+    const currentItems = responseData.page 
+        ? filteredVehicles 
+        : filteredVehicles.slice(indexOfFirstItem, indexOfLastItem);
+
+    const totalPages = responseData.page?.totalPages || Math.ceil(vehicles.length / itemsPerPage);
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
@@ -166,7 +173,7 @@ const VehiclesPage = () => {
                                     </div>
 
                                     <div className="card-mini-specs">
-                                        <span><i className="fas fa-pump-soap"></i> {car.fuelType}</span>
+                                        <span><i className="fas fa-gas-pump"></i> {car.fuelType}</span>
                                         <span><i className="fas fa-cog"></i> {car.licensePlate}</span>
                                     </div>
 

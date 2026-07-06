@@ -1,11 +1,10 @@
 package com.example.rentalcars.features.payment.domain.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import com.example.rentalcars.core.exception.BusinessException;
 
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-public class InvalidPaymentStatusException extends RuntimeException {
+public class InvalidPaymentStatusException extends BusinessException {
+
     public InvalidPaymentStatusException(String message) {
-        super(message);
+        super(message, "INVALID_PAYMENT_STATUS");
     }
 }

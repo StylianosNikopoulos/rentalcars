@@ -1,6 +1,9 @@
 package com.example.rentalcars.features.vehicle.domain.port.outbound;
 
 import com.example.rentalcars.features.vehicle.domain.model.Vehicle;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +13,7 @@ public interface VehicleRepository {
     Vehicle save(Vehicle vehicle);
     Optional<Vehicle> findById(UUID id);
     Optional<Vehicle> findByIdWithLock(UUID id);
-    List<Vehicle> findAllVehicles();
+    Page<Vehicle> findAllVehicles(Pageable pageable);
     boolean existsByLicensePlate(String licensePlate);
     void deleteById(UUID id);
     List<Vehicle> findAvailableVehicles(LocalDateTime start, LocalDateTime end);

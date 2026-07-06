@@ -12,6 +12,8 @@ import com.example.rentalcars.features.vehicle.domain.model.VehicleStatus;
 import com.example.rentalcars.features.vehicle.domain.exception.VehicleNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,8 +51,8 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<Vehicle> getAllVehicles() {
-        return vehicleRepository.findAllVehicles();
+    public Page<Vehicle> getAllVehicles(Pageable pageable) {
+        return vehicleRepository.findAllVehicles(pageable);
     }
 
     @Override

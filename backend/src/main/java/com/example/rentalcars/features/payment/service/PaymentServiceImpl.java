@@ -7,7 +7,6 @@ import com.example.rentalcars.features.payment.domain.exception.PaymentNotFoundE
 import com.example.rentalcars.features.payment.domain.model.Payment;
 import com.example.rentalcars.features.payment.domain.model.PaymentStatus;
 import com.example.rentalcars.features.payment.domain.port.inbound.PaymentService;
-import com.example.rentalcars.features.payment.domain.port.outbound.PaymentGateway;
 import com.example.rentalcars.features.payment.domain.port.outbound.PaymentRepository;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
@@ -23,15 +22,13 @@ import java.util.UUID;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
-    private final PaymentGateway paymentGateway;
     private final PaymentRepository paymentRepository;
     private final ReservationService reservationService;
 
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
-    public PaymentServiceImpl(PaymentGateway paymentGateway, PaymentRepository paymentRepository, @Lazy ReservationService reservationService) {
-        this.paymentGateway = paymentGateway;
+    public PaymentServiceImpl(PaymentRepository paymentRepository, @Lazy ReservationService reservationService) {
         this.paymentRepository = paymentRepository;
         this.reservationService = reservationService;
     }
@@ -73,7 +70,7 @@ public class PaymentServiceImpl implements PaymentService {
             return session.getUrl();
 
         } catch (StripeException e) {
-            throw new StripePaymentException("Stripe Session Creation Failed: " + e.getMessage());
+            throw new StripePaymentException("Stripe Session Creation Failed", "STRIPE_PAYMENT_FAILED");
         }
     }
 
@@ -109,7 +106,7 @@ public class PaymentServiceImpl implements PaymentService {
             paymentRepository.save(payment);
 
         } catch (StripeException e) {
-            throw new StripePaymentException("Error communication with Stripe for Refund: " + e.getUserMessage());
+            throw new StripePaymentException("Error communication with Stripe for Refund", "STRIPE_REFUND_FAILED");
         }
     }
 
@@ -127,6 +124,6 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment getPaymentByReservationId(UUID reservationId) {
         return paymentRepository.findByReservationId(reservationId)
-                .orElseThrow(() -> new PaymentNotFoundException("Payment not found for reservation: " + reservationId));
+                .orElseThrow(() -> new PaymentNotFoundException(reservationId.toString()));
     }
 }

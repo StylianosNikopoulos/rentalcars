@@ -138,6 +138,20 @@ const MyReservationPage = () => {
             toast.dismiss(loadingToast);
             toast.error("Failed to initialize payment");
         }
+
+        try {
+            const data = await paymentService.initiatePayment(res.id);
+
+            if (!data?.url) {
+                toast.error(error.response?.data?.message || "Payment session failed.");
+                return;
+            }
+
+            window.location.href = data.url;
+
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to initialize payment.");
+        }
     };
 
 
