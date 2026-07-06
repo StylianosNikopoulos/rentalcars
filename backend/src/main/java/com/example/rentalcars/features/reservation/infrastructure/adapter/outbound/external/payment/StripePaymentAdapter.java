@@ -5,6 +5,7 @@ import com.example.rentalcars.features.payment.domain.exception.StripePaymentExc
 import com.example.rentalcars.features.payment.domain.port.outbound.PaymentGateway;
 import com.example.rentalcars.features.payment.domain.model.PaymentIntentResponse;
 import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
 import jakarta.annotation.PostConstruct;
@@ -35,8 +36,8 @@ public class StripePaymentAdapter implements PaymentGateway {
 
             PaymentIntent intent = PaymentIntent.create(params);
             return new PaymentIntentResponse(intent.getId(), intent.getClientSecret());
-        } catch (Exception e) {
-            throw new StripePaymentException("Stripe payment failed: " + e.getMessage());
+        } catch (StripeException e) {
+            throw new StripePaymentException("Stripe communication failed", "STRIPE_PAYMENT_FAILED");
         }
     }
 }
