@@ -19,7 +19,8 @@ const Home = () => {
         const fetchVehicles = async () => {
             try {
                 const data = await vehicleService.getAllVehicles();
-                setVehicles(data.slice(0, 3));
+                const vehiclesArray = data.content || [];
+                setVehicles(vehiclesArray.slice(0, 3));
             } catch (error) {
                 console.error("Error fetching vehicles", error);
             } finally {
@@ -45,9 +46,16 @@ const Home = () => {
         <div className="home-page">
             <header className="hero">
                 <div className="hero-content">
-                    <span className="hero-badge">Premium Car Rental</span>
-                    <h1>Luxury <br/><span className="text-outline">Vehicles</span></h1>
-                    <p>Unlock the journey of your life with our exclusive fleet of world-class automobiles.</p>
+                    <span className="hero-badge">Premium Car Rental Service</span>
+
+                    <h1>
+                        Luxury <br/>
+                        <span className="text-outline">Car Rentals</span>
+                    </h1>
+
+                    <p>
+                        Discover premium vehicles and enjoy a seamless rental experience designed for comfort, reliability, and convenience.
+                    </p>
                     
                     <div className="search-widget-v2">
                         <div className="search-field">
@@ -73,7 +81,7 @@ const Home = () => {
                                     }}
                                     minDate={new Date()}
                                     isClearable={true}
-                                    placeholderText="Select Dates Range"
+                                    placeholderText="Select pickup and return dates"
                                     className="custom-home-datepicker" 
                                     dateFormat="dd MMM yyyy"
                                 />
@@ -90,15 +98,15 @@ const Home = () => {
             {/* FEATURED VEHICLES SECTION */}
             <section className="featured-fleet-section">
                 <div className="section-header-v2">
-                    <h2>Featured Fleet</h2>
-                    <p>Explore our most popular vehicles available right now</p>
+                    <h2>Featured Vehicles</h2>
+                    <p>Hand-selected vehicles available for immediate booking</p>
                 </div>
 
                 {loading ? (
                     <div className="loader-container" style={{ minHeight: '350px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                         <div className="loader"></div>
                         <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px' }}>
-                            FETCHING VEHICLES...
+                            FETCHING AVAILABLE VEHICLES...
                         </span>
                     </div>
                 ) : (
@@ -111,18 +119,24 @@ const Home = () => {
                                         alt={`${car.brand} ${car.model}`} 
                                     />
                                 </div>
+
                                 <div className="home-car-info">
                                     <h3>{car.brand} <span>{car.model}</span></h3>
+
                                     <div className="home-car-specs-row">
                                         <span><i className="fas fa-gas-pump"></i> {car.fuelType}</span>
                                         <span><i className="fas fa-cog"></i> {car.licensePlate}</span>
                                     </div>
+
                                     <div className="home-car-price-row">
                                         <div className="home-price">
                                             <strong>€{car.dailyPrice}</strong>
                                             <span>/ day</span>
                                         </div>
-                                        <button className="home-view-deal-btn">Book Now</button>
+
+                                        <button className="home-view-deal-btn">
+                                            View Details
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -134,30 +148,33 @@ const Home = () => {
             {/* WHY US FEATURES SECTION */}
             <section className="features-section">
                 <div className="section-header-v2">
-                    <h2>The Rental Experience</h2>
-                    <p>Why corporate professionals and luxury travelers choose our services</p>
+                    <h2>Why Choose Us</h2>
+                    <p>A premium rental experience trusted by business and leisure travelers</p>
                 </div>
+
                 <div className="features-grid">
                     <div className="feature-card">
                         <div className="feature-icon">
                             <i className="fas fa-shield-alt"></i>
                         </div>
-                        <h3>Fully Insured</h3>
-                        <p>Comprehensive coverage for total peace of mind on every mile you drive.</p>
+                        <h3>Comprehensive Insurance</h3>
+                        <p>Full coverage options to ensure a safe and worry-free driving experience.</p>
                     </div>
+
                     <div className="feature-card">
                         <div className="feature-icon">
                             <i className="fas fa-road"></i>
                         </div>
-                        <h3>Unlimited Miles</h3>
-                        <p>No boundaries, no limits. Explore the destination at your own pace.</p>
+                        <h3>No Mileage Limits</h3>
+                        <p>Drive freely without restrictions on distance or destination.</p>
                     </div>
+
                     <div className="feature-card">
                         <div className="feature-icon">
                             <i className="fas fa-headset"></i>
                         </div>
-                        <h3>24/7 Support</h3>
-                        <p>Our dedicated team is always a call away, anywhere, anytime.</p>
+                        <h3>24/7 Customer Support</h3>
+                        <p>Dedicated support team available anytime to assist you during your rental.</p>
                     </div>
                 </div>
             </section>

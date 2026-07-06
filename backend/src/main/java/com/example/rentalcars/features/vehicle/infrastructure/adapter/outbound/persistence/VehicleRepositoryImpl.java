@@ -3,6 +3,8 @@ package com.example.rentalcars.features.vehicle.infrastructure.adapter.outbound.
 import com.example.rentalcars.features.vehicle.domain.model.Vehicle;
 import com.example.rentalcars.features.vehicle.domain.port.outbound.VehicleRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,10 +36,9 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     }
 
     @Override
-    public List<Vehicle> findAllVehicles() {
-        return jpaRepository.findAll().stream()
-                .map(vehiclePersistenceMapper::toDomain)
-                .toList();
+    public Page<Vehicle> findAllVehicles(Pageable pageable) {
+        return jpaRepository.findAll(pageable)
+                .map(vehiclePersistenceMapper::toDomain);
     }
 
     @Override

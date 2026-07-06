@@ -1,10 +1,21 @@
 import api from '../api/axios';
 
 const vehicleService = {
-    getAllVehicles: async () => {
-        const response = await api.get('/vehicles');
+    getAllVehicles: async (page = 0, size = 9, sortOrder = 'default', searchTerm = '') => {
+        let sortParam = 'id,desc';
+        if (sortOrder === 'low') sortParam = 'dailyPrice,asc';
+        if (sortOrder === 'high') sortParam = 'dailyPrice,desc';
+
+        const response = await api.get('/vehicles', {
+            params: {
+                page: page,
+                size: size,
+                sort: sortParam,
+                search: searchTerm
+            }
+        });
         return response.data;
-    }, 
+    },
 
     getVehicleById: async (id) => {
         const response = await api.get(`/vehicles/${id}`);

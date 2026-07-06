@@ -47,13 +47,14 @@ const AdminPage = () => {
 
     // React Query: Fetching Data ---
     
-    const { data: vehicles = [], isLoading: loadingVehicles } = useQuery({
-        queryKey: ['admin-vehicles'],
-        queryFn: () => vehicleService.getAllVehicles(),
+    const { data: vehicleResponse = {}, isLoading: loadingVehicles } = useQuery({
+        queryKey: ['admin-vehicles', vehiclePage],
+        queryFn: () => vehicleService.getAllVehicles(vehiclePage - 1, itemsPerPage),
         enabled: activeTab === 'vehicles',
         refetchInterval: 10000,
         staleTime: 0,
-        refetchOnMount: true
+        refetchOnMount: true,
+        keepPreviousData: true
     });
 
     const { data: users = [], isLoading: loadingUsers } = useQuery({
@@ -75,12 +76,8 @@ const AdminPage = () => {
         refetchIntervalInBackground: true
     });
 
-    // Vehicles Pagination
-    const totalVehiclePages = Math.ceil(vehicles.length / itemsPerPage);
-    const currentVehicles = vehicles.slice(
-        (vehiclePage - 1) * itemsPerPage,
-        vehiclePage * itemsPerPage
-    );
+    const currentVehicles = vehicleResponse.content || [];
+    const totalVehiclePages = vehicleResponse.page?.totalPages || 1;
 
     // Users Pagination
     const totalUserPages = Math.ceil(users.length / itemsPerPage);
@@ -297,7 +294,7 @@ const AdminPage = () => {
     const PaginationControls = ({ currentPage, totalPages, onPageChange }) => {
         if (totalPages <= 1) return null;
         return (
-            <div className="pagination" style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px' }}>
+            <div className="pagination" style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', Grid: 'center', alignItems: 'center', gap: '15px' }}>
                 <button 
                     onClick={() => onPageChange(prev => Math.max(prev - 1, 1))} 
                     disabled={currentPage === 1} 
