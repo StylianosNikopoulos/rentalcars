@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import '../assets/styles/admin.css';
 import vehicleService from '../services/vehicleService';
@@ -21,6 +21,19 @@ const AdminPage = () => {
     const [userPage, setUserPage] = useState(1);
     const [reservationPage, setReservationPage] = useState(1);
     const itemsPerPage = 10;
+
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, [vehiclePage, userPage, reservationPage]);
+
+    useEffect(() => {
+        setVehiclePage(1);
+        setUserPage(1);
+        setReservationPage(1);
+    }, [activeTab]);
 
     const [newVehicle, setNewVehicle] = useState({
         brand: '',

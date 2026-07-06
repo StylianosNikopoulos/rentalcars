@@ -23,21 +23,17 @@ const RegisterPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const loadingToast = toast.loading('Creating account...');
-        
+
         try {
             await register(formData);
             toast.success('Account created successfully!', { id: loadingToast });
-            navigate('/'); 
+            navigate('/');
         } catch (error) {
-            const errorCode = error.response?.data?.code;
-
-            if (errorCode === "EMAIL_ALREADY_EXISTS") {
-                toast.error("This email is already registered", { id: loadingToast });
-            } else if (errorCode === "INVALID_DATES") { 
-                toast.error("The provided dates are invalid.", { id: loadingToast });
-            } else {
-                toast.error(error.response?.data?.message || "Registration failed. Please try again.", { id: loadingToast });
-            }
+            toast.error(
+                error.response?.data?.message ||
+                'Registration failed. Please try again.',
+                { id: loadingToast }
+            );
         }
     };
 

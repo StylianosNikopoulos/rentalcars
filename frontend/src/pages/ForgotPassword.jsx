@@ -15,7 +15,7 @@ const ForgotPassword = () => {
             setIsSubmitted(true);
             toast.success("Instructions sent if the account exists.");
         } catch (error) {
-            toast.error("Something went wrong. Try again later.");
+            toast.error(error.response?.data?.message || "Something went wrong. Try again later.");
         }
     };
 

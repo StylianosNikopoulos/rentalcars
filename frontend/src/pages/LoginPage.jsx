@@ -22,12 +22,13 @@ const LoginPage = () => {
             toast.success('Welcome back!', { id: loadingToast });
             navigate('/', { replace: true }); 
         } catch (error) {
-            const errorCode = error.response?.data?.code;
 
-            if (errorCode === "INVALID_CREDENTIALS") {
-                toast.error("Invalid email or password.", { id: loadingToast });
+            const { code, message } = error.response?.data || {};
+
+            if (code === "INVALID_CREDENTIALS") {
+                toast.error(message, { id: loadingToast });
             } else {
-                toast.error(error.response?.data?.message || "Login failed.", { id: loadingToast });
+                toast.error(message || "Login failed.", { id: loadingToast });
             }
         }
     };
