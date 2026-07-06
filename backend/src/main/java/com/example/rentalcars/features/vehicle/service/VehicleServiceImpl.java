@@ -51,8 +51,8 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Page<Vehicle> getAllVehicles(Pageable pageable) {
-        return vehicleRepository.findAllVehicles(pageable);
+    public Page<Vehicle> getAllVehicles(String search, Pageable pageable) {
+        return vehicleRepository.findAllVehicles(search, pageable);
     }
 
     @Override

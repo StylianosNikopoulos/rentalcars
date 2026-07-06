@@ -42,8 +42,14 @@ const VehiclesPage = () => {
 
     const vehicles = Array.isArray(responseData) ? responseData : (responseData.content || []);
 
-    const getProcessedVehicles = () => {
-        let filtered = vehicles.filter(car => 
+    let currentItems = [];
+    let totalPages = 1;
+
+    if (responseData.page) {
+        currentItems = vehicles;
+        totalPages = responseData.page.totalPages;
+    } else {
+        const filtered = vehicles.filter(car => 
             car.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
             car.model.toLowerCase().includes(searchTerm.toLowerCase())
         );
@@ -53,19 +59,13 @@ const VehiclesPage = () => {
         } else if (sortOrder === "high") {
             filtered.sort((a, b) => b.dailyPrice - a.dailyPrice);
         }
-        return filtered;
-    };
 
-    const filteredVehicles = getProcessedVehicles();
-    
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
-    const currentItems = responseData.page 
-        ? filteredVehicles 
-        : filteredVehicles.slice(indexOfFirstItem, indexOfLastItem);
-
-    const totalPages = responseData.page?.totalPages || Math.ceil(vehicles.length / itemsPerPage);
+        const indexOfLastItem = currentPage * itemsPerPage;
+        const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+        
+        currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
+        totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+    }
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
@@ -144,7 +144,7 @@ const VehiclesPage = () => {
                         FETCHING VEHICLES...
                     </span>
                 </div>
-            ) : filteredVehicles.length === 0 ? (
+            ) : currentItems.length === 0 ? (
                 <div className="no-results" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
                     <i className="fas fa-search" style={{ fontSize: '2rem', color: '#ff4d00', marginBottom: '1rem', display: 'block' }}></i>
                     No vehicles matching your criteria were found.

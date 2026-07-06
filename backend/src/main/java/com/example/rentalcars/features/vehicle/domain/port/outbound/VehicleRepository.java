@@ -13,7 +13,7 @@ public interface VehicleRepository {
     Vehicle save(Vehicle vehicle);
     Optional<Vehicle> findById(UUID id);
     Optional<Vehicle> findByIdWithLock(UUID id);
-    Page<Vehicle> findAllVehicles(Pageable pageable);
+    Page<Vehicle> findAllVehicles(String search, Pageable pageable);
     boolean existsByLicensePlate(String licensePlate);
     void deleteById(UUID id);
     List<Vehicle> findAvailableVehicles(LocalDateTime start, LocalDateTime end);
