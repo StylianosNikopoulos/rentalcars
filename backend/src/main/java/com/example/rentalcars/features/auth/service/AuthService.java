@@ -34,6 +34,7 @@ public class AuthService implements AuthUseCase {
     private final RefreshTokenRepository refreshTokenRepository;
     private final RefreshTokenService refreshTokenService;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Override
     public AuthResponse login(LoginRequest request) {
@@ -124,7 +125,7 @@ public class AuthService implements AuthUseCase {
             user.setResetTokenExpiry(LocalDateTime.now().plusHours(1));
             userService.save(user);
 
-            //TODO need to add actual email Service
+            emailService.sendPasswordResetEmail(email, token);
             log.info("Password reset token for {}: {}", email, token);
         } catch (UserNotFoundException e) {
             log.warn("Password reset requested for non existing email: {}", email);
