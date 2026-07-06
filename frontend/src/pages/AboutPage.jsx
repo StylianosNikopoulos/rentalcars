@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import '../assets/styles/about.css';
 
 const AboutPage = () => {
@@ -11,67 +11,71 @@ const AboutPage = () => {
 
     return (
         <div className="about-container">
-        <div className="portfolio-alert">
-            <div className="alert-content">
-                <i className="fas fa-laptop-code"></i>
-                <div className="alert-text">
-                    <h4>Software Engineering Showcase</h4>
-                    <p>
-                        This platform is a <strong>professional technical demonstration</strong>. 
-                        While it features a fully functional booking engine and payment simulation, 
-                        it is intended for <strong>portfolio display only</strong>. No real-world 
-                        rentals are processed.
-                    </p>
+
+            <div className="portfolio-alert">
+                <div className="alert-content">
+                    <i className="fas fa-info-circle"></i>
+                    <div className="alert-text">
+                        <h4>Engineering Portfolio Project</h4>
+                        <p>
+                            This application is a full-stack software engineering project
+                            built for demonstration purposes. It simulates a complete car rental
+                            workflow including booking, authentication, and payments.
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div className="about-content-wrapper">
-            <div className="section-header">
-                <p>The Vision</p>
-                <h2>Engineered for <span className="text-primary">Performance</span></h2>
-            </div>
+            <div className="about-content-wrapper">
 
-        <div className="about-grid">
-        <div className="about-card">
-            <div className="about-icon"><i className="fab fa-docker"></i></div>
-            <h3>Containerized Deployment</h3>
-            <p>
-                The entire ecosystem is <strong>Dockerized</strong> for seamless scaling and 
-                deployment. Using <strong>Docker Compose</strong>, the Spring Boot API and 
-                PostgreSQL database are orchestrated to ensure environment consistency.
-            </p>
-        </div>
-
-            <div className="about-card">
-                <div className="about-icon"><i className="fas fa-server"></i></div>
-                <h3>Spring Boot Backend</h3>
-                <p>
-                    A high-performance <strong>RESTful API</strong> built with Java and Spring Boot. 
-                    Features complex business logic, <strong>JPA/Hibernate</strong> for data 
-                    persistence, and advanced filtering for vehicle availability.
-                </p>
-             </div>
-                <div className="about-card">
-                    <div className="about-icon"><i className="fas fa-shield-alt"></i></div>
-                    <h3>Secure Auth Flow</h3>
-                    <p>
-                        Enterprise-grade security using <strong>JWT (JSON Web Tokens)</strong>. 
-                        Implementation of custom Security Filters and Role-Based Access Control 
-                        to protect user data and administrative actions.
-                    </p>
+                <div className="section-header">
+                    <p>Overview</p>
+                    <h2>Built with a focus on <span className="text-primary">scalability & clean architecture</span></h2>
                 </div>
-             </div>
-            <div className="about-cta-section">
-                <p>Want to see the technical implementation?</p>
-                <div style={{display: 'flex', gap: '15px', justifyContent: 'center'}}>
-                    <button className="explore-btn" onClick={() => navigate('/vehicles')}>
-                        Try the Demo
+
+                <div className="about-grid">
+
+                    <div className="about-card">
+                        <div className="about-icon"><i className="fab fa-docker"></i></div>
+                        <h3>Containerized Architecture</h3>
+                        <p>
+                            The backend and database are containerized to ensure consistent
+                            development and deployment environments using Docker.
+                        </p>
+                    </div>
+
+                    <div className="about-card">
+                        <div className="about-icon"><i className="fas fa-server"></i></div>
+                        <h3>Backend API</h3>
+                        <p>
+                            Built with Java Spring Boot, following REST principles with layered
+                            architecture, JPA persistence, and structured business logic.
+                        </p>
+                    </div>
+
+                    <div className="about-card">
+                        <div className="about-icon"><i className="fas fa-shield-alt"></i></div>
+                        <h3>Authentication & Security</h3>
+                        <p>
+                            Secure authentication system using JWT and role-based access control
+                            to protect user and admin functionality.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div className="about-cta-section">
+                    <p>Explore the live demo and system flow</p>
+                    <button
+                        className="explore-btn"
+                        onClick={() => navigate('/vehicles')}
+                    >
+                        Try Demo
                     </button>
                 </div>
+
             </div>
         </div>
-    </div>
     );
 };
 

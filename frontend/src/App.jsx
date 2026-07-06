@@ -19,6 +19,7 @@ import AboutPage from './pages/AboutPage';
 import AdminPage from './pages/AdminPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import CookieConsent from './components/layout/CookieConsent';
 
 const AdminRoute = ({ children }) => {
   const { user } = useAuth();
@@ -48,6 +49,8 @@ function App() {
         
         <Navbar />
         
+        <CookieConsent />
+
         <main style={{ minHeight: '80vh' }}>
           <Routes>
             <Route path="/" element={<Home />} />
