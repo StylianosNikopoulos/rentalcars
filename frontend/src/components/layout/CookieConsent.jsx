@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../../assets/styles/cookieConsent.css';
+import { useLang } from '../../context/LangContext';
+import { translations } from '../../i18n/translations';
 
 const GA_ID = import.meta.env.VITE_GA_ID;
 
@@ -34,6 +36,8 @@ const loadAnalytics = () => {
 
 const CookieConsent = () => {
     const [visible, setVisible] = useState(false);
+    const { lang } = useLang();
+    const t = translations[lang].cookieConsent;
 
     useEffect(() => {
         const consent = localStorage.getItem('cookieConsent');
@@ -75,18 +79,18 @@ const CookieConsent = () => {
     return (
         <div className="cookie-banner show">
             <div className="cookie-text-section">
-                <h4>🍪 Cookies & Privacy</h4>
+                <h4>🍪 {t.title}</h4>
                 <p>
-                    We use cookies to improve your experience and analyze traffic.
+                    {t.text}
                 </p>
             </div>
 
             <div className="cookie-actions">
                 <button className="cookie-btn cookie-reject" onClick={handleReject}>
-                    Reject
+                    {t.btnReject}
                 </button>
                 <button className="cookie-btn cookie-accept" onClick={handleAccept}>
-                    Accept
+                    {t.btnAccept}
                 </button>
             </div>
         </div>

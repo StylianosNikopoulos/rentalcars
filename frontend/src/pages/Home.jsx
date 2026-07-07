@@ -4,9 +4,14 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import vehicleService from '../services/vehicleService'; 
 import toast from 'react-hot-toast'; 
+import { useLang } from '../context/LangContext';
+import { translations } from '../i18n/translations';
 import '../assets/styles/home.css';
 
 const Home = () => {
+    const { lang } = useLang();
+    const t = translations[lang].home;
+
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     
@@ -32,7 +37,7 @@ const Home = () => {
 
     const handleSearch = () => {
         if (!startDate || !endDate) {
-            toast.error("Please select both pickup and return dates");
+            toast.error(t.toastDatesError);
             return;
         }
 
@@ -46,30 +51,28 @@ const Home = () => {
         <div className="home-page">
             <header className="hero">
                 <div className="hero-content">
-                    <span className="hero-badge">Premium Car Rental Service</span>
+                    <span className="hero-badge">{t.heroBadge}</span>
 
                     <h1>
-                        Luxury <br/>
-                        <span className="text-outline">Car Rentals</span>
+                        {t.heroTitle1} <br/>
+                        <span className="text-outline">{t.heroTitle2}</span>
                     </h1>
 
-                    <p>
-                        Discover premium vehicles and enjoy a seamless rental experience designed for comfort, reliability, and convenience.
-                    </p>
+                    <p>{t.heroDesc}</p>
                     
                     <div className="search-widget-v2">
                         <div className="search-field">
                             <i className="fas fa-map-marker-alt field-icon"></i>
                             <div className="field-inputs">
-                                <label>Pick-up Location</label>
-                                <input type="text" value="Thessaloniki Airport" readOnly />
+                                <label>{t.locationLabel}</label>
+                                <input type="text" value={t.locationValue} readOnly />
                             </div>
                         </div>
 
                         <div className="search-field">
                             <i className="far fa-calendar-alt field-icon"></i>
                             <div className="field-inputs">
-                                <label>Rental Timeline</label>
+                                <label>{t.timelineLabel}</label>
                                 <DatePicker
                                     selectsRange={true}
                                     startDate={startDate}
@@ -81,7 +84,7 @@ const Home = () => {
                                     }}
                                     minDate={new Date()}
                                     isClearable={true}
-                                    placeholderText="Select pickup and return dates"
+                                    placeholderText={t.placeholderDate}
                                     className="custom-home-datepicker" 
                                     dateFormat="dd MMM yyyy"
                                 />
@@ -89,7 +92,7 @@ const Home = () => {
                         </div>
 
                         <button className="search-btn-v2" onClick={handleSearch}>
-                            Search Fleet <i className="fas fa-arrow-right"></i>
+                            {t.searchBtn} <i className="fas fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>
@@ -98,15 +101,15 @@ const Home = () => {
             {/* FEATURED VEHICLES SECTION */}
             <section className="featured-fleet-section">
                 <div className="section-header-v2">
-                    <h2>Featured Vehicles</h2>
-                    <p>Hand-selected vehicles available for immediate booking</p>
+                    <h2>{t.featuredTitle}</h2>
+                    <p>{t.featuredDesc}</p>
                 </div>
 
                 {loading ? (
                     <div className="loader-container" style={{ minHeight: '350px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                         <div className="loader"></div>
                         <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px' }}>
-                            FETCHING AVAILABLE VEHICLES...
+                            {t.fetching}
                         </span>
                     </div>
                 ) : (
@@ -131,11 +134,11 @@ const Home = () => {
                                     <div className="home-car-price-row">
                                         <div className="home-price">
                                             <strong>€{car.dailyPrice}</strong>
-                                            <span>/ day</span>
+                                            <span>/ {lang === 'en' ? 'day' : 'ημέρα'}</span>
                                         </div>
 
                                         <button className="home-view-deal-btn">
-                                            View Details
+                                            {t.viewDetails}
                                         </button>
                                     </div>
                                 </div>
@@ -148,8 +151,8 @@ const Home = () => {
             {/* WHY US FEATURES SECTION */}
             <section className="features-section">
                 <div className="section-header-v2">
-                    <h2>Why Choose Us</h2>
-                    <p>A premium rental experience trusted by business and leisure travelers</p>
+                    <h2>{t.whyUsTitle}</h2>
+                    <p>{t.whyUsDesc}</p>
                 </div>
 
                 <div className="features-grid">
@@ -157,24 +160,24 @@ const Home = () => {
                         <div className="feature-icon">
                             <i className="fas fa-shield-alt"></i>
                         </div>
-                        <h3>Comprehensive Insurance</h3>
-                        <p>Full coverage options to ensure a safe and worry-free driving experience.</p>
+                        <h3>{t.feat1Title}</h3>
+                        <p>{t.feat1Desc}</p>
                     </div>
 
                     <div className="feature-card">
                         <div className="feature-icon">
                             <i className="fas fa-road"></i>
                         </div>
-                        <h3>No Mileage Limits</h3>
-                        <p>Drive freely without restrictions on distance or destination.</p>
+                        <h3>{t.feat2Title}</h3>
+                        <p>{t.feat2Desc}</p>
                     </div>
 
                     <div className="feature-card">
                         <div className="feature-icon">
                             <i className="fas fa-headset"></i>
                         </div>
-                        <h3>24/7 Customer Support</h3>
-                        <p>Dedicated support team available anytime to assist you during your rental.</p>
+                        <h3>{t.feat3Title}</h3>
+                        <p>{t.feat3Desc}</p>
                     </div>
                 </div>
             </section>

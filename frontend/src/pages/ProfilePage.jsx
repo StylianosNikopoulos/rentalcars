@@ -3,12 +3,17 @@ import { useAuth } from '../hooks/useAuth';
 import userService from '../services/userService';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useLang } from '../context/LangContext';
+import { translations } from '../i18n/translations';
 import '../assets/styles/profile.css';
 import '../assets/styles/swal-custom.css';
 import Swal from 'sweetalert2';
 import authService from '../services/authService';
 
 const ProfilePage = () => {
+    const { lang } = useLang();
+    const t = translations[lang].profile;
+
     const { user: authData, logout } = useAuth();
     const navigate = useNavigate();
     const [fullUser, setFullUser] = useState(null);
@@ -24,7 +29,7 @@ const ProfilePage = () => {
     });
 
     const LICENSE_CATEGORIES = [
-        { value: '', label: 'Select Category' },
+        { value: '', label: t.selectCategory },
         { value: 'AM', label: 'AM (Moped)' },
         { value: 'A1', label: 'A1 (Light Motorcycle)' },
         { value: 'A2', label: 'A2 (Medium Motorcycle)' },
@@ -52,14 +57,14 @@ const ProfilePage = () => {
                         driverLicenseNumber: data.driverLicenseNumber || ''
                     });
                 } catch (error) {
-                    toast.error("Failed to load profile details");
+                    toast.error(t.toastLoadError);
                 } finally {
                     setLoading(false);
                 }
             }
         };
         if (authData) fetchUserData();
-    }, [authData]);
+    }, [authData, t]);
 
     const handleUpdate = async (e) => {
         e.preventDefault();
@@ -67,9 +72,9 @@ const ProfilePage = () => {
             const updated = await userService.updateUser(fullUser.id, editData);
             setFullUser(updated);
             setIsEditing(false);
-            toast.success("Profile updated successfully!");
+            toast.success(t.toastUpdateSuccess);
         } catch (error) {
-            const errorMessage = error.response?.data?.message || "Update failed.";
+            const errorMessage = error.response?.data?.message || t.toastUpdateError;
             const validationErrors = error.response?.data?.errors; 
             
             if (validationErrors) {
@@ -84,22 +89,22 @@ const ProfilePage = () => {
     const handleRequestReset = async () => {
         try {
             await authService.forgotPassword(fullUser.email);
-            toast.success("A reset token has been generated. Please check your email to proceed.");
+            toast.success(t.toastResetSuccess);
         } catch (error) {
-            toast.error("Failed to request reset.");
+            toast.error(t.toastResetError);
         }
     };
 
     const handleDeleteAccount = () => {
         Swal.fire({
-            title: 'ARE YOU SURE?',
-            text: "This action cannot be undone!",
+            title: t.swalDeleteTitle,
+            text: t.swalDeleteText,
             icon: 'warning',
             iconColor: '#ff4d00',
             background: '#151515',
             showCancelButton: true,
-            confirmButtonText: 'DELETE',
-            cancelButtonText: 'CANCEL',
+            confirmButtonText: t.swalConfirmBtn,
+            cancelButtonText: t.swalCancelBtn,
             target: '.profile-container', 
             heightAuto: false, 
             buttonsStyling: false,
@@ -116,28 +121,27 @@ const ProfilePage = () => {
             if (result.isConfirmed) {
                 try {
                     await userService.deleteUser(fullUser.id);
-                    toast.success("Account terminated");
+                    toast.success(t.toastDeleteSuccess);
                     logout();
                     navigate('/');
                 } catch (error) {
-                    toast.error("Error during deletion");
+                    toast.error(t.toastDeleteError);
                 }
             }
         });
     };
 
-
     return (
         <div className="profile-container">
             <header className="profile-header">
-                <h1>Member Account</h1>
-                <p>Exclusive Access & Identity Settings</p>
+                <h1>{t.title}</h1>
+                <p>{t.subtitle}</p>
             </header>
 
             {loading ? (
                 <div className="loader-container" style={{ minHeight: '300px' }}>
                     <div className="loader"></div>
-                    <span style={{color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px'}}>FETCHING PROFILE...</span>
+                    <span style={{color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px'}}>{t.fetching}</span>
                 </div>
             ) : (
                 <div className="profile-grid">
@@ -154,9 +158,9 @@ const ProfilePage = () => {
                                 onClick={() => setIsEditing(!isEditing)}
                             >
                                 {isEditing ? (
-                                    <><i className="fas fa-times"></i> Discard Changes</>
+                                    <><i className="fas fa-times"></i> {t.btnDiscard}</>
                                 ) : (
-                                    <><i className="far fa-edit"></i> Modify Profile</>
+                                    <><i className="far fa-edit"></i> {t.btnModify}</>
                                 )}
                             </button>
                         </div>
@@ -166,31 +170,31 @@ const ProfilePage = () => {
                         {!isEditing ? (
                             <div className="info-display">
                                 <div className="info-group">
-                                    <label className="info-label"><i className="far fa-envelope"></i> Email Address</label>
+                                    <label className="info-label"><i className="far fa-envelope"></i> {t.emailLabel}</label>
                                     <span className="info-value">{fullUser?.email}</span>
                                 </div>
                                 <div className="info-row-grid">
                                     <div className="info-group">
-                                        <label className="info-label"><i className="far fa-user"></i> First Name</label>
+                                        <label className="info-label"><i className="far fa-user"></i> {t.firstNameLabel}</label>
                                         <span className="info-value">{fullUser?.firstName}</span>
                                     </div>
                                     <div className="info-group">
-                                        <label className="info-label"><i className="far fa-user"></i> Last Name</label>
+                                        <label className="info-label"><i className="far fa-user"></i> {t.lastNameLabel}</label>
                                         <span className="info-value">{fullUser?.lastName}</span>
                                     </div>
                                 </div>
                                 <div className="info-group">
-                                    <label className="info-label"><i className="fas fa-mobile-alt"></i> Phone Number</label>
-                                    <span className="info-value">{fullUser?.phoneNumber || 'Not provided'}</span>
+                                    <label className="info-label"><i className="fas fa-mobile-alt"></i> {t.phoneLabel}</label>
+                                    <span className="info-value">{fullUser?.phoneNumber || t.notProvided}</span>
                                 </div>
                                 <div className="info-group">
-                                    <label className="info-label"><i className="far fa-map"></i> Address</label>
-                                    <span className="info-value">{fullUser?.address || 'Not provided'}</span>
+                                    <label className="info-label"><i className="far fa-map"></i> {t.addressLabel}</label>
+                                    <span className="info-value">{fullUser?.address || t.notProvided}</span>
                                 </div>
                                 <div className="info-group">
-                                    <label className="info-label"><i className="fas fa-id-card"></i> Driver's License</label>
+                                    <label className="info-label"><i className="fas fa-id-card"></i> {t.licenseLabel}</label>
                                     <span className="info-value">
-                                        {fullUser?.driverLicenseNumber ? `Category ${fullUser.driverLicenseNumber}` : 'Not provided'}
+                                        {fullUser?.driverLicenseNumber ? `${t.licenseCategory} ${fullUser.driverLicenseNumber}` : t.notProvided}
                                     </span>
                                 </div>
                             </div>
@@ -198,7 +202,7 @@ const ProfilePage = () => {
                             <form onSubmit={handleUpdate} className="edit-form">
                                 <div className="form-row-grid">
                                     <div className="form-group">
-                                        <label>First Name</label>
+                                        <label>{t.firstNameLabel}</label>
                                         <input 
                                             type="text" 
                                             value={editData.firstName}
@@ -207,7 +211,7 @@ const ProfilePage = () => {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>Last Name</label>
+                                        <label>{t.lastNameLabel}</label>
                                         <input 
                                             type="text" 
                                             value={editData.lastName}
@@ -218,7 +222,7 @@ const ProfilePage = () => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Phone Number</label>
+                                    <label>{t.phoneLabel}</label>
                                     <input 
                                         type="text" 
                                         placeholder="6912345678"
@@ -228,7 +232,7 @@ const ProfilePage = () => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Address</label>
+                                    <label>{t.addressLabel}</label>
                                     <input 
                                         type="text" 
                                         placeholder="Leof. Vas. Georgiou 42, Thessaloniki, 54640"
@@ -238,7 +242,7 @@ const ProfilePage = () => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Driver's License Category</label>
+                                    <label>{t.licenseFormLabel}</label>
                                     <div className="select-wrapper">
                                         <select 
                                             className="profile-select"
@@ -255,7 +259,7 @@ const ProfilePage = () => {
                                 </div>
 
                                 <button type="submit" className="confirm-glow-btn submit-profile-btn">
-                                    Save Updates <i className="fas fa-check"></i>
+                                    {t.btnSave} <i className="fas fa-check"></i>
                                 </button>
                             </form>
                         )}
@@ -263,7 +267,7 @@ const ProfilePage = () => {
                         <section className="danger-zone">
                             <div className="danger-zone-header">
                                 <i className="fas fa-shield-alt danger-icon"></i>
-                                <h4>Security & Privacy</h4>
+                                <h4>{t.securityTitle}</h4>
                             </div>
                             
                             <div className="danger-actions-block">
@@ -271,23 +275,21 @@ const ProfilePage = () => {
                                     className="security-action-btn" 
                                     onClick={handleRequestReset}
                                 >
-                                    <i className="fas fa-key"></i> Request Password Reset
+                                    <i className="fas fa-key"></i> {t.btnResetPassword}
                                 </button>
                                 
                                 <div className="termination-separator"></div>
 
                                 {fullUser?.role !== 'ADMIN' ? (
                                     <div className="account-delete-block">
-                                        <p>
-                                            Once you delete your account, there is no going back. All reservation logs, invoices, and active profile access rights will be permanently scrubbed.
-                                        </p>
+                                        <p>{t.deleteWarning}</p>
                                         <button className="delete-btn" onClick={handleDeleteAccount}>
-                                            Terminate Account
+                                            {t.btnTerminate}
                                         </button>
                                     </div>
                                 ) : (
                                     <p className="admin-notice">
-                                        <i className="fas fa-info-circle"></i> Administrator accounts cannot be self-terminated due to safety constraints.
+                                        <i className="fas fa-info-circle"></i> {t.adminNotice}
                                     </p>
                                 )}
                             </div>

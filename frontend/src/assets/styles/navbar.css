@@ -370,3 +370,119 @@
         transform: translateY(0) scale(1);
     }
 }
+
+/* --- LANGUAGE DROPDOWN --- */
+.lang-dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.lang-dropdown-btn {
+    background: rgba(255, 255, 255, 0.03);
+    color: #bbb;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.lang-dropdown-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.lang-dropdown-btn .arrow-icon {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+}
+
+.lang-dropdown-btn .arrow-icon.rotate {
+    transform: rotate(180deg);
+}
+
+.lang-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    padding: 6px;
+    min-width: 130px;
+    z-index: 2500;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    animation: fadeInDropdown 0.2s ease-out;
+}
+
+@keyframes fadeInDropdown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.lang-dropdown-item {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    padding: 10px 14px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: left;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.lang-dropdown-item:hover {
+    background: rgba(255, 77, 0, 0.08);
+    color: var(--primary);
+}
+
+.lang-dropdown-item.active {
+    color: #fff;
+    background: rgba(255, 77, 0, 0.15);
+    font-weight: 700;
+}
+
+/* --- MOBILE RESPONSIVE FOR DROPDOWN --- */
+@media (max-width: 992px) {
+    .lang-dropdown-container {
+        width: 85%;
+        max-width: 320px;
+    }
+
+    .lang-dropdown-btn {
+        width: 100%;
+        padding: 14px;
+        font-size: 1.1rem;
+        border-radius: 14px;
+        justify-content: center;
+    }
+
+    .lang-dropdown-menu {
+        position: relative;
+        top: 5px;
+        right: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.02);
+        box-shadow: none;
+        border-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .lang-dropdown-item {
+        font-size: 1rem;
+        padding: 12px;
+        text-align: center;
+    }
+}

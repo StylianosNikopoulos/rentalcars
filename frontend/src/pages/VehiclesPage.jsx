@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; 
 import vehicleService from '../services/vehicleService';
-import '../assets/styles/vehicles.css'; 
 import { useQuery } from '@tanstack/react-query';
+import { useLang } from '../context/LangContext';
+import { translations } from '../i18n/translations';
+import '../assets/styles/vehicles.css'; 
 
 const VehiclesPage = () => {
+    const { lang } = useLang();
+    const t = translations[lang].vehicles;
+
     const navigate = useNavigate();
     const location = useLocation(); 
     
@@ -75,7 +80,7 @@ const VehiclesPage = () => {
     const formatDate = (dateString) => {
         if (!dateString) return "";
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-GB', {
+        return date.toLocaleDateString(lang === 'gr' ? 'el-GR' : 'en-GB', {
             day: '2-digit',
             month: 'short',
             year: 'numeric'
@@ -87,25 +92,25 @@ const VehiclesPage = () => {
         navigate(`/vehicle/${carId}${searchPath}`);
     };
 
-    if (isError) return <div className="error-message">Error loading fleet. Please try again later.</div>;
+    if (isError) return <div className="error-message">{t.errorMsg}</div>;
 
     return (
         <div className="vehicles-page">
             <div className="vehicles-header">
-                <h1>Our Premium Fleet</h1>
+                <h1>{t.pageTitle}</h1>
 
                 {selectedStart && selectedEnd && (
                     <div className="availability-info-banner">
                         <div className="availability-text">
                             <i className="far fa-calendar-check"></i>
-                            <span>Showing available fleet for: </span>
+                            <span>{t.showingAvailable} </span>
                             <strong>{formatDate(selectedStart)}</strong>
                             <span className="date-separator">→</span>
                             <strong>{formatDate(selectedEnd)}</strong>
-                            <span className="days-badge">({rentalDays} {rentalDays === 1 ? 'day' : 'days'})</span>
+                            <span className="days-badge">({rentalDays} {rentalDays === 1 ? t.daySingle : t.daysPlural})</span>
                         </div>
                         <button className="clear-dates-btn" onClick={() => navigate('/vehicles')}>
-                            <i className="fas fa-undo-alt" style={{ fontSize: '0.85rem' }}></i> RESET DATES
+                            <i className="fas fa-undo-alt" style={{ fontSize: '0.85rem' }}></i> {t.btnResetDates}
                         </button>
                     </div>
                 )}
@@ -115,7 +120,7 @@ const VehiclesPage = () => {
                         <i className="fas fa-search search-icon"></i>
                         <input 
                             type="text" 
-                            placeholder="Search by brand or model (e.g., Audi, Tesla)..." 
+                            placeholder={t.searchPlaceholder} 
                             className="search-input"
                             value={searchTerm}
                             onChange={handleSearch}
@@ -124,14 +129,15 @@ const VehiclesPage = () => {
                     <div className="sort-container">
                         <select 
                             className="sort-select" 
+                            value={sortOrder}
                             onChange={(e) => {
                                 setSortOrder(e.target.value);
                                 setCurrentPage(1);
                             }}
                         >
-                            <option value="default">Sort By: Featured</option>
-                            <option value="low">Price: Low to High</option>
-                            <option value="high">Price: High to Low</option>
+                            <option value="default">{t.sortFeatured}</option>
+                            <option value="low">{t.sortLowHigh}</option>
+                            <option value="high">{t.sortHighLow}</option>
                         </select>
                     </div>
                 </div>
@@ -141,13 +147,13 @@ const VehiclesPage = () => {
                 <div className="loader-container" style={{ minHeight: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                     <div className="loader"></div>
                     <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px' }}>
-                        FETCHING VEHICLES...
+                        {t.fetching}
                     </span>
                 </div>
             ) : currentItems.length === 0 ? (
                 <div className="no-results" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
                     <i className="fas fa-search" style={{ fontSize: '2rem', color: '#ff4d00', marginBottom: '1rem', display: 'block' }}></i>
-                    No vehicles matching your criteria were found.
+                    {t.noResults}
                 </div>
             ) : (
                 <>
@@ -180,19 +186,19 @@ const VehiclesPage = () => {
                                     <div className="card-pricing-footer">
                                         <div className="car-price-tag">
                                             <span className="price-value">€{car.dailyPrice}</span>
-                                            <span className="price-label">/ day</span>
+                                            <span className="price-label">/ {t.perDay}</span>
                                         </div>
                                         
                                         {rentalDays > 0 && (
                                             <div className="total-price-badge">
-                                                <span>Total for {rentalDays} {rentalDays === 1 ? 'day' : 'days'}</span>
+                                                <span>{t.totalFor} {rentalDays} {rentalDays === 1 ? t.daySingle : t.daysPlural}</span>
                                                 <strong>€{(car.dailyPrice * rentalDays).toFixed(0)}</strong>
                                             </div>
                                         )}
                                     </div>
                                 </div>
                                 <button className="rent-btn-minimal">
-                                    View Deal <i className="fas fa-arrow-right"></i>
+                                    {t.btnViewDeal} <i className="fas fa-arrow-right"></i>
                                 </button>
                             </div>
                         ))}
@@ -205,15 +211,15 @@ const VehiclesPage = () => {
                                 disabled={currentPage === 1} 
                                 className="page-btn"
                             >
-                                <i className="fas fa-chevron-left"></i> PREVIOUS
+                                <i className="fas fa-chevron-left"></i> {t.btnPrevious}
                             </button>
-                            <span className="page-info">Page {currentPage} of {totalPages}</span>
+                            <span className="page-info">{t.pageInfo.replace('{{current}}', currentPage).replace('{{total}}', totalPages)}</span>
                             <button 
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
                                 disabled={currentPage === totalPages} 
                                 className="page-btn"
                             >
-                                NEXT <i className="fas fa-chevron-right"></i>
+                                {t.btnNext} <i className="fas fa-chevron-right"></i>
                             </button>
                         </div>
                     )}
