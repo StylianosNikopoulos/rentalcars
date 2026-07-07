@@ -52,11 +52,8 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     }
 
     @Override
-    public List<Vehicle> findAvailableVehicles(LocalDateTime start, LocalDateTime end) {
-        List<VehicleJpaEntity> entities = jpaRepository.findAvailableVehicles(start, end);
-
-        return entities.stream()
-                .map(vehiclePersistenceMapper::toDomain)
-                .toList();
+    public Page<Vehicle> findAvailableVehicles(LocalDateTime start, LocalDateTime end, Pageable pageable) {
+        Page<VehicleJpaEntity> entities = jpaRepository.findAvailableVehicles(start, end, pageable);
+        return entities.map(vehiclePersistenceMapper::toDomain);
     }
 }

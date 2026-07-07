@@ -16,5 +16,5 @@ public interface VehicleRepository {
     Page<Vehicle> findAllVehicles(String search, Pageable pageable);
     boolean existsByLicensePlate(String licensePlate);
     void deleteById(UUID id);
-    List<Vehicle> findAvailableVehicles(LocalDateTime start, LocalDateTime end);
+    Page<Vehicle> findAvailableVehicles(LocalDateTime start, LocalDateTime end, Pageable pageable);
 }

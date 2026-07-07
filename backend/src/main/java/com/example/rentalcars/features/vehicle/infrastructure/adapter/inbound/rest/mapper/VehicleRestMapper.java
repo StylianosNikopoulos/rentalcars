@@ -6,6 +6,8 @@ import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.re
 import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.dto.VehicleResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -13,8 +15,6 @@ public interface VehicleRestMapper {
 
     @Mapping(target = "licensePlate", source = "licensePlate.value")
     VehicleResponse toResponse(Vehicle domain);
-
-    List<VehicleResponse> toResponseList(List<Vehicle> domains);
 
     VehicleImageResponse toImageResponse(VehicleImage domain);
 }

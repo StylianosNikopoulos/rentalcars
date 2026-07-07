@@ -57,10 +57,11 @@ public class VehicleController {
     }
 
     @GetMapping("/available")
-    public ResponseEntity<List<VehicleResponse>> getAvailableVehicles(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-                                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+    public ResponseEntity<Page<VehicleResponse>> getAvailableVehicles(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+                                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+                                                                      @PageableDefault(size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        List<Vehicle> available = vehicleService.getAvailableVehicles(start, end);
-        return ResponseEntity.ok(vehicleRestMapper.toResponseList(available));
+        Page<VehicleResponse> available = vehicleService.getAvailableVehicles(start, end, pageable).map(vehicleRestMapper::toResponse);
+        return ResponseEntity.ok(available);
     }
 }
