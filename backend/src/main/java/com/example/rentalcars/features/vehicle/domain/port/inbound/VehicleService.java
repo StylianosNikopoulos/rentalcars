@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 public interface VehicleService {
@@ -16,6 +15,6 @@ public interface VehicleService {
     Vehicle getVehicleById(UUID id);
     Vehicle updateVehicle(UUID id, VehicleRequest request);
     void deleteVehicle(UUID id);
-    List<Vehicle> getAvailableVehicles(LocalDateTime start, LocalDateTime end);
+    Page<Vehicle> getAvailableVehicles(LocalDateTime start, LocalDateTime end, Pageable pageable);
     void updateVehicleStatus(UUID vehicleId, VehicleStatus newStatus);
 }

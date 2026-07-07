@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,9 +23,10 @@ public interface VehicleJpaRepository extends JpaRepository<VehicleJpaEntity, UU
             "SELECT r.vehicleId FROM ReservationJpaEntity r " +
             "WHERE r.status <> 'CANCELED' " +
             "AND r.startDate < :end AND r.endDate > :start)")
-    List<VehicleJpaEntity> findAvailableVehicles(
+    Page<VehicleJpaEntity> findAvailableVehicles(
             @Param("start") LocalDateTime start,
-            @Param("end") LocalDateTime end
+            @Param("end") LocalDateTime end,
+            Pageable pageable
             );
 
     Page<VehicleJpaEntity> findAll(Pageable pageable);
