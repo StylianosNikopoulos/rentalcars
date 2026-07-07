@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import toast from 'react-hot-toast';
 import { useNavigate, Link } from 'react-router-dom';
+import { useLang } from '../context/LangContext';
+import { translations } from '../i18n/translations';
 import '../assets/styles/auth.css';
 
 const LoginPage = () => {
+    const { lang } = useLang();
+    const t = translations[lang].login;
+
     const [credentials, setCredentials] = useState({ email: '', password: '' });
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -16,19 +21,17 @@ const LoginPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const loadingToast = toast.loading('Authenticating...');
+        const loadingToast = toast.loading(t.toastLoading);
         try {
             await login(credentials);
-            toast.success('Welcome back!', { id: loadingToast });
+            toast.success(t.toastSuccess, { id: loadingToast });
             navigate('/', { replace: true }); 
         } catch (error) {
-
             const { code, message } = error.response?.data || {};
-
             if (code === "INVALID_CREDENTIALS") {
                 toast.error(message, { id: loadingToast });
             } else {
-                toast.error(message || "Login failed.", { id: loadingToast });
+                toast.error(message || t.toastError, { id: loadingToast });
             }
         }
     };
@@ -36,10 +39,10 @@ const LoginPage = () => {
     return (
         <div className="auth-container">
             <div className="auth-card">
-                <h2>Login</h2>
+                <h2>{t.title}</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label>Email Address</label>
+                        <label>{t.emailLabel}</label>
                         <input 
                             name="email"
                             type="email" 
@@ -50,7 +53,7 @@ const LoginPage = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label>Password</label>
+                        <label>{t.passwordLabel}</label>
                         <input 
                             name="password"
                             type="password" 
@@ -62,14 +65,14 @@ const LoginPage = () => {
                     </div>
                     <div className="forgot-password-wrapper">
                         <Link to="/forgot-password">
-                            Forgot Password?
+                            {t.forgotPassword}
                         </Link>
                     </div>
                     <button type="submit" className="auth-button">
-                        Sign In <i className="fas fa-sign-in-alt"></i>
+                        {t.btnSubmit} <i className="fas fa-sign-in-alt"></i>
                     </button>
                 </form>
-                <Link to="/register" className="auth-link">Don't have an account? Register</Link>
+                <Link to="/register" className="auth-link">{t.registerLink}</Link>
             </div>
         </div>
     );

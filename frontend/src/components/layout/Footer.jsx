@@ -1,8 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../../assets/styles/footer.css'; 
+import { useLang } from '../../context/LangContext';
+import { translations } from '../../i18n/translations';
 
 const Footer = () => {
+    const { lang } = useLang();
+    const t = translations[lang].footer;
+
     return (
         <footer className="footer-root">
             <div className="footer-main-container">
@@ -14,22 +19,22 @@ const Footer = () => {
                     </div>
 
                     <div className="footer-nav-column">
-                        <h4>Company</h4>
+                        <h4>{t.company}</h4>
                         <div className="footer-links-list">
-                            <Link to="/about">About Us</Link>
-                            <Link to="/vehicles">Fleet</Link>
+                            <Link to="/about">{t.about}</Link>
+                            <Link to="/vehicles">{t.fleet}</Link>
                         </div>
                     </div>
 
                     <div className="footer-nav-column">
-                        <h4>Legal</h4>
+                        <h4>{t.legal}</h4>
                         <div className="footer-links-list">
-                            <Link to="/terms">Terms & Conditions</Link>
+                            <Link to="/terms">{t.terms}</Link>
                         </div>
                     </div>
 
                     <div className="footer-nav-column">
-                        <h4>Contact</h4>
+                        <h4>{t.contact}</h4>
                         <div className="footer-links-list">
                             <a href="mailto:info@rentalcar.com">info@rentalcar.com</a>
                             <a href="tel:+30231055555">+30 231 055 555</a>
@@ -41,7 +46,7 @@ const Footer = () => {
 
                 <div className="footer-bottom-bar">
                     <p className="footer-copyright">
-                        &copy; {new Date().getFullYear()} RentalCar. All rights reserved.
+                        &copy; {new Date().getFullYear()} RentalCar. {t.rights}
                     </p>
 
                     <div className="footer-social-links">

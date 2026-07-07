@@ -5,6 +5,8 @@ import paymentService from '../services/paymentService';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2'; 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLang } from '../context/LangContext';
+import { translations } from '../i18n/translations';
 import '../assets/styles/reservations.css'; 
 import '../assets/styles/swal-custom.css';
 
@@ -28,6 +30,8 @@ const calculateGlobalTimeLeft = (createdAt) => {
 };
 
 const ReservationTimer = ({ createdAt, onExpire }) => {
+    const { lang } = useLang();
+    const t = translations[lang].myReservations;
     const [timeLeft, setTimeLeft] = useState(calculateGlobalTimeLeft(createdAt));
 
     useEffect(() => {
@@ -43,7 +47,7 @@ const ReservationTimer = ({ createdAt, onExpire }) => {
     }, [createdAt, onExpire]);
 
     if (timeLeft <= 0) {
-        return <span className="timer-expired"><i className="fas fa-exclamation-circle"></i> Expired</span>;
+        return <span className="timer-expired"><i className="fas fa-exclamation-circle"></i> {t.timerExpired}</span>;
     }
 
     const minutes = Math.floor((timeLeft / 1000 / 60) % 60);
@@ -51,12 +55,15 @@ const ReservationTimer = ({ createdAt, onExpire }) => {
 
     return (
         <span className="res-timer">
-            <i className="fas fa-history"></i> {minutes}m {seconds < 10 ? `0${seconds}` : seconds}s
+            <i className="fas fa-history"></i> {minutes}{t.timerMin} {seconds < 10 ? `0${seconds}` : seconds}{t.timerSec}
         </span>
     );
 };
 
 const MyReservationPage = () => {
+    const { lang } = useLang();
+    const t = translations[lang].myReservations;
+
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [currentPage, setCurrentPage] = useState(1);
@@ -72,25 +79,25 @@ const MyReservationPage = () => {
         mutationFn: (id) => reservationService.cancelReservation(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['myReservations'] });
-            toast.success("Reservation Canceled Successfully");
+            toast.success(t.toastCancelSuccess);
         },
         onError: () => {
-            toast.error("Could not cancel reservation");
+            toast.error(t.toastCancelError);
         }
     });
 
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
         if (query.get("success")) {
-            toast.success("Payment completed! Your reservation has been confirmed.");
+            toast.success(t.toastPaymentSuccess);
             queryClient.invalidateQueries({ queryKey: ['myReservations'] });
             window.history.replaceState({}, document.title, window.location.pathname);
         }
         if (query.get("canceled")) {
-            toast.error("Payment canceled.");
+            toast.error(t.toastPaymentCanceled);
             window.history.replaceState({}, document.title, window.location.pathname);
         }
-    }, [queryClient]);
+    }, [queryClient, t]);
 
     // Pagination
     const totalPages = Math.ceil(reservations.length / bookingsPerPage);
@@ -100,14 +107,14 @@ const MyReservationPage = () => {
 
     const handleCancel = (reservationId) => {
         Swal.fire({
-            title: 'CANCEL RESERVATION?',
-            text: "This action will cancel your booking. Are you sure?",
+            title: t.swalCancelTitle,
+            text: t.swalCancelText,
             icon: 'warning',
             iconColor: '#ff4d00',
             background: '#151515',
             showCancelButton: true,
-            confirmButtonText: 'YES, CANCEL IT',
-            cancelButtonText: 'NO, KEEP IT',
+            confirmButtonText: t.swalYes,
+            cancelButtonText: t.swalNo,
             buttonsStyling: false,
             customClass: {
                 container: 'swal-fix-overlay', 
@@ -125,55 +132,40 @@ const MyReservationPage = () => {
     };
 
     const handleCheckOut = async (res) => {
-        const loadingToast = toast.loading("Redirecting to Secure Payment...");
+        const loadingToast = toast.loading(t.toastRedirecting);
         try {
             const data = await paymentService.initiatePayment(res.id);
             toast.dismiss(loadingToast);
             if (data?.url) {
                 window.location.href = data.url; 
             } else {
-                toast.error("Payment URL not found");
+                toast.error(t.toastPaymentUrlError);
             }
         } catch (error) {
             toast.dismiss(loadingToast);
-            toast.error("Failed to initialize payment");
-        }
-
-        try {
-            const data = await paymentService.initiatePayment(res.id);
-
-            if (!data?.url) {
-                toast.error(error.response?.data?.message || "Payment session failed.");
-                return;
-            }
-
-            window.location.href = data.url;
-
-        } catch (error) {
-            toast.error(error.response?.data?.message || "Failed to initialize payment.");
+            toast.error(error.response?.data?.message || t.toastPaymentInitError);
         }
     };
-
 
     return (
         <div className="reservations-container">
             <div className="reservations-header">
-                <h2>My Reservations</h2>
-                <p>Manage your rental bookings and active payments</p>
+                <h2>{t.title}</h2>
+                <p>{t.subtitle}</p>
             </div>
 
             {isLoading ? (
                 <div className="loader-container">
                     <div className="loader"></div>
-                    <span style={{color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px'}}>FETCHING RESERVATIONS...</span>
+                    <span style={{color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px'}}>{t.fetching}</span>
                 </div>
             ) : reservations.length === 0 ? (
                 <div className="empty-state">
                     <div className="empty-icon"><i className="fas fa-car-crash"></i></div>
-                    <h3>No Bookings Found</h3>
-                    <p>You don't have any active or past reservations at the moment.</p>
+                    <h3>{t.noBookingsTitle}</h3>
+                    <p>{t.noBookingsDesc}</p>
                     <button onClick={() => navigate('/vehicles')} className="checkOut-btn-premium" style={{width: 'auto', marginTop: '1.5rem'}}>
-                        Explore Our Fleet
+                        {t.btnExplore}
                     </button>
                 </div>
             ) : (
@@ -182,6 +174,7 @@ const MyReservationPage = () => {
                         {currentBookings.map((res) => {
                             const status = res.status.toUpperCase();
                             const isExpired = calculateGlobalTimeLeft(res.createdAt) <= 0;
+                            const currentLocale = lang === 'gr' ? 'el-GR' : 'en-GB';
 
                             return (
                                 <div key={res.id} className="res-card">
@@ -195,12 +188,12 @@ const MyReservationPage = () => {
                                         
                                         <div className="res-timeline-block">
                                             <div className="timeline-item">
-                                                <small>Rental Period</small>
+                                                <small>{t.rentalPeriod}</small>
                                                 <p>
                                                     <i className="far fa-calendar-alt"></i> 
-                                                    {res.period?.start ? new Date(res.period.start).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}) : 'N/A'} 
+                                                    {res.period?.start ? new Date(res.period.start).toLocaleDateString(currentLocale, {day:'2-digit', month:'short', year:'numeric'}) : 'N/A'} 
                                                     <span className="arrow-sep">→</span>
-                                                    {res.period?.end ? new Date(res.period.end).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}) : 'N/A'}
+                                                    {res.period?.end ? new Date(res.period.end).toLocaleDateString(currentLocale, {day:'2-digit', month:'short', year:'numeric'}) : 'N/A'}
                                                 </p>
                                             </div>
                                         </div>
@@ -210,7 +203,7 @@ const MyReservationPage = () => {
                                         <div className="res-pricing-status">
                                             <div className="status-badge-wrapper">
                                                 <span className={`status-badge ${res.status.toLowerCase().replace(/\s+/g, '_')}`}>
-                                                    {res.status.replace('_', ' ')}
+                                                    {lang === 'gr' && t[res.status.toLowerCase()] ? t[res.status.toLowerCase()] : res.status.replace('_', ' ')}
                                                 </span>
                                                 {status === 'PENDING' && (
                                                     <ReservationTimer 
@@ -220,7 +213,7 @@ const MyReservationPage = () => {
                                                 )}
                                             </div>
                                             <div className="res-total-price">
-                                                <span>Total Amount</span>
+                                                <span>{t.totalAmount}</span>
                                                 <strong>€{res.totalAmount?.toFixed(2)}</strong>
                                             </div>
                                         </div>
@@ -232,13 +225,13 @@ const MyReservationPage = () => {
                                                     className="cancel-btn-premium"
                                                     disabled={cancelMutation.isPending}
                                                 >
-                                                    {cancelMutation.isPending ? 'Processing...' : 'Cancel Booking'}
+                                                    {cancelMutation.isPending ? t.btnProcessing : t.btnCancel}
                                                 </button>
                                             )}
 
                                             {status === 'PENDING' && !isExpired && (
                                                 <button onClick={() => handleCheckOut(res)} className="checkOut-btn-premium">
-                                                    Proceed to Checkout <i className="fas fa-credit-card"></i>
+                                                    {t.btnCheckout} <i className="fas fa-credit-card"></i>
                                                 </button>
                                             )}
                                         </div>
@@ -254,7 +247,7 @@ const MyReservationPage = () => {
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
                             >
-                                <i className="fas fa-chevron-left"></i> Previous
+                                <i className="fas fa-chevron-left"></i> {t.btnPrevious}
                             </button>
                             <span className="page-info">{currentPage} / {totalPages}</span>
                             <button 
@@ -262,7 +255,7 @@ const MyReservationPage = () => {
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                 disabled={currentPage === totalPages}
                             >
-                                Next <i className="fas fa-chevron-right"></i>
+                                {t.btnNext} <i className="fas fa-chevron-right"></i>
                             </button>
                         </div>
                     )}

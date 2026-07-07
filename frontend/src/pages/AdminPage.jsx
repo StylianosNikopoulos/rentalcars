@@ -6,10 +6,15 @@ import userService from '../services/userService';
 import reservationService from '../services/reservationService';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2'; 
+import { useLang } from '../context/LangContext';
+import { translations } from "../i18n/translations";
 import '../assets/styles/swal-custom.css';
 
 const AdminPage = () => {
     const queryClient = useQueryClient();
+    const { lang } = useLang();
+    const t = translations[lang].admin;
+
     const [activeTab, setActiveTab] = useState('vehicles');
     
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -99,62 +104,62 @@ const AdminPage = () => {
         mutationFn: (id) => vehicleService.deleteVehicle(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-vehicles']);
-            toast.success("Vehicle deleted successfully");
+            toast.success(t.toastVehDeleted);
             if (currentVehicles.length === 1 && vehiclePage > 1) setVehiclePage(prev => prev - 1);
         },
-        onError: () => toast.error("Could not delete vehicle")
+        onError: () => toast.error(t.toastVehDelErr)
     });
 
     const deleteUserMutation = useMutation({
         mutationFn: (id) => userService.deleteUser(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-users']);
-            toast.success("User deleted successfully");
+            toast.success(t.toastUserDeleted);
             if (currentUsers.length === 1 && userPage > 1) setUserPage(prev => prev - 1);
         },
-        onError: () => toast.error("Error deleting user")
+        onError: () => toast.error(t.toastUserDelErr)
     });
 
     const cancelResMutation = useMutation({
         mutationFn: (id) => reservationService.cancelReservation(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-reservations']);
-            toast.success("Reservation canceled");
+            toast.success(t.toastResCanceled);
         },
-        onError: () => toast.error("Error cancelling reservation")
+        onError: () => toast.error(t.toastResCanErr)
     });
 
     const returnResMutation = useMutation({
         mutationFn: (id) => reservationService.returnVehicle(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-reservations']);
-            toast.success("Vehicle returned successfully!");
+            toast.success(t.toastVehReturned);
         },
-        onError: () => toast.error("Error processing return")
+        onError: () => toast.error(t.toastVehRetErr)
     });
 
     // Handlers
 
     const handleCancelReservation = (id) => {
-        confirmSwal('CANCEL RESERVATION?', "This will cancel the pending reservation.", () => {
+        confirmSwal(t.swalCancelTitle, t.swalCancelText, () => {
             cancelResMutation.mutate(id);
         });
     };
 
     const handleDeleteUser = (id) => {
-        confirmSwal('DELETE USER?', "This action will permanently delete the user.", () => {
+        confirmSwal(t.swalDeleteUserTitle, t.swalDeleteUserText, () => {
             deleteUserMutation.mutate(id);
         });
     };
 
     const handleDeleteVehicle = (id) => {
-        confirmSwal('DELETE VEHICLE?', "This action will delete vehicle. Are you sure?", () => {
+        confirmSwal(t.swalDeleteVehTitle, t.swalDeleteVehText, () => {
             deleteVehicleMutation.mutate(id);
         });
     };
 
     const handleReturnVehicle = (id) => {
-        confirmSwal('RETURN VEHICLE?', "Confirm that the vehicle has been returned and inspected.", () => {
+        confirmSwal(t.swalReturnTitle, t.swalReturnText, () => {
             returnResMutation.mutate(id);
         });
     };
@@ -162,7 +167,7 @@ const AdminPage = () => {
     const confirmSwal = (title, text, onConfirm) => {
         Swal.fire({
             title, text, icon: 'warning', iconColor: '#ff4d00', background: '#151515',
-            showCancelButton: true, confirmButtonText: 'YES', cancelButtonText: 'NO',
+            showCancelButton: true, confirmButtonText: t.swalYes, cancelButtonText: t.swalNo,
             buttonsStyling: false,
             customClass: {
                 container: 'swal-fix-overlay', popup: 'swal-custom-popup',
@@ -211,9 +216,9 @@ const AdminPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (newVehicle.images.length === 0) return toast.error("At least one image is required");
+        if (newVehicle.images.length === 0) return toast.error(t.toastImgReq);
 
-        const loadingToast = toast.loading(isEditMode ? "Processing..." : "Creating vehicle...");
+        const loadingToast = toast.loading(isEditMode ? t.toastProcessing : t.toastCreating);
         try {
             const uploadPromises = newVehicle.images.map(async (img) => {
                 if (img.url.startsWith('http')) return { url: img.url, isMain: img.isMain };
@@ -242,11 +247,11 @@ const AdminPage = () => {
                 await vehicleService.createVehicle(payload);
             }
             
-            toast.success(isEditMode ? "Vehicle updated" : "Vehicle created", { id: loadingToast });
+            toast.success(isEditMode ? t.toastVehUpdated : t.toastVehCreated, { id: loadingToast });
             queryClient.invalidateQueries(['admin-vehicles']);
             closeModal();
         } catch (error) {
-            toast.error("Operation failed", { id: loadingToast });
+            toast.error(t.toastOpFailed, { id: loadingToast });
         }
     };
 
@@ -300,15 +305,17 @@ const AdminPage = () => {
                     disabled={currentPage === 1} 
                     className="page-btn"
                 >
-                    <i className="fas fa-chevron-left"></i> PREVIOUS
+                    <i className="fas fa-chevron-left"></i> {t.btnPrevious}
                 </button>
-                <span className="page-info" style={{ color: '#aaa', fontSize: '0.9rem' }}>Page {currentPage} of {totalPages}</span>
+                <span className="page-info" style={{ color: '#aaa', fontSize: '0.9rem' }}>
+                    {t.pageInfo.replace('{{current}}', currentPage).replace('{{total}}', totalPages)}
+                </span>
                 <button 
                     onClick={() => onPageChange(prev => Math.min(prev + 1, totalPages))} 
                     disabled={currentPage === totalPages} 
                     className="page-btn"
                 >
-                    NEXT <i className="fas fa-chevron-right"></i>
+                    {t.btnNext} <i className="fas fa-chevron-right"></i>
                 </button>
             </div>
         );
@@ -317,31 +324,31 @@ const AdminPage = () => {
     return (
         <div className="admin-container">
             <aside className="admin-sidebar">
-                <div className="sidebar-header"><i className="fas fa-user-shield"></i><span>Admin Panel</span></div>
+                <div className="sidebar-header"><i className="fas fa-user-shield"></i><span>{t.sidebarTitle}</span></div>
                 <nav className="sidebar-nav">
-                    <button className={activeTab === 'vehicles' ? 'active' : ''} onClick={() => setActiveTab('vehicles')}><i className="fas fa-car"></i> Vehicles</button>
-                    <button className={activeTab === 'users' ? 'active' : ''} onClick={() => setActiveTab('users')}><i className="fas fa-users"></i> Users</button>
-                    <button className={activeTab === 'reservations' ? 'active' : ''} onClick={() => setActiveTab('reservations')}><i className="fas fa-calendar-check"></i> Reservations</button>
+                    <button className={activeTab === 'vehicles' ? 'active' : ''} onClick={() => setActiveTab('vehicles')}><i className="fas fa-car"></i> {t.tabVehicles}</button>
+                    <button className={activeTab === 'users' ? 'active' : ''} onClick={() => setActiveTab('users')}><i className="fas fa-users"></i> {t.tabUsers}</button>
+                    <button className={activeTab === 'reservations' ? 'active' : ''} onClick={() => setActiveTab('reservations')}><i className="fas fa-calendar-check"></i> {t.tabReservations}</button>
                 </nav>
             </aside>
 
             <main className="admin-main">
                 <header className="admin-topbar">
-                    <h2>{activeTab.toUpperCase()}</h2>
+                    <h2>{activeTab === 'vehicles' ? t.tabVehicles.toUpperCase() : activeTab === 'users' ? t.tabUsers.toUpperCase() : t.tabReservations.toUpperCase()}</h2>
                 </header>
 
                 <div className="admin-content">
                     {activeTab === 'vehicles' && (
                         <div className="admin-section">
                             <button className="add-btn" onClick={() => { closeModal(); setIsModalOpen(true); }}>
-                                + Add Vehicle
+                                {t.addVehicle}
                             </button>
                             
                             {loadingVehicles ? (
                                 <div className="loader-container" style={{ minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                                     <div className="loader"></div>
                                     <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px' }}>
-                                        FETCHING VEHICLES...
+                                        {t.fetchingVehicles}
                                     </span>
                                 </div>
                             ) : (
@@ -349,10 +356,10 @@ const AdminPage = () => {
                                     <table className="admin-table">
                                         <thead>
                                             <tr>
-                                                <th>Vehicle</th>
-                                                <th>Plate</th>
-                                                <th>Price</th>
-                                                <th>Actions</th>
+                                                <th>{t.tableVehicle}</th>
+                                                <th>{t.tablePlate}</th>
+                                                <th>{t.tablePrice}</th>
+                                                <th>{t.tableActions}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -363,10 +370,10 @@ const AdminPage = () => {
                                                     <td>€{car.dailyPrice}</td>
                                                     <td className="actions-cell">
                                                         <button className="btn-update" onClick={() => openUpdateModal(car)}>
-                                                            <i className="fas fa-edit"></i> Update
+                                                            <i className="fas fa-edit"></i> {t.btnUpdate}
                                                         </button>
                                                         <button className="btn-delete" onClick={() => handleDeleteVehicle(car.id)}>
-                                                            <i className="fas fa-trash"></i> Delete
+                                                            <i className="fas fa-trash"></i> {t.btnDelete}
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -390,7 +397,7 @@ const AdminPage = () => {
                                 <div className="loader-container" style={{ minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                                     <div className="loader"></div>
                                     <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px' }}>
-                                        FETCHING USERS...
+                                        {t.fetchingUsers}
                                     </span>
                                 </div>
                             ) : (
@@ -398,10 +405,10 @@ const AdminPage = () => {
                                     <table className="admin-table">
                                         <thead>
                                             <tr>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Role</th>
-                                                <th>Actions</th>
+                                                <th>{t.tableName}</th>
+                                                <th>{t.tableEmail}</th>
+                                                <th>{t.tableRole}</th>
+                                                <th>{t.tableActions}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -414,7 +421,7 @@ const AdminPage = () => {
                                                         <div className="actions-cell">
                                                             {user.role !== 'ADMIN' && (
                                                                 <button className="btn-delete" onClick={() => handleDeleteUser(user.id)}>
-                                                                    <i className="fas fa-trash"></i> Delete
+                                                                    <i className="fas fa-trash"></i> {t.btnDelete}
                                                                 </button>
                                                             )}
                                                         </div>
@@ -440,7 +447,7 @@ const AdminPage = () => {
                                 <div className="loader-container" style={{ minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                                     <div className="loader"></div>
                                     <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px' }}>
-                                        FETCHING RESERVATIONS...
+                                        {t.fetchingReservations}
                                     </span>
                                 </div>
                             ) : (
@@ -448,12 +455,12 @@ const AdminPage = () => {
                                     <table className="admin-table">
                                         <thead>
                                             <tr>
-                                                <th>User Email</th>
-                                                <th>Vehicle</th>
-                                                <th>From</th>
-                                                <th>Until</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
+                                                <th>{t.tableUserEmail}</th>
+                                                <th>{t.tableVehicle}</th>
+                                                <th>{t.tableFrom}</th>
+                                                <th>{t.tableUntil}</th>
+                                                <th>{t.tableStatus}</th>
+                                                <th>{t.tableActions}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -472,20 +479,20 @@ const AdminPage = () => {
                                                         <div className="actions-cell">
                                                             {res.status === 'PENDING' && (
                                                                 <button className="status-btn pick-up" onClick={() => handleCancelReservation(res.id)}>
-                                                                    <i className="fas fa-times"></i> Cancel
+                                                                    <i className="fas fa-times"></i> {t.btnCancel}
                                                                 </button>
                                                             )}
 
                                                             {res.status === 'ACTIVE' && (
                                                                 <button className="status-btn return-btn-table" onClick={() => handleReturnVehicle(res.id)}>
-                                                                    <i className="fas fa-undo"></i> Return
+                                                                    <i className="fas fa-undo"></i> {t.btnReturn}
                                                                 </button>
                                                             )}
                                                         </div>
                                                     </td>
                                                 </tr>
                                             )) : (
-                                                <tr><td colSpan="6" style={{textAlign: 'center', color: '#666', padding: '30px'}}>No reservations found.</td></tr>
+                                                <tr><td colSpan="6" style={{textAlign: 'center', color: '#666', padding: '30px'}}>{t.noReservations}</td></tr>
                                             )}
                                         </tbody>
                                     </table>
@@ -505,11 +512,11 @@ const AdminPage = () => {
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="admin-modal glass-morphism">
-                        <h3>{isEditMode ? 'Update Vehicle' : 'Add New Vehicle'}</h3>
+                        <h3>{isEditMode ? t.modalUpdateTitle : t.modalAddTitle}</h3>
                         <form onSubmit={handleSubmit}>
                             <div className="admin-form-group">
-                                <input type="text" placeholder="Brand" required value={newVehicle.brand} onChange={e => setNewVehicle({...newVehicle, brand: e.target.value})} />
-                                <input type="text" placeholder="Model" required value={newVehicle.model} onChange={e => setNewVehicle({...newVehicle, model: e.target.value})} />
+                                <input type="text" placeholder={t.placeholderBrand} required value={newVehicle.brand} onChange={e => setNewVehicle({...newVehicle, brand: e.target.value})} />
+                                <input type="text" placeholder={t.placeholderModel} required value={newVehicle.model} onChange={e => setNewVehicle({...newVehicle, model: e.target.value})} />
                             </div>
 
                             <div className="image-grid-upload">
@@ -517,28 +524,28 @@ const AdminPage = () => {
                                     <div key={index} className={`image-preview-item ${img.isMain ? 'main-photo' : ''}`}>
                                         <img src={img.url} alt="preview" />
                                         <div className="image-controls">
-                                            <button type="button" onClick={() => setMainImage(index)} title="Set as Main"><i className={img.isMain ? "fas fa-star" : "far fa-star"}></i></button>
-                                            <button type="button" onClick={() => removeImage(index)} title="Remove Image"><i className="fas fa-times"></i></button>
+                                            <button type="button" onClick={() => setMainImage(index)} title={t.setMainPhoto}><i className={img.isMain ? "fas fa-star" : "far fa-star"}></i></button>
+                                            <button type="button" onClick={() => removeImage(index)} title={t.removePhoto}><i className="fas fa-times"></i></button>
                                         </div>
-                                        {img.isMain && <span className="main-label">MAIN</span>}
+                                        {img.isMain && <span className="main-label">{t.mainLabel}</span>}
                                     </div>
                                 ))}
                                 <label className="add-more-photos"><i className="fas fa-plus"></i><input type="file" multiple accept="image/*" onChange={handleImagesChange} hidden /></label>
                             </div>
 
                             <div className="admin-form-group mt-20">
-                                <input type="number" step="0.01" className="no-spinners" placeholder="Price/Day" required value={newVehicle.dailyPrice} onChange={e => setNewVehicle({...newVehicle, dailyPrice: e.target.value})} />
+                                <input type="number" step="0.01" className="no-spinners" placeholder={t.placeholderPrice} required value={newVehicle.dailyPrice} onChange={e => setNewVehicle({...newVehicle, dailyPrice: e.target.value})} />
                                 <div className="flex-1">
-                                    <input type="text" placeholder="Plate (ABC-1234)" className={plateError ? 'input-error' : ''} required value={newVehicle.licensePlate} onChange={handlePlateChange} />
+                                    <input type="text" placeholder={t.placeholderPlate} className={plateError ? 'input-error' : ''} required value={newVehicle.licensePlate} onChange={handlePlateChange} />
                                     {plateError && <span className="error-text">{plateError}</span>}
                                 </div>
                             </div>
 
                             <div className="admin-form-group">
-                                <input type="number" placeholder="Year" value={newVehicle.year} onChange={e => setNewVehicle({...newVehicle, year: e.target.value})} />
+                                <input type="number" placeholder={t.placeholderYear} value={newVehicle.year} onChange={e => setNewVehicle({...newVehicle, year: e.target.value})} />
                                 <div className="select-wrapper">
                                     <select className="admin-select" required value={newVehicle.fuelType} onChange={e => setNewVehicle({...newVehicle, fuelType: e.target.value})}>
-                                        <option value="" disabled>Fuel Type</option>
+                                        <option value="" disabled>{t.placeholderFuel}</option>
                                         <option value="PETROL">PETROL</option>
                                         <option value="DIESEL">DIESEL</option>
                                         <option value="ELECTRIC">ELECTRIC</option>
@@ -549,8 +556,8 @@ const AdminPage = () => {
                             </div>
 
                             <div className="modal-actions">
-                                <button type="button" className="cancel-btn" onClick={closeModal}>Cancel</button>
-                                <button type="submit" className="add-btn">{isEditMode ? 'Update' : 'Save'}</button>
+                                <button type="button" className="cancel-btn" onClick={closeModal}>{t.btnCancel}</button>
+                                <button type="submit" className="add-btn">{isEditMode ? t.btnUpdate : t.btnSave}</button>
                             </div>
                         </form>
                     </div>

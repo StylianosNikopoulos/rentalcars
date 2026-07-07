@@ -7,6 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import vehicleService from '../services/vehicleService';
 import reservationService from '../services/reservationService';
 import toast from 'react-hot-toast';
+import { useLang } from '../context/LangContext';
+import { translations } from '../i18n/translations';
 import '../assets/styles/details.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Mousewheel, Keyboard, Thumbs } from 'swiper/modules';
@@ -16,6 +18,9 @@ import 'swiper/css/pagination';
 import 'swiper/css/thumbs';
 
 const VehicleDetailsPage = () => {
+    const { lang } = useLang();
+    const t = translations[lang].details;
+
     const { id } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -53,12 +58,12 @@ const VehicleDetailsPage = () => {
     const bookingMutation = useMutation({
         mutationFn: (bookingData) => reservationService.createReservation(bookingData),
         onSuccess: () => {
-            toast.success("Reservation successful!");
+            toast.success(t.toastBookingSuccess);
             queryClient.invalidateQueries(['vehicle-reservations', id]);
             setTimeout(() => navigate('/reservations'), 1500);
         },
         onError: (error) => {
-            toast.error(error.response?.data?.message || "Booking failed");
+            toast.error(error.response?.data?.message || t.toastBookingError);
         }
     });
 
@@ -66,16 +71,16 @@ const VehicleDetailsPage = () => {
         e.preventDefault(); 
         if (bookingMutation.isPending) return;
         if (!user) {
-            toast.error("Please login to make a reservation");
+            toast.error(t.toastLoginReq);
             navigate('/login');
             return;
         }
         if (!acceptedTerms) {
-            toast.error("You must accept the Terms and GDPR policy to continue");
+            toast.error(t.toastTermsReq);
             return;
         }
         if (!startDate || !endDate) {
-            toast.error("Please select both dates");
+            toast.error(t.toastDatesReq);
             return;
         }
 
@@ -101,7 +106,7 @@ const VehicleDetailsPage = () => {
             <div className="loader-container" style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#0a0a0a' }}>
                 <div className="loader"></div>
                 <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px' }}>
-                    FETCHING DETAILS...
+                    {t.fetching}
                 </span>
             </div>
         );
@@ -111,7 +116,7 @@ const VehicleDetailsPage = () => {
         return (
             <div className="error-message" style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', color: '#ff4d4d', padding: '2rem', textAlign: 'center' }}>
                 <i className="fas fa-exclamation-triangle" style={{ fontSize: '2rem', marginBottom: '1rem' }}></i>
-                Vehicle not found or has been removed.
+                {t.errorNotFound}
             </div>
         );
     }
@@ -129,7 +134,7 @@ const VehicleDetailsPage = () => {
                     <h1>{vehicle.brand} <span>{vehicle.model}</span></h1>
                     <div className="price-tag">
                         <span className="amount">${vehicle.dailyPrice}</span>
-                        <span className="per-day">/ day</span>
+                        <span className="per-day">/ {t.perDay}</span>
                     </div>
                 </div>
             </div>
@@ -176,33 +181,33 @@ const VehicleDetailsPage = () => {
                     </div>
 
                     <div className="real-car-features">
-                        <h2>Vehicle Specifications</h2>
+                        <h2>{t.specifications}</h2>
                         <div className="features-grid">
                             <div className="feature-item">
                                 <i className="fas fa-gas-pump"></i>
                                 <div>
-                                    <span>Fuel Type</span>
+                                    <span>{t.fuelType}</span>
                                     <strong>{vehicle.fuelType}</strong>
                                 </div>
                             </div>
                             <div className="feature-item">
                                 <i className="fas fa-calendar-alt"></i>
                                 <div>
-                                    <span>Year Model</span>
+                                    <span>{t.yearModel}</span>
                                     <strong>{vehicle.year}</strong>
                                 </div>
                             </div>
                             <div className="feature-item">
                                 <i className="fas fa-calendar-alt"></i>
                                 <div>
-                                    <span>Model</span>
+                                    <span>{t.modelLabel}</span>
                                     <strong>{vehicle.model}</strong>
                                 </div>
                             </div>
                             <div className="feature-item">
                                 <i className="fas fa-calendar-alt"></i>
                                 <div>
-                                    <span>License Plate</span>
+                                    <span>{t.licensePlate}</span>
                                     <strong>{vehicle.licensePlate}</strong>
                                 </div>
                             </div>
@@ -218,12 +223,12 @@ const VehicleDetailsPage = () => {
                             </div>
                         )}
                         <div className="card-header">
-                            <h3>Book This Vehicle</h3>
-                            <p>Select your preferred rental timeline</p>
+                            <h3>{t.sidebarTitle}</h3>
+                            <p>{t.sidebarSubtitle}</p>
                         </div>
                         <form onSubmit={handleBooking}>
                             <div className="form-group date-picker-group">
-                                <label><i className="far fa-calendar"></i> Pick-up & Return Dates</label>
+                                <label><i className="far fa-calendar"></i> {t.datesLabel}</label>
                                 <DatePicker
                                     selectsRange={true}
                                     startDate={startDate}
@@ -236,7 +241,7 @@ const VehicleDetailsPage = () => {
                                     minDate={new Date(new Date().setDate(new Date().getDate() + 1))}
                                     excludeDateIntervals={bookedDates}
                                     isClearable={true}
-                                    placeholderText="Select date range"
+                                    placeholderText={t.placeholderDates}
                                     className="custom-datepicker-input" 
                                     required
                                 />
@@ -244,17 +249,17 @@ const VehicleDetailsPage = () => {
 
                             {startDate && endDate && (
                                 <div className="invoice-breakdown">
-                                    <h4>Price Breakdown</h4>
+                                    <h4>{t.invoiceTitle}</h4>
                                     <div className="invoice-row">
-                                        <span>Daily Rate</span>
-                                        <span>${vehicle.dailyPrice} x {rentalDays} days</span>
+                                        <span>{t.dailyRate}</span>
+                                        <span>${vehicle.dailyPrice} x {rentalDays} {t.daysCount}</span>
                                     </div>
                                     <div className="invoice-row">
-                                        <span>Local Taxes & Fees</span>
-                                        <span className="free-badge">Included</span>
+                                        <span>{t.taxesLabel}</span>
+                                        <span className="free-badge">{t.includedBadge}</span>
                                     </div>
                                     <div className="invoice-total">
-                                        <span>Total Amount</span>
+                                        <span>{t.totalAmount}</span>
                                         <strong>${(rentalDays * vehicle.dailyPrice).toFixed(2)}</strong>
                                     </div>
                                 </div>
@@ -269,7 +274,7 @@ const VehicleDetailsPage = () => {
                                     />
                                     <span className="checkmark"></span>
                                     <span className="checkbox-text">
-                                        I accept the rental <Link to="/terms" target="_blank">Terms & GDPR Policy</Link>
+                                        {t.termsCheckboxText} <Link to="/terms" target="_blank">{t.termsLinkText}</Link>
                                     </span>
                                 </label>
                             </div>
@@ -278,7 +283,7 @@ const VehicleDetailsPage = () => {
                                 className="confirm-glow-btn" 
                                 disabled={bookingMutation.isPending}
                             >
-                                {bookingMutation.isPending ? 'Processing...' : (user ? 'Reserve Now' : 'Login to Book')}
+                                {bookingMutation.isPending ? t.btnProcessing : (user ? t.btnReserve : t.btnLoginToBook)}
                             </button>
                         </form>
                     </div>

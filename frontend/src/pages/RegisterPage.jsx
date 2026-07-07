@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import toast from 'react-hot-toast';
 import { useNavigate, Link } from 'react-router-dom';
+import { useLang } from '../context/LangContext';
+import { translations } from '../i18n/translations';
 import '../assets/styles/auth.css';
 
 const RegisterPage = () => {
+    const { lang } = useLang();
+    const t = translations[lang].register;
+
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -22,16 +27,15 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const loadingToast = toast.loading('Creating account...');
+        const loadingToast = toast.loading(t.toastLoading);
 
         try {
             await register(formData);
-            toast.success('Account created successfully!', { id: loadingToast });
+            toast.success(t.toastSuccess, { id: loadingToast });
             navigate('/');
         } catch (error) {
             toast.error(
-                error.response?.data?.message ||
-                'Registration failed. Please try again.',
+                error.response?.data?.message || t.toastError,
                 { id: loadingToast }
             );
         }
@@ -40,35 +44,35 @@ const RegisterPage = () => {
     return (
         <div className="auth-container">
             <div className="auth-card">
-                <h2>Create Account</h2>
+                <h2>{t.title}</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="auth-row-grid">
                         <div className="form-group">
-                            <label>First Name</label>
+                            <label>{t.firstName}</label>
                             <input 
                                 name="firstName" 
                                 value={formData.firstName} 
                                 type="text" 
                                 onChange={handleChange} 
-                                placeholder="FirstName"
+                                placeholder={t.firstName}
                                 required 
                             />
                         </div>
                         <div className="form-group">
-                            <label>Last Name</label>
+                            <label>{t.lastName}</label>
                             <input 
                                 name="lastName" 
                                 value={formData.lastName} 
                                 type="text" 
                                 onChange={handleChange} 
-                                placeholder="LastName"
+                                placeholder={t.lastName}
                                 required 
                             />
                         </div>
                     </div>
                     
                     <div className="form-group">
-                        <label>Email Address</label>
+                        <label>{t.email}</label>
                         <input 
                             name="email" 
                             value={formData.email} 
@@ -80,22 +84,22 @@ const RegisterPage = () => {
                     </div>
                     
                     <div className="form-group">
-                        <label>Password</label>
+                        <label>{t.password}</label>
                         <input 
                             name="password" 
                             value={formData.password} 
                             type="password" 
                             onChange={handleChange} 
-                            placeholder="Minimum 6 characters"
+                            placeholder={t.passwordPlaceholder}
                             required 
                         />
                     </div>
                     
                     <button type="submit" className="auth-button">
-                        Register Account <i className="fas fa-user-plus"></i>
+                        {t.button} <i className="fas fa-user-plus"></i>
                     </button>
                 </form>
-                <Link to="/login" className="auth-link">Already have an account? Login</Link>
+                <Link to="/login" className="auth-link">{t.link}</Link>
             </div>
         </div>
     );

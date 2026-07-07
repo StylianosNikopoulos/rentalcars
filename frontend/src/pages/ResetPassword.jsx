@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import authService from '../services/authService';
 import toast from 'react-hot-toast';
+import { useLang } from '../context/LangContext';
+import { translations } from '../i18n/translations';
 import '../assets/styles/auth.css';
 
 const ResetPassword = () => {
+    const { lang } = useLang();
+    const t = translations[lang].resetPassword;
+
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const token = searchParams.get('token');
@@ -20,16 +25,16 @@ const ResetPassword = () => {
         e.preventDefault();
         
         if (passwords.newPassword !== passwords.confirmPassword) {
-            return toast.error("Passwords do not match");
+            return toast.error(t.toastMismatch);
         }
 
-        const loadingToast = toast.loading('Updating password...');
+        const loadingToast = toast.loading(t.toastLoading);
         try {
             await authService.resetPassword(token, passwords.newPassword);
-            toast.success("Password updated successfully!", { id: loadingToast });
+            toast.success(t.toastSuccess, { id: loadingToast });
             navigate('/login', { replace: true });
         } catch (error) {
-            const msg = error.response?.data?.message || "Invalid or expired token.";
+            const msg = error.response?.data?.message || t.toastError;
             toast.error(msg, { id: loadingToast });
         }
     };
@@ -39,12 +44,12 @@ const ResetPassword = () => {
             <div className="auth-container">
                 <div className="auth-card" style={{ textAlign: 'center' }}>
                     <i className="fas fa-exclamation-triangle" style={{ fontSize: '2.5rem', color: '#ff4444', marginBottom: '1.5rem' }}></i>
-                    <h2 style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>Invalid Link</h2>
+                    <h2 style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>{t.invalidTitle}</h2>
                     <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '2rem' }}>
-                        The password reset token is missing or has expired. Please request a new password reset link.
+                        {t.invalidDesc}
                     </p>
                     <Link to="/login" className="back-to-login" style={{ marginTop: 0 }}>
-                        <span className="arrow">←</span> Back to Login
+                        <span className="arrow">←</span> {t.backToLogin}
                     </Link>
                 </div>
             </div>
@@ -54,10 +59,10 @@ const ResetPassword = () => {
     return (
         <div className="auth-container">
             <div className="auth-card">
-                <h2>Set New Password</h2>
+                <h2>{t.title}</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label>New Password</label>
+                        <label>{t.newPasswordLabel}</label>
                         <input 
                             name="newPassword"
                             type="password" 
@@ -69,7 +74,7 @@ const ResetPassword = () => {
                     </div>
                     
                     <div className="form-group">
-                        <label>Confirm New Password</label>
+                        <label>{t.confirmPasswordLabel}</label>
                         <input 
                             name="confirmPassword"
                             type="password" 
@@ -81,7 +86,7 @@ const ResetPassword = () => {
                     </div>
                     
                     <button type="submit" className="auth-button" style={{ marginTop: '2rem' }}>
-                        Update Password <i className="fas fa-key"></i>
+                        {t.btnSubmit} <i className="fas fa-key"></i>
                     </button>
                 </form>
             </div>
