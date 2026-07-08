@@ -1,6 +1,5 @@
 package com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest;
 
-import com.example.rentalcars.features.vehicle.domain.model.Vehicle;
 import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.dto.VehicleRequest;
 import com.example.rentalcars.features.vehicle.infrastructure.adapter.inbound.rest.dto.VehicleResponse;
 import com.example.rentalcars.features.vehicle.domain.port.inbound.VehicleService;
@@ -16,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -63,5 +61,10 @@ public class VehicleController {
 
         Page<VehicleResponse> available = vehicleService.getAvailableVehicles(start, end, pageable).map(vehicleRestMapper::toResponse);
         return ResponseEntity.ok(available);
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("UP");
     }
 }
