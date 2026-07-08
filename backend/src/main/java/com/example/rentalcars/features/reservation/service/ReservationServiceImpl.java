@@ -12,6 +12,9 @@ import com.example.rentalcars.features.reservation.domain.port.outbound.Reservat
 import com.example.rentalcars.features.user.domain.port.inbound.UserService;
 import com.example.rentalcars.features.vehicle.domain.model.VehicleStatus;
 import com.example.rentalcars.features.vehicle.domain.port.inbound.VehicleService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -61,22 +64,32 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Reservation> getMyReservations() {
+    public Page<Reservation> getMyReservations(Pageable pageable) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var user = userService.getUserByEmail(auth.getName());
         List<Reservation> reservations = reservationRepository.findByUserId(user.getId());
 
-        return reservations.stream()
+        List<Reservation> sortedReservations = reservations.stream()
                 .sorted((r1,r2)-> Integer.compare(getStatusPriority(r1.getStatus()), getStatusPriority(r2.getStatus())))
                 .toList();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), sortedReservations.size());
+
+        if (start > sortedReservations.size()) {
+            return new PageImpl<>(List.of(), pageable, sortedReservations.size());
+        }
+
+        List<Reservation> pageContent = sortedReservations.subList(start, end);
+        return new PageImpl<>(pageContent, pageable, sortedReservations.size());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Reservation> getAllReservations() {
-        List<Reservation> reservations = reservationRepository.findAll();
+    public Page<Reservation> getAllReservations(Pageable pageable) {
+        Page<Reservation> reservations = reservationRepository.findAll(pageable);
 
-        for (Reservation res : reservations) {
+        for (Reservation res : reservations.getContent()) {
             try {
                 var user = userService.getUserById(res.getUserId());
                 if (user != null) {
@@ -150,7 +163,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public List<Reservation> markAsCompleted(UUID reservationId) {
+    public Reservation markAsCompleted(UUID reservationId) {
         var reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException(reservationId));
 
@@ -159,10 +172,10 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         reservation.setStatus(ReservationStatus.COMPLETED);
-        reservationRepository.save(reservation);
+        var updatedReservation = reservationRepository.save(reservation);
 
         vehicleService.updateVehicleStatus(reservation.getVehicleId(), VehicleStatus.AVAILABLE);
-        return reservationRepository.findAll();
+        return updatedReservation;
     }
 
     @Override

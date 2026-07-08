@@ -226,7 +226,6 @@ export const translations = {
       btnViewDeal: "View Deal",
       btnPrevious: "PREVIOUS",
       btnNext: "NEXT",
-      pageInfo: "Page {{current}} of {{total}}",
       errorMsg: "Error loading fleet. Please try again later."
     },
     admin: {
@@ -257,7 +256,6 @@ export const translations = {
       btnReturn: "Return",
       btnPrevious: "PREVIOUS",
       btnNext: "NEXT",
-      pageInfo: "Page {{current}} of {{total}}",
       modalAddTitle: "Add New Vehicle",
       modalUpdateTitle: "Update Vehicle",
       placeholderBrand: "Brand",
@@ -541,7 +539,6 @@ export const translations = {
       btnViewDeal: "Προβολή",
       btnPrevious: "ΠΡΟΗΓΟΥΜΕΝΟ",
       btnNext: "ΕΠΟΜΕΝΟ",
-      pageInfo: "Σελίδα {{current}} από {{total}}",
       errorMsg: "Σφάλμα κατά τη φόρτωση του στόλου. Παρακαλώ δοκιμάστε αργότερα."
     },
     admin: {
@@ -572,7 +569,6 @@ export const translations = {
       btnReturn: "Επιστροφή",
       btnPrevious: "ΠΡΟΗΓΟΥΜΕΝΟ",
       btnNext: "ΕΠΟΜΕΝΟ",
-      pageInfo: "Σελίδα {{current}} από {{total}}",
       modalAddTitle: "Προσθήκη Νέου Οχήματος",
       modalUpdateTitle: "Ενημέρωση Στοιχείων Οχήματος",
       placeholderBrand: "Μάρκα",

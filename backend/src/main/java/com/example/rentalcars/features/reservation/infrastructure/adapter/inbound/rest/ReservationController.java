@@ -7,6 +7,10 @@ import com.example.rentalcars.features.reservation.infrastructure.adapter.inboun
 import com.example.rentalcars.features.reservation.infrastructure.adapter.inbound.rest.mapper.ReservationRestMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +26,10 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @GetMapping("/me")
-    public ResponseEntity<List<ReservationResponse>> getMyReservations(){
-        List<Reservation> reservations = reservationService.getMyReservations();
-        return ResponseEntity.ok(restMapper.toResponseList(reservations));
+    public ResponseEntity<Page<ReservationResponse>> getMyReservations(@PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Reservation> reservationsPage = reservationService.getMyReservations(pageable);
+        Page<ReservationResponse> responses = reservationsPage.map(restMapper::toResponse);
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/{id}")

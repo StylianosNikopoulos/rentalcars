@@ -213,7 +213,7 @@ const VehiclesPage = () => {
                             >
                                 <i className="fas fa-chevron-left"></i> {t.btnPrevious}
                             </button>
-                            <span className="page-info">{t.pageInfo.replace('{{current}}', currentPage).replace('{{total}}', totalPages)}</span>
+                            <span className="page-info">PAGE {currentPage} OF {totalPages}</span>
                             <button 
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
                                 disabled={currentPage === totalPages} 

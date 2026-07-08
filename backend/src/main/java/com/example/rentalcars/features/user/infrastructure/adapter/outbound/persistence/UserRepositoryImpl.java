@@ -3,9 +3,10 @@ package com.example.rentalcars.features.user.infrastructure.adapter.outbound.per
 import com.example.rentalcars.features.user.domain.model.User;
 import com.example.rentalcars.features.user.domain.port.outbound.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,11 +39,9 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> findAll() {
-        return jpaRepository.findAll()
-                .stream()
-                .map(userPersistenceMapper::toDomain)
-                .toList();
+    public Page<User> findAll(Pageable pageable) {
+        return jpaRepository.findAll(pageable)
+                .map(userPersistenceMapper::toDomain);
     }
 
     @Override
