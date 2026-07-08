@@ -49,7 +49,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new InvalidReservationDatesException("Pickup date cannot be in the past.");
         }
 
-        var vehicle = vehicleService.getVehicleById(reservation.getVehicleId());
+        var vehicle = vehicleService.getVehicleByIdWithLock(reservation.getVehicleId());
 
         if (reservationRepository.existsOverlap(reservation.getVehicleId(), reservation.getPeriod())) {
             throw new CarNotAvailableException();
