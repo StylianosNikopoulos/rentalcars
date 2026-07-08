@@ -6,9 +6,12 @@ import com.example.rentalcars.features.user.infrastructure.adapter.inbound.rest.
 import com.example.rentalcars.features.user.domain.port.inbound.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,9 +35,9 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        var users = userService.getAllUsers();
-        return ResponseEntity.ok(users.stream().map(userMapper::toResponse).toList());
+    public ResponseEntity<Page<UserResponse>> getAllUsers(@PageableDefault(size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        var users = userService.getAllUsers(pageable).map(userMapper::toResponse);
+        return ResponseEntity.ok(users);
     }
 
     @PutMapping("/{id}")

@@ -6,6 +6,8 @@ import com.example.rentalcars.features.reservation.domain.model.ReservationStatu
 import com.example.rentalcars.features.reservation.domain.port.outbound.ReservationRepository;
 import com.example.rentalcars.features.user.infrastructure.adapter.outbound.persistence.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -45,10 +47,8 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAll() {
-        return jpaRepository.findAll().stream()
-                .map(reservationMapper::toDomain)
-                .toList();
+    public Page<Reservation> findAll(Pageable pageable) {
+        return jpaRepository.findAll(pageable).map(reservationMapper::toDomain);
     }
 
     @Override

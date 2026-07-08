@@ -69,17 +69,32 @@ const MyReservationPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const bookingsPerPage = 3;
 
-    const { data: reservations = [], isLoading } = useQuery({
-        queryKey: ['myReservations'],
-        queryFn: reservationService.getMyReservations,
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, [currentPage]);
+
+    const { data: reservationResponse = {}, isLoading } = useQuery({
+        queryKey: ['myReservations', currentPage],
+        queryFn: () => reservationService.getMyReservations(currentPage - 1, bookingsPerPage),
         refetchInterval: 10000,
+        keepPreviousData: true
     });
+
+    const currentBookings = reservationResponse.content || [];
+    const totalPages = reservationResponse.page?.totalPages || 1;
+    const isTotalElementsZero = reservationResponse.page?.totalElements === 0;
 
     const cancelMutation = useMutation({
         mutationFn: (id) => reservationService.cancelReservation(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['myReservations'] });
             toast.success(t.toastCancelSuccess);
+            if (currentBookings.length === 1 && currentPage > 1) {
+                setCurrentPage(prev => prev - 1);
+            }
         },
         onError: () => {
             toast.error(t.toastCancelError);
@@ -98,12 +113,6 @@ const MyReservationPage = () => {
             window.history.replaceState({}, document.title, window.location.pathname);
         }
     }, [queryClient, t]);
-
-    // Pagination
-    const totalPages = Math.ceil(reservations.length / bookingsPerPage);
-    const indexOfLastBooking = currentPage * bookingsPerPage;
-    const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
-    const currentBookings = reservations.slice(indexOfFirstBooking, indexOfLastBooking);
 
     const handleCancel = (reservationId) => {
         Swal.fire({
@@ -159,7 +168,7 @@ const MyReservationPage = () => {
                     <div className="loader"></div>
                     <span style={{color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px'}}>{t.fetching}</span>
                 </div>
-            ) : reservations.length === 0 ? (
+            ) : isTotalElementsZero ? (
                 <div className="empty-state">
                     <div className="empty-icon"><i className="fas fa-car-crash"></i></div>
                     <h3>{t.noBookingsTitle}</h3>

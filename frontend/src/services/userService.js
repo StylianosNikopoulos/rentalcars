@@ -2,8 +2,8 @@ import api from '../api/axios';
 
 const userService = {
 
-    getAllUsers: async () => {
-        const response = await api.get('/users'); 
+    getAllUsers: async (page = 0, size = 9) => {
+        const response = await api.get(`/users?page=${page}&size=${size}`); 
         return response.data;
     },
     

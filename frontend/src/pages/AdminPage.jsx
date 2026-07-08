@@ -25,7 +25,7 @@ const AdminPage = () => {
     const [vehiclePage, setVehiclePage] = useState(1);
     const [userPage, setUserPage] = useState(1);
     const [reservationPage, setReservationPage] = useState(1);
-    const itemsPerPage = 10;
+    const itemsPerPage = 9;
 
     useEffect(() => {
         window.scrollTo({
@@ -62,41 +62,38 @@ const AdminPage = () => {
         keepPreviousData: true
     });
 
-    const { data: users = [], isLoading: loadingUsers } = useQuery({
-        queryKey: ['admin-users'],
-        queryFn: () => userService.getAllUsers(),
+    const { data: userResponse = {}, isLoading: loadingUsers } = useQuery({
+        queryKey: ['admin-users', userPage],
+        queryFn: () => userService.getAllUsers(userPage - 1, itemsPerPage),
         enabled: activeTab === 'users',
         refetchInterval: 30000,
         staleTime: 0,
-        refetchOnMount: true
+        refetchOnMount: true,
+        keepPreviousData: true
     });
 
-    const { data: reservations = [], isLoading: loadingReservations } = useQuery({
-        queryKey: ['admin-reservations'],
-        queryFn: () => reservationService.getAllReservations(),
+    const { data: reservationResponse = {}, isLoading: loadingReservations } = useQuery({
+        queryKey: ['admin-reservations', reservationPage],
+        queryFn: () => reservationService.getAllReservations(reservationPage - 1, itemsPerPage),
         enabled: activeTab === 'reservations',
         refetchInterval: 5000,
         staleTime: 0,
         refetchOnMount: true,
-        refetchIntervalInBackground: true
+        refetchIntervalInBackground: true,
+        keepPreviousData: true
     });
 
+    // Vehicles Data
     const currentVehicles = vehicleResponse.content || [];
     const totalVehiclePages = vehicleResponse.page?.totalPages || 1;
 
-    // Users Pagination
-    const totalUserPages = Math.ceil(users.length / itemsPerPage);
-    const currentUsers = users.slice(
-        (userPage - 1) * itemsPerPage,
-        userPage * itemsPerPage
-    );
+    // Users Data
+    const currentUsers = userResponse.content || [];
+    const totalUserPages = userResponse.page?.totalPages || 1;
 
-    // Reservations Pagination
-    const totalReservationPages = Math.ceil(reservations.length / itemsPerPage);
-    const currentReservations = reservations.slice(
-        (reservationPage - 1) * itemsPerPage,
-        reservationPage * itemsPerPage
-    );
+    // Reservations Data
+    const currentReservations = reservationResponse.content || [];
+    const totalReservationPages = reservationResponse.page?.totalPages || 1;
 
     // React Query: Mutations ---
 
@@ -297,7 +294,6 @@ const AdminPage = () => {
 
     // --- PAGINATION ---
     const PaginationControls = ({ currentPage, totalPages, onPageChange }) => {
-        if (totalPages <= 1) return null;
         return (
             <div className="pagination" style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', Grid: 'center', alignItems: 'center', gap: '15px' }}>
                 <button 
@@ -308,7 +304,7 @@ const AdminPage = () => {
                     <i className="fas fa-chevron-left"></i> {t.btnPrevious}
                 </button>
                 <span className="page-info" style={{ color: '#aaa', fontSize: '0.9rem' }}>
-                    {t.pageInfo.replace('{{current}}', currentPage).replace('{{total}}', totalPages)}
+                    PAGE {currentPage} OF {totalPages}
                 </span>
                 <button 
                     onClick={() => onPageChange(prev => Math.min(prev + 1, totalPages))} 
