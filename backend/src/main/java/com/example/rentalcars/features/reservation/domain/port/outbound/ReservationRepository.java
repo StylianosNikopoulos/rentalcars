@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface ReservationRepository {
     Reservation save(Reservation reservation);
     Optional<Reservation> findById (UUID id);
-    List<Reservation> findByUserId(UUID userId);
+    Page<Reservation> findByUserId(UUID userId, Pageable pageable);
     Page<Reservation> findAll(Pageable pageable);
     List<Reservation> findByVehicleId(UUID vehicleId);
     boolean existsOverlap(UUID vehicleId, DateRange period);

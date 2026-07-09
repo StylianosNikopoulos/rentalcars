@@ -40,10 +40,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findByUserId(UUID userId) {
-        return jpaRepository.findByUserId(userId).stream()
-                .map(reservationMapper::toDomain)
-                .collect(Collectors.toList());
+    public Page<Reservation> findByUserId(UUID userId, Pageable pageable) {
+        return jpaRepository.findByUserId(userId, pageable)
+                .map(reservationMapper::toDomain);
     }
 
     @Override

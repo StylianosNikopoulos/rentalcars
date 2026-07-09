@@ -13,7 +13,17 @@ import java.util.UUID;
 
 @Repository
 public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEntity, UUID> {
-    List<ReservationJpaEntity> findByUserId(UUID id);
+    @Query(
+            value = "SELECT r FROM ReservationJpaEntity r WHERE r.user.id = :userId " +
+                    "ORDER BY CASE r.status " +
+                    "  WHEN 'ACTIVE' THEN 1 " +
+                    "  WHEN 'PENDING' THEN 2 " +
+                    "  WHEN 'CONFIRMED' THEN 3 " +
+                    "  WHEN 'COMPLETED' THEN 4 " +
+                    "  WHEN 'CANCELED' THEN 5 " +
+                    "  ELSE 6 END ASC, r.createdAt DESC",
+            countQuery = "SELECT COUNT(r) FROM ReservationJpaEntity r WHERE r.user.id = :userId")
+    Page<ReservationJpaEntity> findByUserId(@Param("userId") UUID userId, Pageable pageable);
     Page<ReservationJpaEntity> findAll(Pageable pageable);
 
     @Query("SELECT COUNT(r) > 0 FROM ReservationJpaEntity r " +
