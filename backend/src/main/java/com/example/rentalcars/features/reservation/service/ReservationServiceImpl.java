@@ -67,21 +67,7 @@ public class ReservationServiceImpl implements ReservationService {
     public Page<Reservation> getMyReservations(Pageable pageable) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var user = userService.getUserByEmail(auth.getName());
-        List<Reservation> reservations = reservationRepository.findByUserId(user.getId());
-
-        List<Reservation> sortedReservations = reservations.stream()
-                .sorted((r1,r2)-> Integer.compare(getStatusPriority(r1.getStatus()), getStatusPriority(r2.getStatus())))
-                .toList();
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), sortedReservations.size());
-
-        if (start > sortedReservations.size()) {
-            return new PageImpl<>(List.of(), pageable, sortedReservations.size());
-        }
-
-        List<Reservation> pageContent = sortedReservations.subList(start, end);
-        return new PageImpl<>(pageContent, pageable, sortedReservations.size());
+        return reservationRepository.findByUserId(user.getId(), pageable);
     }
 
     @Override
@@ -204,17 +190,5 @@ public class ReservationServiceImpl implements ReservationService {
     private boolean isAdmin(Authentication auth) {
         return auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-    }
-
-    private int getStatusPriority(ReservationStatus status){
-        if (status == null) return 99;
-        return switch (status) {
-            case ACTIVE    -> 1;
-            case PENDING   -> 2;
-            case CONFIRMED -> 3;
-            case COMPLETED -> 4;
-            case CANCELED  -> 5;
-            default        -> 6;
-        };
     }
 }
