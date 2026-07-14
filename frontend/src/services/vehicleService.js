@@ -22,14 +22,22 @@ const vehicleService = {
         return response.data;
     },
   
-    getAvailableVehicles: async (startDate, endDate) => {
+    getAvailableVehicles: async (startDate, endDate, page = 0, size = 9, sortOrder = 'default', searchTerm = '') => {
         const startISO = `${startDate}T00:00:00`;
         const endISO = `${endDate}T23:59:59`;
+
+        let sortParam = 'id,desc';
+        if (sortOrder === 'low') sortParam = 'dailyPrice,asc';
+        if (sortOrder === 'high') sortParam = 'dailyPrice,desc';
 
         const response = await api.get('/vehicles/available', {
             params: {
                 start: startISO,
-                end: endISO
+                end: endISO,
+                page: page,
+                size: size,
+                sort: sortParam,
+                search: searchTerm
             }
         });
         return response.data;

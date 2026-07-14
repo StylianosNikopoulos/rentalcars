@@ -19,13 +19,18 @@ public interface VehicleJpaRepository extends JpaRepository<VehicleJpaEntity, UU
     @Query("SELECT v FROM VehicleJpaEntity v WHERE v.id = :id")
     Optional<VehicleJpaEntity> findByIdWithLock(@Param("id") UUID id);
 
-    @Query("SELECT v FROM VehicleJpaEntity v WHERE v.status = 'AVAILABLE' and v.id NOT IN (" +
+    @Query("SELECT v FROM VehicleJpaEntity v WHERE v.status = 'AVAILABLE' " +
+            "AND (:search IS NULL OR TRIM(:search) = '' " +
+            "OR LOWER(v.brand) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "OR LOWER(v.model) LIKE LOWER(CONCAT('%', :search, '%'))) " +
+            "AND v.id NOT IN (" +
             "SELECT r.vehicleId FROM ReservationJpaEntity r " +
             "WHERE r.status <> 'CANCELED' " +
             "AND r.startDate < :end AND r.endDate > :start)")
     Page<VehicleJpaEntity> findAvailableVehicles(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
+            @Param("search") String search,
             Pageable pageable
             );
 

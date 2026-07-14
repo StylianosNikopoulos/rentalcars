@@ -57,9 +57,10 @@ public class VehicleController {
     @GetMapping("/available")
     public ResponseEntity<Page<VehicleResponse>> getAvailableVehicles(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
                                                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+                                                                      @RequestParam(required = false) String search,
                                                                       @PageableDefault(size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        Page<VehicleResponse> available = vehicleService.getAvailableVehicles(start, end, pageable).map(vehicleRestMapper::toResponse);
+        Page<VehicleResponse> available = vehicleService.getAvailableVehicles(start, end, search, pageable).map(vehicleRestMapper::toResponse);
         return ResponseEntity.ok(available);
     }
 

@@ -37,7 +37,7 @@ const VehiclesPage = () => {
         queryKey: ['vehicles', selectedStart, selectedEnd, currentPage, sortOrder, searchTerm], 
         queryFn: async () => {
             if (selectedStart && selectedEnd) {
-                return await vehicleService.getAvailableVehicles(selectedStart, selectedEnd);
+                return await vehicleService.getAvailableVehicles(selectedStart, selectedEnd, currentPage - 1, itemsPerPage, sortOrder, searchTerm);
             }
             return await vehicleService.getAllVehicles(currentPage - 1, itemsPerPage, sortOrder, searchTerm);
         },
@@ -45,32 +45,8 @@ const VehiclesPage = () => {
         keepPreviousData: true
     });
 
-    const vehicles = Array.isArray(responseData) ? responseData : (responseData.content || []);
-
-    let currentItems = [];
-    let totalPages = 1;
-
-    if (responseData.page) {
-        currentItems = vehicles;
-        totalPages = responseData.page.totalPages;
-    } else {
-        const filtered = vehicles.filter(car => 
-            car.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            car.model.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-        if (sortOrder === "low") {
-            filtered.sort((a, b) => a.dailyPrice - b.dailyPrice);
-        } else if (sortOrder === "high") {
-            filtered.sort((a, b) => b.dailyPrice - a.dailyPrice);
-        }
-
-        const indexOfLastItem = currentPage * itemsPerPage;
-        const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-        
-        currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
-        totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
-    }
+    const currentItems = responseData.content || [];
+    const totalPages = responseData.page?.totalPages || 1;
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);

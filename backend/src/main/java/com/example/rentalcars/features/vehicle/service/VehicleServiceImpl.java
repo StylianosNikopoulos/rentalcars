@@ -103,9 +103,9 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Page<Vehicle> getAvailableVehicles(LocalDateTime start, LocalDateTime end, Pageable pageable) {
+    public Page<Vehicle> getAvailableVehicles(LocalDateTime start, LocalDateTime end, String search, Pageable pageable) {
         new DateRange(start, end);
-        return vehicleRepository.findAvailableVehicles(start, end, pageable);
+        return vehicleRepository.findAvailableVehicles(start, end, search, pageable);
     }
 
     @Override
