@@ -67,6 +67,7 @@ const MyReservationPage = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [currentPage, setCurrentPage] = useState(1);
+    const [isActionPending, setIsActionPending] = useState(false);
     const bookingsPerPage = 3;
 
     useEffect(() => {
@@ -80,7 +81,8 @@ const MyReservationPage = () => {
         queryKey: ['myReservations', currentPage],
         queryFn: () => reservationService.getMyReservations(currentPage - 1, bookingsPerPage),
         refetchInterval: 10000,
-        keepPreviousData: true
+        keepPreviousData: true,
+        enabled: !isActionPending
     });
 
     const currentBookings = reservationResponse.content || [];
@@ -89,6 +91,9 @@ const MyReservationPage = () => {
 
     const cancelMutation = useMutation({
         mutationFn: (id) => reservationService.cancelReservation(id),
+        onMutate: () => {
+            setIsActionPending(true);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['myReservations'] });
             toast.success(t.toastCancelSuccess);
@@ -98,6 +103,9 @@ const MyReservationPage = () => {
         },
         onError: () => {
             toast.error(t.toastCancelError);
+        },
+        onSettled: () => {
+            setIsActionPending(false);
         }
     });
 
@@ -115,6 +123,8 @@ const MyReservationPage = () => {
     }, [queryClient, t]);
 
     const handleCancel = (reservationId) => {
+        if (isActionPending) return;
+
         Swal.fire({
             title: t.swalCancelTitle,
             text: t.swalCancelText,
@@ -141,6 +151,9 @@ const MyReservationPage = () => {
     };
 
     const handleCheckOut = async (res) => {
+        if (isActionPending) return;
+
+        setIsActionPending(true);
         const loadingToast = toast.loading(t.toastRedirecting);
         try {
             const data = await paymentService.initiatePayment(res.id);
@@ -148,9 +161,11 @@ const MyReservationPage = () => {
             if (data?.url) {
                 window.location.href = data.url; 
             } else {
+                setIsActionPending(false);
                 toast.error(t.toastPaymentUrlError);
             }
         } catch (error) {
+            setIsActionPending(false);
             toast.dismiss(loadingToast);
             toast.error(error.response?.data?.message || t.toastPaymentInitError);
         }
@@ -163,7 +178,7 @@ const MyReservationPage = () => {
                 <p>{t.subtitle}</p>
             </div>
 
-            {isLoading ? (
+            {isLoading && !isActionPending ? (
                 <div className="loader-container">
                     <div className="loader"></div>
                     <span style={{color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '2px', marginTop: '15px'}}>{t.fetching}</span>
@@ -173,7 +188,12 @@ const MyReservationPage = () => {
                     <div className="empty-icon"><i className="fas fa-car-crash"></i></div>
                     <h3>{t.noBookingsTitle}</h3>
                     <p>{t.noBookingsDesc}</p>
-                    <button onClick={() => navigate('/vehicles')} className="checkOut-btn-premium" style={{width: 'auto', marginTop: '1.5rem'}}>
+                    <button 
+                        onClick={() => navigate('/vehicles')} 
+                        className="checkOut-btn-premium" 
+                        style={{width: 'auto', marginTop: '1.5rem'}}
+                        disabled={isActionPending}
+                    >
                         {t.btnExplore}
                     </button>
                 </div>
@@ -232,14 +252,18 @@ const MyReservationPage = () => {
                                                 <button 
                                                     onClick={() => handleCancel(res.id)} 
                                                     className="cancel-btn-premium"
-                                                    disabled={cancelMutation.isPending}
+                                                    disabled={isActionPending}
                                                 >
                                                     {cancelMutation.isPending ? t.btnProcessing : t.btnCancel}
                                                 </button>
                                             )}
 
                                             {status === 'PENDING' && !isExpired && (
-                                                <button onClick={() => handleCheckOut(res)} className="checkOut-btn-premium">
+                                                <button 
+                                                    onClick={() => handleCheckOut(res)} 
+                                                    className="checkOut-btn-premium"
+                                                    disabled={isActionPending}
+                                                >
                                                     {t.btnCheckout} <i className="fas fa-credit-card"></i>
                                                 </button>
                                             )}
@@ -254,7 +278,7 @@ const MyReservationPage = () => {
                             <button 
                                 className="page-btn"
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                disabled={currentPage === 1}
+                                disabled={currentPage === 1 || isActionPending}
                             >
                                 <i className="fas fa-chevron-left"></i> {t.btnPrevious}
                             </button>
@@ -262,7 +286,7 @@ const MyReservationPage = () => {
                             <button 
                                 className="page-btn"
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                disabled={currentPage === totalPages}
+                                disabled={currentPage === totalPages || isActionPending}
                             >
                                 {t.btnNext} <i className="fas fa-chevron-right"></i>
                             </button>

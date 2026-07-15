@@ -19,6 +19,7 @@ const ProfilePage = () => {
     const [fullUser, setFullUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     
     const [editData, setEditData] = useState({ 
         firstName: '', 
@@ -68,6 +69,9 @@ const ProfilePage = () => {
 
     const handleUpdate = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
         try {
             const updated = await userService.updateUser(fullUser.id, editData);
             setFullUser(updated);
@@ -82,20 +86,30 @@ const ProfilePage = () => {
             } else {
                 toast.error(errorMessage);
             }
-            console.error("Update error:", error.response?.data);
+            console.error(error.response?.data);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const handleRequestReset = async () => {
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
+        const loadingToast = toast.loading(t.toastLoading || "Sending reset link...");
         try {
             await authService.forgotPassword(fullUser.email);
-            toast.success(t.toastResetSuccess);
+            toast.success(t.toastResetSuccess, { id: loadingToast });
         } catch (error) {
-            toast.error(t.toastResetError);
+            toast.error(t.toastResetError, { id: loadingToast });
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const handleDeleteAccount = () => {
+        if (isSubmitting) return;
+
         Swal.fire({
             title: t.swalDeleteTitle,
             text: t.swalDeleteText,
@@ -119,13 +133,16 @@ const ProfilePage = () => {
             }
         }).then(async (result) => {
             if (result.isConfirmed) {
+                setIsSubmitting(true);
+                const loadingToast = toast.loading("Deleting account...");
                 try {
                     await userService.deleteUser(fullUser.id);
-                    toast.success(t.toastDeleteSuccess);
+                    toast.success(t.toastDeleteSuccess, { id: loadingToast });
                     logout();
                     navigate('/');
                 } catch (error) {
-                    toast.error(t.toastDeleteError);
+                    setIsSubmitting(false);
+                    toast.error(t.toastDeleteError, { id: loadingToast });
                 }
             }
         });
@@ -156,6 +173,7 @@ const ProfilePage = () => {
                             <button 
                                 className={isEditing ? "discard-btn" : "confirm-glow-btn"} 
                                 onClick={() => setIsEditing(!isEditing)}
+                                disabled={isSubmitting}
                             >
                                 {isEditing ? (
                                     <><i className="fas fa-times"></i> {t.btnDiscard}</>
@@ -208,6 +226,7 @@ const ProfilePage = () => {
                                             value={editData.firstName}
                                             onChange={(e) => setEditData({...editData, firstName: e.target.value})}
                                             required
+                                            disabled={isSubmitting}
                                         />
                                     </div>
                                     <div className="form-group">
@@ -217,6 +236,7 @@ const ProfilePage = () => {
                                             value={editData.lastName}
                                             onChange={(e) => setEditData({...editData, lastName: e.target.value})}
                                             required
+                                            disabled={isSubmitting}
                                         />
                                     </div>
                                 </div>
@@ -228,6 +248,7 @@ const ProfilePage = () => {
                                         placeholder="6912345678"
                                         value={editData.phoneNumber}
                                         onChange={(e) => setEditData({...editData, phoneNumber: e.target.value})}
+                                        disabled={isSubmitting}
                                     />
                                 </div>
 
@@ -238,6 +259,7 @@ const ProfilePage = () => {
                                         placeholder="Leof. Vas. Georgiou 42, Thessaloniki, 54640"
                                         value={editData.address}
                                         onChange={(e) => setEditData({...editData, address: e.target.value})}
+                                        disabled={isSubmitting}
                                     />
                                 </div>
 
@@ -248,6 +270,7 @@ const ProfilePage = () => {
                                             className="profile-select"
                                             value={editData.driverLicenseNumber}
                                             onChange={(e) => setEditData({...editData, driverLicenseNumber: e.target.value})}
+                                            disabled={isSubmitting}
                                         >
                                             {LICENSE_CATEGORIES.map(cat => (
                                                 <option key={cat.value} value={cat.value}>
@@ -258,8 +281,12 @@ const ProfilePage = () => {
                                     </div>
                                 </div>
 
-                                <button type="submit" className="confirm-glow-btn submit-profile-btn">
-                                    {t.btnSave} <i className="fas fa-check"></i>
+                                <button 
+                                    type="submit" 
+                                    className="confirm-glow-btn submit-profile-btn"
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? '...' : <>{t.btnSave} <i className="fas fa-check"></i></>}
                                 </button>
                             </form>
                         )}
@@ -274,8 +301,9 @@ const ProfilePage = () => {
                                 <button 
                                     className="security-action-btn" 
                                     onClick={handleRequestReset}
+                                    disabled={isSubmitting}
                                 >
-                                    <i className="fas fa-key"></i> {t.btnResetPassword}
+                                    <i className="fas fa-key"></i> {isSubmitting ? "..." : t.btnResetPassword}
                                 </button>
                                 
                                 <div className="termination-separator"></div>
@@ -283,8 +311,12 @@ const ProfilePage = () => {
                                 {fullUser?.role !== 'ADMIN' ? (
                                     <div className="account-delete-block">
                                         <p>{t.deleteWarning}</p>
-                                        <button className="delete-btn" onClick={handleDeleteAccount}>
-                                            {t.btnTerminate}
+                                        <button 
+                                            className="delete-btn" 
+                                            onClick={handleDeleteAccount}
+                                            disabled={isSubmitting}
+                                        >
+                                            {isSubmitting ? "..." : t.btnTerminate}
                                         </button>
                                     </div>
                                 ) : (
