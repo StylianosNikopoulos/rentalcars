@@ -11,6 +11,7 @@ const LoginPage = () => {
     const t = translations[lang].login;
 
     const [credentials, setCredentials] = useState({ email: '', password: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -21,12 +22,16 @@ const LoginPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
         const loadingToast = toast.loading(t.toastLoading);
         try {
             await login(credentials);
             toast.success(t.toastSuccess, { id: loadingToast });
             navigate('/', { replace: true }); 
         } catch (error) {
+            setIsSubmitting(false);
             const { code, message } = error.response?.data || {};
             if (code === "INVALID_CREDENTIALS") {
                 toast.error(message, { id: loadingToast });
@@ -50,6 +55,7 @@ const LoginPage = () => {
                             onChange={handleChange} 
                             placeholder="name@example.com"
                             required 
+                            disabled={isSubmitting}
                         />
                     </div>
                     <div className="form-group">
@@ -61,18 +67,31 @@ const LoginPage = () => {
                             onChange={handleChange} 
                             placeholder="••••••••"
                             required 
+                            disabled={isSubmitting}
                         />
                     </div>
                     <div className="forgot-password-wrapper">
-                        <Link to="/forgot-password">
-                            {t.forgotPassword}
-                        </Link>
+                        {isSubmitting ? (
+                            <span className="disabled-link">{t.forgotPassword}</span>
+                        ) : (
+                            <Link to="/forgot-password">
+                                {t.forgotPassword}
+                            </Link>
+                        )}
                     </div>
-                    <button type="submit" className="auth-button">
-                        {t.btnSubmit} <i className="fas fa-sign-in-alt"></i>
+                    <button 
+                        type="submit" 
+                        className="auth-button" 
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? '...' : t.btnSubmit} <i className="fas fa-sign-in-alt"></i>
                     </button>
                 </form>
-                <Link to="/register" className="auth-link">{t.registerLink}</Link>
+                {isSubmitting ? (
+                    <span className="auth-link disabled-link">{t.registerLink}</span>
+                ) : (
+                    <Link to="/register" className="auth-link">{t.registerLink}</Link>
+                )}
             </div>
         </div>
     );

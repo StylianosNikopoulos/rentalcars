@@ -15,6 +15,7 @@ const ResetPassword = () => {
     const token = searchParams.get('token');
 
     const [passwords, setPasswords] = useState({ newPassword: '', confirmPassword: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,17 +24,20 @@ const ResetPassword = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
         
         if (passwords.newPassword !== passwords.confirmPassword) {
             return toast.error(t.toastMismatch);
         }
 
+        setIsSubmitting(true);
         const loadingToast = toast.loading(t.toastLoading);
         try {
             await authService.resetPassword(token, passwords.newPassword);
             toast.success(t.toastSuccess, { id: loadingToast });
             navigate('/login', { replace: true });
         } catch (error) {
+            setIsSubmitting(false);
             const msg = error.response?.data?.message || t.toastError;
             toast.error(msg, { id: loadingToast });
         }
@@ -70,6 +74,7 @@ const ResetPassword = () => {
                             onChange={handleChange}
                             placeholder="••••••••"
                             required 
+                            disabled={isSubmitting}
                         />
                     </div>
                     
@@ -82,11 +87,17 @@ const ResetPassword = () => {
                             onChange={handleChange}
                             placeholder="••••••••"
                             required 
+                            disabled={isSubmitting}
                         />
                     </div>
                     
-                    <button type="submit" className="auth-button" style={{ marginTop: '2rem' }}>
-                        {t.btnSubmit} <i className="fas fa-key"></i>
+                    <button 
+                        type="submit" 
+                        className="auth-button" 
+                        style={{ marginTop: '2rem' }}
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? '...' : <>{t.btnSubmit} <i className="fas fa-key"></i></>}
                     </button>
                 </form>
             </div>

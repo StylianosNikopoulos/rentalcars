@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom'; 
 import { useAuth } from '../hooks/useAuth';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -30,10 +30,12 @@ const VehicleDetailsPage = () => {
     const [endDate, setEndDate] = useState(null);
     const [acceptedTerms, setAcceptedTerms] = useState(false);
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
+    const [isActionPending, setIsActionPending] = useState(false);
 
     const { data: vehicle, isLoading: vehicleLoading } = useQuery({
         queryKey: ['vehicle', id],
         queryFn: () => vehicleService.getVehicleById(id),
+        enabled: !isActionPending
     });
 
     const { data: bookedDates = [], isLoading: datesLoading } = useQuery({
@@ -52,24 +54,29 @@ const VehicleDetailsPage = () => {
                 return null;
             }).filter(Boolean);
         },
-        refetchInterval: 10000
+        refetchInterval: 10000,
+        enabled: !isActionPending
     });
 
     const bookingMutation = useMutation({
         mutationFn: (bookingData) => reservationService.createReservation(bookingData),
+        onMutate: () => {
+            setIsActionPending(true);
+        },
         onSuccess: () => {
             toast.success(t.toastBookingSuccess);
-            queryClient.invalidateQueries(['vehicle-reservations', id]);
+            queryClient.invalidateQueries({ queryKey: ['vehicle-reservations', id] });
             setTimeout(() => navigate('/reservations'), 1500);
         },
         onError: (error) => {
+            setIsActionPending(false);
             toast.error(error.response?.data?.message || t.toastBookingError);
         }
     });
 
     const handleBooking = async (e) => {
         e.preventDefault(); 
-        if (bookingMutation.isPending) return;
+        if (bookingMutation.isPending || isActionPending) return;
         if (!user) {
             toast.error(t.toastLoginReq);
             navigate('/login');
@@ -101,7 +108,7 @@ const VehicleDetailsPage = () => {
         bookingMutation.mutate(bookingData);
     };
 
-    if (vehicleLoading || datesLoading) {
+    if ((vehicleLoading || datesLoading) && !isActionPending) {
         return (
             <div className="loader-container" style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#0a0a0a' }}>
                 <div className="loader"></div>
@@ -216,8 +223,8 @@ const VehicleDetailsPage = () => {
                 </div>
                 
                 <div className="booking-sidebar">
-                    <div className={`booking-card ${bookingMutation.isPending ? 'submitting' : ''}`}>
-                        {bookingMutation.isPending && (
+                    <div className={`booking-card ${bookingMutation.isPending || isActionPending ? 'submitting' : ''}`}>
+                        {(bookingMutation.isPending || isActionPending) && (
                             <div className="booking-overlay">
                                 <div className="mini-loader"></div>
                             </div>
@@ -244,6 +251,7 @@ const VehicleDetailsPage = () => {
                                     placeholderText={t.placeholderDates}
                                     className="custom-datepicker-input" 
                                     required
+                                    disabled={bookingMutation.isPending || isActionPending}
                                 />
                             </div>
 
@@ -271,6 +279,7 @@ const VehicleDetailsPage = () => {
                                         type="checkbox" 
                                         checked={acceptedTerms} 
                                         onChange={(e) => setAcceptedTerms(e.target.checked)}
+                                        disabled={bookingMutation.isPending || isActionPending}
                                     />
                                     <span className="checkmark"></span>
                                     <span className="checkbox-text">
@@ -281,9 +290,9 @@ const VehicleDetailsPage = () => {
                             <button 
                                 type="submit" 
                                 className="confirm-glow-btn" 
-                                disabled={bookingMutation.isPending}
+                                disabled={bookingMutation.isPending || isActionPending}
                             >
-                                {bookingMutation.isPending ? t.btnProcessing : (user ? t.btnReserve : t.btnLoginToBook)}
+                                {bookingMutation.isPending || isActionPending ? t.btnProcessing : (user ? t.btnReserve : t.btnLoginToBook)}
                             </button>
                         </form>
                     </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import '../assets/styles/admin.css';
 import vehicleService from '../services/vehicleService';
 import userService from '../services/userService';
@@ -21,6 +21,7 @@ const AdminPage = () => {
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentVehicleId, setCurrentVehicleId] = useState(null);
     const [plateError, setPlateError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
     
     const [vehiclePage, setVehiclePage] = useState(1);
     const [userPage, setUserPage] = useState(1);
@@ -59,7 +60,7 @@ const AdminPage = () => {
         refetchInterval: 10000,
         staleTime: 0,
         refetchOnMount: true,
-        keepPreviousData: true
+        placeholderData: keepPreviousData
     });
 
     const { data: userResponse = {}, isLoading: loadingUsers } = useQuery({
@@ -69,7 +70,7 @@ const AdminPage = () => {
         refetchInterval: 30000,
         staleTime: 0,
         refetchOnMount: true,
-        keepPreviousData: true
+        placeholderData: keepPreviousData
     });
 
     const { data: reservationResponse = {}, isLoading: loadingReservations } = useQuery({
@@ -80,7 +81,7 @@ const AdminPage = () => {
         staleTime: 0,
         refetchOnMount: true,
         refetchIntervalInBackground: true,
-        keepPreviousData: true
+        placeholderData: keepPreviousData
     });
 
     // Vehicles Data
@@ -100,7 +101,7 @@ const AdminPage = () => {
     const deleteVehicleMutation = useMutation({
         mutationFn: (id) => vehicleService.deleteVehicle(id),
         onSuccess: () => {
-            queryClient.invalidateQueries(['admin-vehicles']);
+            queryClient.invalidateQueries({ queryKey: ['admin-vehicles'] });
             toast.success(t.toastVehDeleted);
             if (currentVehicles.length === 1 && vehiclePage > 1) setVehiclePage(prev => prev - 1);
         },
@@ -110,7 +111,7 @@ const AdminPage = () => {
     const deleteUserMutation = useMutation({
         mutationFn: (id) => userService.deleteUser(id),
         onSuccess: () => {
-            queryClient.invalidateQueries(['admin-users']);
+            queryClient.invalidateQueries({ queryKey: ['admin-users'] });
             toast.success(t.toastUserDeleted);
             if (currentUsers.length === 1 && userPage > 1) setUserPage(prev => prev - 1);
         },
@@ -120,7 +121,7 @@ const AdminPage = () => {
     const cancelResMutation = useMutation({
         mutationFn: (id) => reservationService.cancelReservation(id),
         onSuccess: () => {
-            queryClient.invalidateQueries(['admin-reservations']);
+            queryClient.invalidateQueries({ queryKey: ['admin-reservations'] });
             toast.success(t.toastResCanceled);
         },
         onError: () => toast.error(t.toastResCanErr)
@@ -129,7 +130,7 @@ const AdminPage = () => {
     const returnResMutation = useMutation({
         mutationFn: (id) => reservationService.returnVehicle(id),
         onSuccess: () => {
-            queryClient.invalidateQueries(['admin-reservations']);
+            queryClient.invalidateQueries({ queryKey: ['admin-reservations'] });
             toast.success(t.toastVehReturned);
         },
         onError: () => toast.error(t.toastVehRetErr)
@@ -213,8 +214,10 @@ const AdminPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
         if (newVehicle.images.length === 0) return toast.error(t.toastImgReq);
 
+        setIsSubmitting(true);
         const loadingToast = toast.loading(isEditMode ? t.toastProcessing : t.toastCreating);
         try {
             const uploadPromises = newVehicle.images.map(async (img) => {
@@ -245,10 +248,12 @@ const AdminPage = () => {
             }
             
             toast.success(isEditMode ? t.toastVehUpdated : t.toastVehCreated, { id: loadingToast });
-            queryClient.invalidateQueries(['admin-vehicles']);
+            queryClient.invalidateQueries({ queryKey: ['admin-vehicles']});
             closeModal();
         } catch (error) {
             toast.error(t.toastOpFailed, { id: loadingToast });
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -295,7 +300,7 @@ const AdminPage = () => {
     // --- PAGINATION ---
     const PaginationControls = ({ currentPage, totalPages, onPageChange }) => {
         return (
-            <div className="pagination" style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', Grid: 'center', alignItems: 'center', gap: '15px' }}>
+            <div className="pagination" style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px' }}>
                 <button 
                     onClick={() => onPageChange(prev => Math.max(prev - 1, 1))} 
                     disabled={currentPage === 1} 
@@ -552,8 +557,10 @@ const AdminPage = () => {
                             </div>
 
                             <div className="modal-actions">
-                                <button type="button" className="cancel-btn" onClick={closeModal}>{t.btnCancel}</button>
-                                <button type="submit" className="add-btn">{isEditMode ? t.btnUpdate : t.btnSave}</button>
+                                <button type="button" className="cancel-btn" onClick={closeModal} disabled={isSubmitting}>{t.btnCancel}</button>
+                                <button type="submit" className="add-btn" disabled={isSubmitting}>
+                                    {isSubmitting ? '...' : (isEditMode ? t.btnUpdate : t.btnSave)}
+                                </button>
                             </div>
                         </form>
                     </div>

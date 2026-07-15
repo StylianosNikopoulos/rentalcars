@@ -17,6 +17,7 @@ const RegisterPage = () => {
         lastName: ''
     });
     
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { register } = useAuth();
     const navigate = useNavigate();
 
@@ -27,6 +28,9 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
         const loadingToast = toast.loading(t.toastLoading);
 
         try {
@@ -34,6 +38,7 @@ const RegisterPage = () => {
             toast.success(t.toastSuccess, { id: loadingToast });
             navigate('/');
         } catch (error) {
+            setIsSubmitting(false);
             toast.error(
                 error.response?.data?.message || t.toastError,
                 { id: loadingToast }
@@ -56,6 +61,7 @@ const RegisterPage = () => {
                                 onChange={handleChange} 
                                 placeholder={t.firstName}
                                 required 
+                                disabled={isSubmitting}
                             />
                         </div>
                         <div className="form-group">
@@ -67,6 +73,7 @@ const RegisterPage = () => {
                                 onChange={handleChange} 
                                 placeholder={t.lastName}
                                 required 
+                                disabled={isSubmitting}
                             />
                         </div>
                     </div>
@@ -80,6 +87,7 @@ const RegisterPage = () => {
                             onChange={handleChange} 
                             placeholder="name@example.com"
                             required 
+                            disabled={isSubmitting}
                         />
                     </div>
                     
@@ -92,14 +100,23 @@ const RegisterPage = () => {
                             onChange={handleChange} 
                             placeholder={t.passwordPlaceholder}
                             required 
+                            disabled={isSubmitting}
                         />
                     </div>
                     
-                    <button type="submit" className="auth-button">
-                        {t.button} <i className="fas fa-user-plus"></i>
+                    <button 
+                        type="submit" 
+                        className="auth-button" 
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? '...' : t.button} <i className="fas fa-user-plus"></i>
                     </button>
                 </form>
-                <Link to="/login" className="auth-link">{t.link}</Link>
+                {isSubmitting ? (
+                    <span className="auth-link disabled-link">{t.link}</span>
+                ) : (
+                    <Link to="/login" className="auth-link">{t.link}</Link>
+                )}
             </div>
         </div>
     );

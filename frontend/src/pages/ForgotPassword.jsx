@@ -12,15 +12,21 @@ const ForgotPassword = () => {
 
     const [email, setEmail] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
+        const loadingToast = toast.loading(t.toastLoading || "Sending...");
         try {
             await authService.forgotPassword(email);
             setIsSubmitted(true);
-            toast.success(t.toastSuccess);
+            toast.success(t.toastSuccess, { id: loadingToast });
         } catch (error) {
-            toast.error(error.response?.data?.message || t.toastError);
+            setIsSubmitting(false);
+            toast.error(error.response?.data?.message || t.toastError, { id: loadingToast });
         }
     };
 
@@ -50,12 +56,25 @@ const ForgotPassword = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required 
+                        disabled={isSubmitting}
                     />
                 </div>
-                <button type="submit" className="confirm-glow-btn">{t.btnSubmit}</button>
-                <Link to="/login" className="back-to-login">
-                     <span className="arrow">←</span> {t.backToLogin}
+                <button 
+                    type="submit" 
+                    className="confirm-glow-btn"
+                    disabled={isSubmitting}
+                >
+                    {isSubmitting ? '...' : t.btnSubmit}
+                </button>
+                {isSubmitting ? (
+                    <span className="back-to-login disabled-link">
+                        <span className="arrow">←</span> {t.backToLogin}
+                    </span>
+                ) : (
+                    <Link to="/login" className="back-to-login">
+                        <span className="arrow">←</span> {t.backToLogin}
                     </Link>
+                )}
             </form>
         </div>
     );
