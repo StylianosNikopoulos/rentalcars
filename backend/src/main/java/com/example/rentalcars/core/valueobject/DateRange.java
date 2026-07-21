@@ -9,7 +9,7 @@ import java.time.Duration;
 public record DateRange(LocalDateTime start, LocalDateTime end) {
     public DateRange {
         if (start == null || end == null) throw new IllegalArgumentException("Dates cannot be null");
-        if (start.isAfter(end)) {
+        if (!start.isBefore(end)) {
             throw new BusinessException("Start date must be before end date", "INVALID_DATE_RANGE");
         }
     }
